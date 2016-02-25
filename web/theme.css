@@ -10,4 +10,6 @@ body{
 div {
   bottom: 0px;
   margin-bottom: 1,5em;
+  padding-top: 20px;
+  margin-top: 10px;
 }
