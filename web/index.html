@@ -12,18 +12,33 @@
 
 <script type="text/javascript">
   function toggleVisible(id) {
+	var section = document.getElementById(id);
+	if(section.style.display == "none"){
+		section.style.display = "block";
+	}
+	else{
+		section.style.display = "none";
+	}
+  }
+
+  function changeStudentImage(id, old_image, new_image){
+    var image = document.getElementById(id)
+    if(image.src == old_image){
+      image.src = new_image
+    }
+    else
+      image.src = old_image
   }
 
 </script>
 </head>
 
-
 <body style="font-family:sans-serif; text-align: center; " >
-
+  
 <link rel="stylesheet" type="text/css" href="theme.css">
 
 <h1 style="color: green">Interfaces Pessoa M&aacute;quina 2015-16</h1>
-<h2>Grupo 33 - Turno IPM201110L00</h2>
+<h2>Grupo 00 - Turno IPM201110L00</h2>
 
 
 <table align=center>
@@ -38,9 +53,9 @@
     <td>81105</td>
   </tr>
   <tr>
-    <td><img id="rgb" src = "patrick.jpg" width="80" height="100" ></td>
-    <td><img id="cmy" src = "joana.png" width="80" height="100" ></td>
-    <td><img id="hsv" src = "Sofi.jpg" width="80" height="100" ></td>
+    <td><img id="patrick_image" src = "student2.png" width="80" height="100" onclick='changeStudentImage("patrick_image", "file:///home/patrick/IPM/web/student2.png", "file:///home/patrick/IPM/web/patrick.jpg")' ></td>
+    <td><img id="joana_image" src = "student1.png" width="80" height="100" onclick='changeStudentImage("joana_image", "file:///home/patrick/IPM/web/student1.png", "file:///home/patrick/IPM/web/joana.png")'></td>
+    <td><img id="sofia_image" src = "student1.png" width="80" height="100" onclick='changeStudentImage("sofia_image", "file:///home/patrick/IPM/web/student1.png", "file:///home/patrick/IPM/web/Sofi.jpg")'></td>
   </tr>
 </table>
 
@@ -48,7 +63,7 @@
 <p>
 
 <div id="at" class="section">
-<h2 class="section">Análise de Tarefas</h2>
+<h2 onclick='toggleVisible("at_inner")' class="section"> Análise de Tarefas</h2>
 <div id="at_inner" class="inner_section">
 <a href="questionario1.html">Question&aacute;rio para an&aacute;lise de tarefas</a> <br />
 <a href="questionario2.html">Question&aacute;rio para an&aacute;lise de tarefas (melhorado)</a> <br />
@@ -58,7 +73,7 @@
 </div>
 
 <div id="mc" class="section">
-<h2 class="section">Modelo Conceptual</h2>
+<h2 onclick='toggleVisible("mc_inner")' class="section">Modelo Conceptual</h2>
 <div id="mc_inner" class="inner_section">
 <a href="mod-conceptual1.html">Modelo Conceptual</a> <br />
 <a href="mod-conceptual2.html">Modelo Conceptual (melhorado)</a> <br />
@@ -66,7 +81,7 @@
 </div>
 
 <div id="proto" class="section">
-<h2 class="section">Protótipos</h2>
+<h2 onclick='toggleVisible("proto_inner")' class="section">Protótipos</h2>
 <div id="proto_inner" class="inner_section">
 <a href="pbf1.html">PBF</a> <br />
 <a href="pbf2.html">PBF (melhorado)</a> <br />
@@ -80,7 +95,7 @@
 </div>
 
 <div id="au" class="section">
-<h2 class="section">Avaliação com Utilizadores</h2>
+<h2 onclick='toggleVisible("au_inner")' class="section">Avaliação com Utilizadores</h2>
 <div id="au_inner" class="inner_section">
 <a href="tarefas-criterios1.html">Tarefas e Crit&eacute;rios de usabilidade</a> <br />
 <a href="tarefas-criterios2.html">Tarefas e Crit&eacute;rios de usabilidade (melhorado)</a> <br />
@@ -92,6 +107,7 @@
 </div>
 
 </div>
+<img id="ist_image" src="ist.png">
 <script>
 
 </script>
