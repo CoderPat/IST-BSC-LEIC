@@ -9,12 +9,15 @@ body{
 
 div {
   bottom: 0px;
-  margin-bottom: 1,5em;
+  margin-bottom: 1,75em;
   padding-top: 20px;
   margin-top: 10px;
 }
 
 div.inner_section{
+	background-color: white;
+	padding-left:10px;
+	padding-bottom:20px;
 	font-family: sans-serif;
 	border-top-style: solid;
 	border-color: black;
@@ -22,13 +25,16 @@ div.inner_section{
 }
 
 div.section{
-	width:500px;
-	height: 100px;
+	padding-top: 5px;
+	background-color:rgb(255,243,215);
 	border-style: solid;
     border-color: black;
+}
+h2{
+	padding-left: 20px;
 }
 
 #ist_image{
 	width:200px;
-	height: 100px;
+	height: 150px;
 }
