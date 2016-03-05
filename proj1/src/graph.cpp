@@ -44,7 +44,7 @@ std::vector<int> Graph::getArticulations(){
 		vertices_to_visit.pop_back();
 
 		for(int adj_vertix : _graph_lists[current_vertix])
-			if(discovery_time[adj_vertix] != 0)
+			if(discovery_time[adj_vertix] == 0)
 				vertices_to_visit.push_back(adj_vertix);
 	}
 
