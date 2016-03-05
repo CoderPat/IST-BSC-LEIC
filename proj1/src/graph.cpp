@@ -12,6 +12,9 @@ Graph::Graph(int number_of_vertices) : _number_of_vertices(number_of_vertices){
 
 /** Adds the each vertix to the internal lists of the other one */
 void Graph::addEdge(int vertix1, int vertix2){
+	//Change 1-based identation to 0-based identation
+	vertix1--; vertix2--;
+
 	if (std::find(std::begin(_graph_lists[vertix1]), std::end(_graph_lists[vertix1]), vertix2) == std::end(_graph_lists[vertix1])){
 		_graph_lists[vertix1].push_back(vertix2);
 		_graph_lists[vertix2].push_back(vertix1);
@@ -63,7 +66,7 @@ std::vector<int> Graph::getArticulations(){
 		for(int adj_vertix : _graph_lists[vertix])
 			if(lowpoint[adj_vertix] <= lowpoint[adj_vertix])
 				continue;
-		articulations.push_back(vertix);
+		articulations.push_back(vertix+1);
 	}
 
 	return articulations;
