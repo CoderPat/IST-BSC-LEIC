@@ -25,16 +25,17 @@ int main() {
 	articulations = graph.getArticulations();
 
 	//Finally extract the info and print it
+	int higher_artic, lower_artic;
 	if(articulations.empty()) {
-		higherArti = -1;
-		lowerArti = -1;
+		higher_artic = -1;
+		lower_artic = -1;
 	}
 	else {
-		lowerArti = articulations.front();
-		higherArti = articulations.back();
+		lower_artic = articulations.front();
+		higher_artic = articulations.back();
 	}
 
 	std::cout << articulations.size() << std::endl;
-	std::cout << lowerArti << " " << higherArti << std::endl;
+	std::cout << lower_artic << " " << higher_artic << std::endl;
 	return 0;
 }
