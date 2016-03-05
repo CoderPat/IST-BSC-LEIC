@@ -14,17 +14,12 @@ int main() {
 	Graph g = Graph(in1);
 	std::vector<int> articulations;
 
-	std::cout << " Test 1\n";
-
 	for(int i = 0; i < numEdges; i++) {
 		std::cin >> in1 >> in2;
-		std::cout << " Test 2\n";
 		g.addEdge(in1, in2);
 	}
-	std::cout << " Test 3\n";
 
 	articulations = g.getArticulations();
-	std::cout << " Test 4\n";
 	if(articulations.empty()) {
 		higherArti = -1;
 		lowerArti = -1;
