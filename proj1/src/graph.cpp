@@ -68,5 +68,3 @@ std::vector<int> Graph::getArticulations(){
 
 	return articulations;
 }
-
-int main(){}
