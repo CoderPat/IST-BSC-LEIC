@@ -1,43 +1,40 @@
 #include <iostream>
 #include <string>
-#include "../include/Graph.hpp"
+#include <vector> 
+#include "graph.hpp"
 
-/*
+/**
  * Program that recives a graph and returns to std::cout information related to the graph articulations
  */
 
 int main() {
 
-	while(1) {
+	int in1, in2, numEdges ,higherArti , lowerArti;
+	std::cin >> in1 >> numEdges;
+	Graph g = Graph(in1);
+	std::vector<int> articulations;
 
-		int in1, in2, higherArti , lowerArti;
-		Graph g = Graph(in1);
-		
+	std::cout << " Test 1\n";
+
+	for(int i = 0; i < numEdges; i++) {
 		std::cin >> in1 >> in2;
-		std::vector<int> articulations;
-
-		for(int i = 0; i < in2; i++) {
-			std::cin >> in1 >> in2;
-			g.addEdge(in1, in2);
-		}
-
-		articulations = g.getArticulations();
-		higherArti = -1;
-		if(articulations.size() == 0)
-			lowerArti = -1;
-		else
-			lowerArti = articulations[0];
-
-		for(int i = 0; i < articulations.size(); i++){
-			if(articulations[i] < lowerArti)
-				lowerArti = articulations[i];
-			if(articulations[i] > higherArti)
-				higherArti = articulations[i];
-		}
-
-		std::cout << articulations.size() << "\n";
-		std::cout << lowerArti << " " << higherArti << srd::endl;
-
+		std::cout << " Test 2\n";
+		g.addEdge(in1, in2);
 	}
+	std::cout << " Test 3\n";
+
+	articulations = g.getArticulations();
+	std::cout << " Test 4\n";
+	if(articulations.empty()) {
+		higherArti = -1;
+		lowerArti = -1;
+	}
+	else {
+		lowerArti = articulations.front();
+		higherArti = articulations.back();
+	}
+
+	std::cout << articulations.size() << "\n";
+	std::cout << lowerArti << " " << higherArti << std::endl;
 	return 0;
 }
