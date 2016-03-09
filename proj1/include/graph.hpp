@@ -11,26 +11,26 @@ private:
 	int _number_of_vertices;
 
 	/** The internal graph representation, as a vector of lists */
-	std::vector<std::list<int>> _graph_lists;
+	std::vector<std::list<int> > _graph_lists;
 
 public:
 	/**
 	 * Initialize a disconected graph with a certain number of edges
 	 *
-	 * @param number_of_edges
-	 *			the number of edges of the graph
+	 * @param number_of_vertices
+	 *			the number of vertices of the graph
 	 */
-	Graph(int number_of_edges);
+	Graph(int number_of_vertices);
 
 	/**
 	 * Add a edge to the graph
 	 *
-	 * @param vertix1
-	 *			the index of the first vertix
-	 * @param vertix2
-	 *			the index of the second vertix
+	 * @param vertex1
+	 *			the index of the first vertex
+	 * @param vertex2
+	 *			the index of the second vertex
 	 */
-	void addEdge(int vertix1, int vertix2);
+	void addEdge(int vertex1, int vertex2);
 
 	/**
 	 * Performs a depth first traversal of the tree, getting the discovery times, parents and lowpoints for the vertices
@@ -38,13 +38,13 @@ public:
 	 * @param root
 	 * 			where to start the traversal
 	 * @param discovery_time
-	 *			array to save the discovery times
+	 *			vector to save the discovery times
 	 * @param parent
-	 *			array to save the parents in the traversal
+	 *			vector to save the parents in the traversal
 	 * @param lowpoint
-	 *			array to save the lowpoints
+	 *			vector to save the lowpoints
 	 */
-	void depthFirstTraversal(int root, int discovery_time[], int parent[], int lowpoint[]);
+	void depthFirstTraversal(int root, std::vector<int>& discovery_time, std::vector<int>& parent, std::vector<int>& lowpoint);
 
 	/**
 	 * Gets the articulations of the current graph
@@ -52,5 +52,6 @@ public:
 	 *
 	 * @return a ordered vector with the indexes of the articulation nodes
 	 */
-	std::vector<int> getArticulations();
+	std::list<int> getArticulations();
 };
+

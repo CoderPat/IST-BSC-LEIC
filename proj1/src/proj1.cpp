@@ -3,11 +3,15 @@
 #include <vector> 
 #include "graph.hpp"
 
+
 /**
- * Program that recives a graph and prints the number graph articulations and the first and last articulation to the standard output
+ * Program that receives a graph and prints the number of graph articulations and the first and last articulation to the standard output
  */
 
 int main() {
+
+	//Eliminate overhead of using c++ i/o
+	std::cout.sync_with_stdio(false);
 
 	//Get edges and vertices
 	int num_vertices, num_edges;
@@ -21,7 +25,7 @@ int main() {
 	}
 
 	//Get the articulations
-	std::vector<int> articulations;
+	std::list<int> articulations;
 	articulations = graph.getArticulations();
 
 	//Finally extract the info and print it
