@@ -11,7 +11,7 @@
 int main() {
 
 	//Eliminate overhead of using c++ i/o
-	std::cout.sync_with_stdio(false);
+	std::ios::sync_with_stdio(false);
 
 	//Get edges and vertices
 	int num_vertices, num_edges;
