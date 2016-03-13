@@ -1,6 +1,6 @@
-\documentclass{article}
+\documentclass[12pt]{article}
 \usepackage[utf8]{inputenc}
-\usepackage[left=3cm, right=3cm]{geometry}
+\usepackage[top=2.5cm, left=3cm, right=3cm]{geometry}
 
 \title{Análise da complexidade da solução para o problema das pessoas fundamentais}
 \author{Patrick Fernandes\\81191 \and João Abrantes\\81845}
@@ -12,4 +12,7 @@
 O problema proposto consistia em, dado um certo número de pessoas presentes numa certa rede social e as ligações (bidirecionais) entre elas, que pessoas eram fundamentais para a difusão total de uma mensagem, ou seja, em que pessoas a informação tinha obrigatoriamente de passar para poder chegar a todas as pessoas (mencionadas) da rede social.\\
 Pela natureza do problema, é possível concluir que a rede social pode ser descrita por um grafo não dirigido, em que as pessoas são representadas por vértices e as ligações entre pessoas são as arestas do grafo. Então, dada esta descrição do contexto, o problema pode ser reduzido a um em termos do grafo: que vértices são articulações do grafo, ou por outras palavras, que vértices, quando retirados, separariam o grafo original em dois grafos distintos.
 \section{A solução}
+Uma abordagem mais ignorante e intuitiva seria, para todos os vértices, tirar-los, um a um, e testar se originava dois grafos distintos, através de uma \textit{depth/breath-first traversal}. É claro no entanto que esta ideia é computacionalmente cara pois vericar se ficamos com dois grafos distintos tem só por si custo linear. \\ 
+Para arranjar uma solução mais eficiente basta analisar o que define uma articulação de um grafo. Se uma articulação divide um grafo em duas componentes separadas, então se executarmos uma \textit{depth-first traversal}, os elementos de cada componente vão estar antes e depois da passagem pela articulação (pois não há outra ligação entre os componentes). Para além disso, se introduzir-mos a noção do \textit{lowpoint} de um vértice numa \textit{depth-first traversal}, que corresponde a qual o antepassado com menor tempo de descoberta ao qual é possível chegar desde o vértice sem andar para trás na árvore de travessia, também é possível verificar que os vértices depois de uma articulação na travessia nunca podem chegar a antepassados da articulação (pois tem de passar por ela), sendo que tem de obrigatoriamente ter um lowpoint maior que o tempo de descoberta do vértice articulação.\\
+
 \end{document}

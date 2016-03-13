@@ -4,6 +4,7 @@
 program="../build/proj1"
 
 for inputfile in *.in; do
+	echo -------$inputfile--------
 	diff <(eval $program <$inputfile) ${inputfile%.*}.out
 done
 
