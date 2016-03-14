@@ -1,116 +1,282 @@
-﻿<!DOCTYPE html>
+
+
+<!DOCTYPE html>
 <html>
 <head>
-<title>IPM</title>
-<!--<link rel="stylesheet" href="style.css">-->
-
-<style type="text/css">
-
-</style>
+  <title> IPM Grupo 33 </title>
+  <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/font1.css">
+    <link href="css/icons.css">
+    <script src="css/font2.css"></script>
+    <script src="css/font3.css"></script>
+  </head>
 
 <script type="text/javascript">
   function toggleVisible(id) {
-	var section = document.getElementById(id);
-	if(section.style.display == "none"){
-		section.style.display = "block";
-	}
-	else{
-		section.style.display = "none";
-	}
-  }
-
-  function changeStudentImage(id, old_image, new_image){
-    var image = document.getElementById(id)
-    if(image.src == old_image){
-      image.src = new_image
-    }
-    else
-      image.src = old_image
   }
 
 </script>
-
 </head>
 
-<body style="font-family:sans-serif; text-align: center; " >
-  
-<link rel="stylesheet" type="text/css" href="theme.css">
 
-<h1 style="color: green">Interfaces Pessoa M&aacute;quina 2015-16</h1>
-<h2>Grupo 00 - Turno IPM201110L00</h2>
+<body style="font-family:calibri; text-align: center;"  >
 
 
-<table align=center>
-  <tr>
-    <td width="33%">Patrick Fernandes</td>
-    <td width="33%">Joana Godinho</td>
-    <td width="33%">Sofia Costa</td>
-    </tr>
-    <tr>
-    <td>81191</td>
-    <td>81478</td>
-    <td>81105</td>
-  </tr>
-  <tr>
-    <td><img id="patrick_image" src = "patrick.jpg" width="80" height="100"></td>
-    <td><img id="joana_image" src = "joana.png" width="80" height="100" ></td>
-    <td><img id="sofia_image" src = "Sofi.jpg" width="80" height="100" ></td>
-  </tr>
-</table>
 
-<div id="links" style="text-align:left; padding-left: 400px; padding-right: 400px">
-<p>
 
-<div id="at" class="section">
-<h2 onclick='toggleVisible("at_inner")' class="section"> Análise de Tarefas</h2>
-<div id="at_inner" class="inner_section">
-<a href="questionario1.html">Question&aacute;rio para an&aacute;lise de tarefas</a> <br />
-<a href="questionario2.html">Question&aacute;rio para an&aacute;lise de tarefas (melhorado)</a> <br />
-<a href="at1.html">An&aacute;lise de tarefas + Funcionalidades</a> <br />
-<a href="at2.html">An&aacute;lise de tarefas + Funcionalidades (melhorados)</a> <br />
+
+  <!--MENU-->
+
+
+  <nav class="navbar navbar-inverse">
+    <div class="container-fluid" >
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">BarISTa</a>
+      </div>
+      <div class="collapse navbar-collapse" id="myNavbar">
+        <ul class="nav navbar-nav">
+          <li class="active"><a data-toggle="tab" href="#home">Home</a></li>
+          <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Análise de Tarefas<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a data-toggle="tab" href="#quest" >Questionário para análise de tarefas </a></li>
+              <li><a data-toggle="tab" href="#questmer">Questionário para análise de tarefas (melhorado) </a></li>
+              <li><a data-toggle="tab" href="#analise">Análise de tarefas + Funcionalidades</a></li>
+              <li><a href="#">Análise de tarefas + Funcionalidades (melhorados) </a></li>
+            </ul>
+
+          </li>
+          <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Modelo Conceptual <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+            <li><a href="#">Modelo Conceptual </a></li>
+            <li><a href="#">Modelo Conceptual (melhorado)</a></li>
+          </ul>
+
+          <li class="dropdown-toggle">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Protótipos <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+            <li><a href="#">PBF</a></li>
+            <li><a href="#">PBF (melhorado) </a></li>
+            <li><a href="#">Primeiro protótipo funcional </a></li>
+            <li><a href="#">Primeiro protótipo funcional completo</a></li>
+
+            <li><a href="#">Segundo protótipo funcional </a></li>
+            <li><a href="#">Segundo protótipo funcional completo </a></li>
+            <li><a href="#">Protótipo Final  </a></li>
+            <li><a href="#">Protótipo Final Completo </a></li>
+
+          </ul>
+
+          <li class="dropdown-toggle">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Avaliação com Utilizadores <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+            <li><a href="#">Tarefas e Critérios de usabilidade </a></li>
+            <li><a href="#">Tarefas e Critérios de usabilidade (melhorado)</a></li>
+
+            <li><a href="#">Relatório da avaliação com utilizadores </a></li>
+            <li><a href="#">Relatório da avaliação com utilizadores (melhorado) </a></li>
+
+            <li><a href="#">Manual do Utilizador </a></li>
+
+          </ul>
+
+        </ul>
+
+      </div>
+    </div>
+  </nav>
+
+
+  <!--Menu FIM-->
+
+
+
+
+
+
+<div align=center class="tab-content">
+
+<!--Home-->
+  <div id="home" class="tab-pane fade in active">
+
+    <h1 style="color:rgb(0, 176, 255) "><font face=arial>Interfaces Pessoa M&aacute;quina </font>2015-16</h1>
+    <h2><font face=arial>Grupo 33 - Turno IPM201110L00</font></h2>
+
+<!--Tabela-->
+    <div class="w3-content"  style="max-width:900px; max-height:330;position:relative;margin:20px">
+
+    <table  align="center" >
+
+      <tr>
+        <td><div  ><img id="perfil" src = "patrick.jpg"><div class="center"> Patrick Fernandes <br> 81191 </div></div></td>
+        <td><div ><img id="perfil" src = "ju.jpg"><div class="center"> Joana Godinho <br> 81478 </div> </div></td>
+        <td><div ><img id="perfil" src = "Sofi.jpg"><div class="center"> Sofia Aparicio <br> 81105 </div></div></td>
+      </tr>
+    </table>
+
+    </div>
+<!--Fim Tabela-->
+
+
+<!-- Imag-->
+
+    <div align="center" class="w3-content"  style="max-width:900px;position:relative">
+
+      <img  class="mySlides" src="1.jpg" style="width:100%" height="400" width="600">
+      <img class="mySlides" src="2.jpg"  style="width:100%" height="400" width="600">
+      <img class="mySlides" src="3.jpg"  style="width:100%" height="400" width="600">
+
+      <a class="btn-floating" style="position:absolute;top:45%;left:0" onclick="plusDivs(-1)"><font size="12">❮</font></a>
+      <a class="btn-floating" style="position:absolute;top:45%;right:0" onclick="plusDivs(1)"><font size="12">❯</font></a>
+
+
+  </div>
+  <!--Fim Imag-->
+  </div>
+
+  <!--Fim Home-->
+
+<!--Primeira sub pagina-->
+<div id="quest" class="tab-pane fade">
+
+
+  <div id="pdf">
+  <object data="PDF/quest/1aVersao.pdf" type="application/pdf" width="100%" height="100%" >
+
+  </object>
 </div>
 </div>
 
-<div id="mc" class="section">
-<h2 onclick='toggleVisible("mc_inner")' class="section">Modelo Conceptual</h2>
-<div id="mc_inner" class="inner_section">
-<a href="mod-conceptual1.html">Modelo Conceptual</a> <br />
-<a href="mod-conceptual2.html">Modelo Conceptual (melhorado)</a> <br />
-</div>
+<div id="questmer" class="tab-pane fade">
+
+
+  <div id="pdf">
+  <object data="PDF/quest/2aVersao.pdf" type="application/pdf" width="100%" height="100%" >
+
+  </object>
+  </div>
 </div>
 
-<div id="proto" class="section">
-<h2 onclick='toggleVisible("proto_inner")' class="section">Protótipos</h2>
-<div id="proto_inner" class="inner_section">
-<a href="pbf1.html">PBF</a> <br />
-<a href="pbf2.html">PBF (melhorado)</a> <br />
-<a href="protFuncional1-beta.html">Primeiro prot&oacute;tipo funcional</a> <br />
-<a href="protFuncional1-completo.html">Primeiro prot&oacute;tipo funcional completo</a> <br />
-<a href="protFuncional2-beta.html">Segundo prot&oacute;tipo funcional</a> <br />
-<a href="protFuncional2-completo.html">Segundo prot&oacute;tipo funcional completo</a><br />
-<a href="protFinal-beta.html">Prot&oacute;tipo Final</a> <br />
-<a href="protFinal-completo.html">Prot&oacute;tipo Final completo</a><br />
-</div>
-</div>
 
-<div id="au" class="section">
-<h2 onclick='toggleVisible("au_inner")' class="section">Avaliação com Utilizadores</h2>
-<div id="au_inner" class="inner_section">
-<a href="tarefas-criterios1.html">Tarefas e Crit&eacute;rios de usabilidade</a> <br />
-<a href="tarefas-criterios2.html">Tarefas e Crit&eacute;rios de usabilidade (melhorado)</a> <br />
-<a href="relatorioTestes1.html">Relat&oacute;rio da avalia&ccedil;&atilde;o com utilizadores</a> <br />
-<a href="relatorioTestes2.html">Relat&oacute;rio da avalia&ccedil;&atilde;o com utilizadores (melhorado)</a> <br />
-<a href="manual.html">Manual do Utilizador</a> <br />
-</p>
-</div>
-</div>
+  <div id="analise" class="tab-pane fade">
 
+
+    <div id="pdf">
+    <object data="PDF/analise/analise.pdf" type="application/pdf" width="100%" height="100%" >
+
+    </object>
+  </div>
+
+    </div>
 </div>
-<img id="ist_image" src="ist.png">
+<!--Fim Paginas-->
+
+
+
+
+<footer style="color: #a6a6a6">
+  <div >
+            <div class="container">
+              <font size="3">
+            © 2016 Grupo33
+            <!--<a class="grey-text text-lighten-4 right" href="#!">More Links</a>-->
+          </font>
+            </div>
+          </div>
+</footer>
+
+
+
+<style>
+
+table{
+  text-align: center;
+  font-size: 20px;
+  max-width:900px;
+  max-height:330px;
+}
+
+
+footer {
+    padding: 10px 10px;
+    display: block;
+    margin-top: 60px;
+    background-color: #262626;
+}
+
+#nomes{
+  opacity: 0.0;
+  filter: alpha(opacity=100);
+  position: relative
+}
+
+#nomes:hover {
+    opacity: 1.0;
+    filter: alpha(opacity=40);
+}
+
+#pdf{
+  height:600px;
+}
+
+#perfil {
+    opacity: 1.0;
+    filter: beta(opacity=40);
+    position: relative;
+    width:270px;
+    height:330px;
+
+}
+
+#perfil:hover {
+    opacity: 0.3;
+    filter: alpha(opacity=100);
+    position: relative;
+
+
+}
+.center {
+    position: relative;
+    bottom: 100px;
+    z-index: -1;
+    width: 100%;
+    font-size: 18px;
+}
+
+
+
+</style>
+
+
+
 <script>
 
-</script>
+var slideIndex = 1;
+showDivs(slideIndex);
 
+function plusDivs(n) {
+  showDivs(slideIndex += n);
+}
+
+function showDivs(n) {
+  var i;
+  var x = document.getElementsByClassName("mySlides");
+  if (n > x.length) {slideIndex = 1}
+  if (n < 1) {slideIndex = x.length} ;
+  for (i = 0; i < x.length; i++) {
+     x[i].style.display = "none";
+  }
+  x[slideIndex-1].style.display = "block";
+}
+
+</script>
 
 </body>
 </html>
