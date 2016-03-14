@@ -1,6 +1,14 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
 \usepackage[top=1.25in, bottom=1.25in, left=1.5in, right=1.5in]{geometry}
+\usepackage{pgfplots}
+
+
+\pgfplotsset{
+  compat=newest,
+  xlabel near ticks,
+  ylabel near ticks
+}
 
 \begin{document}
 \section*{Análise de Utilizadores e Tarefas}
@@ -11,7 +19,35 @@ O questionário era constituído por 25 perguntas e aquando da elaboração dest
 \subsection*{Quem vai utilizar o sistema?}
 Do que é possível retirar da primeira parte do questionário, o público alvo é constituído maioritariamente por jovens adultos com idades compreendidas entre os 18 e 29 anos (86\% dos inquiridos, como é possível verificar a partir dos resultados à pergunta 2) com o grau de escolaridade referente ao ensino Secundário e Superior (58,24\% e 38,46\% respetivamente, como se verifica nos resultados à pergunta 3). A frequência de idas a bares situasse entre a 1 vez por ano e a 1 vez por semana(verificado as respostas à pergunta 4). Sendo que maioritariamente consome Cerveja/Vinho e Refrigerantes(62,34\% e 54,55\% respetivamente, como é possível verificar na pergunta 5) e a maioria frequenta bares com amigos (97,40\% como se verifica na pergunta 6).
 \subsection*{Que tarefas executam atualmente?}
-Quando vão a um bar, pergunta número 7, os inquiridos demonstraram uma preferência por socializar (94,81\% dos inquiridos selecionaram esta opção ), beber e comer (68,83\%) e ouvir música (57,14\%).
+Quando vão a um bar, pergunta número 7, os inquiridos demonstraram uma preferência por socializar (94.37\% dos inquiridos selecionaram esta opção ), beber e comer (69\%) e ouvir música (57.75\%).
+
+\begin{tikzpicture}[font=\small]
+	\begin{axis}[
+		ybar,
+      	bar width=20pt,
+      	width=14cm,
+      	height=6cm,
+		xlabel={Opções de Resposta},
+      	ylabel={Percentagem de utilizadores},
+      	ymin=0,
+      	ytick=\empty,
+      	xtick=data,
+      	axis x line=bottom,
+      	axis y line=left,
+      	enlarge x limits=0.2,
+      	symbolic x coords={Socializar, Ouvir música, Beber/Comer, Ver Desporto},
+      	xticklabel style={anchor=base,yshift=-\baselineskip},
+      	nodes near coords={\pgfmathprintnumber\pgfplotspointmeta\%}
+    ]
+    \addplot[fill=white] coordinates {
+    		(Socializar,94.37)
+    		(Ouvir música,57.75)
+   		(Beber/Comer,69)
+    		(Ver Desporto,18.31)
+	};
+	\end{axis}
+\end{tikzpicture}
+
 \subsection*{Que tarefas são desejáveis?}
 Como é possível verificar nas respostas à pergunta 25, os inquiridos mostraram interesse em que a mesa barISTa tivesse funcionalidades como o sistema de votação para música ambiente (70.67\% do inquiridos), a sugestão automática de bebidas consoante os gostos do utilizador (69,33\%), um dispositivo de medição de álcool (65,33\%), uma coletânea de jogos de bebida (58,67\%) e capacidade de pedir um cocktail personalizado(56\%).
 \subsection*{Como se aprendem as tarefas?}
@@ -21,7 +57,36 @@ Como seria de esperar, as tarefas desempenham-se num bar. Os inquiridos enquadra
 \subsection*{Qual a relação entre o utilizador e a informação?}
 Nas perguntas 23 e 24, respetivamente, concluímos que a maioria(69,33\%) estaria interessada na existência de uma conta com as suas preferências, estando dispostos a partilhar algumas informações pessoais como o seu nome(73,33\%), gostos(66,67\%),e-mail e idade(cerca de 55\%).
 \subsection*{Que outros instrumentos tem o utilizador?}
-Como é possível verificar na pergunta 11, quando questionados sobre os instrumentos utilizados na escolha do pedido, a maioria respondeu que já possuía ideias pré-definidas em relação ao seu pedido, aquando da ida ao bar. Logo, optam pela não utilização de instrumentos(62,34\%). No entanto, não tendo ideias pré-definidas, recorrem à carta/menu(57,14\%) ou à sugestão de conhecidos(50,65\%).
+Como é possível verificar na pergunta 11, quando questionados sobre os instrumentos utilizados na escolha do pedido, a maioria respondeu que já possuía ideias pré-definidas em relação ao seu pedido, aquando da ida ao bar. Logo, optam pela não utilização de instrumentos(63.38\%). No entanto, não tendo ideias pré-definidas, recorrem à carta/menu(56.34\%) ou à sugestão de conhecidos(52.11\%).\\
+
+\begin{tikzpicture}[font=\small]
+	\begin{axis}[
+		ybar,
+      	bar width=20pt,
+      	width=14cm,
+      	height=6cm,
+		xlabel={Opções de Resposta},
+      	ylabel={Percentagem de utilizadores},
+      	ymin=0,
+      	ytick=\empty,
+      	xtick=data,
+      	axis x line=bottom,
+      	axis y line=left,
+      	enlarge x limits=0.2,
+      	symbolic x coords={Carta/Menu, Sug. Internet, Ideias Pre..., Sug. Conhecidos, Sug. do Bar},
+      	xticklabel style={anchor=base,yshift=-\baselineskip},
+      	nodes near coords={\pgfmathprintnumber\pgfplotspointmeta\%}
+    ]
+    \addplot[fill=white] coordinates {
+    		(Carta/Menu, 56.34)
+    		(Sug. Internet,1.41)
+   		(Ideias Pre...,63.38)
+    		(Sug. Conhecidos,52.11)
+    		(Sug. do Bar, 18.31)
+	};
+	\end{axis}
+\end{tikzpicture}
+
 \subsection*{Como comunicam os utilizadores entre si?}
 A maioria dos inquiridos, como se pode concluir a partir dos resultados obtidos à pergunta 16, comunica entre si pessoalmente(97,37\%), sendo que uma pequena minoria opta comunicar via eletrónica.
 \subsection*{Qual a frequência de desempenho das tarefas?}
@@ -38,21 +103,12 @@ Da lista de funcionalidades propostas e mais votadas (apresentadas na resposta �
 
 \subsection*{Cocktail personalizado}
 Esta funcionalidade permite ao utilizador criar o um cocktail ao seu gosto, dizendo os ingredientes de uma lista pré definida.\\
-\textbf{Exemplo 1}: Cliente deseja um Long Island, bebida esta que o bar não tem no menu. Com esta funcionalidade o cliente consegue pedir um Long Island, a partir dos ingredientes disponibilizados na aplicação.\\
-\textbf{Exemplo 2}: Pedir uma bebida semelhante a outra existente no menu em que a nova bebida pode possuir no máximo 2 ingredientes distintos da presente no menu. 
-\\
 
 \subsection*{Votação para Música Ambiente}
 A votação para musica ambiente é um funcionalidade que permite ao utilizadores do o bar escolherem democraticamente que música de fundo passa. Isso permite melhorar a experiência do utilizador pois podem ouvir a música que lhes agrade.\\
-\textbf{Exemplo 1}: Escolher uma música específica, pesquisando-a a partir do nome, caso esta faça parte do conjunto de músicas disponibilizadas pelo bar.\\
-\textbf{Exemplo 2}: Escolher uma música de entre as cinco mais votadas até ao momento.\\
-
 
 \subsection*{Coletânea de jogos de bebida}
 Uma coletânea de jogos de bebida disponíveis na mesa interativa permite aos utilizadores terem mais opções de diversão quando vão a um bar para além da tradicional socialização.\\
-\textbf{Exemplo 1}:Um grupo de pessoas,todas presentes na mesma mesa, jogarem um determinado jogo de bebida multi-player.\\
-\textbf{Exemplo 2}: Uma pessoa sentada numa dada mesa desafia outra, sentada numa outra mesa, a jogar um dos jogos da coletânea, podendo assim ambos jogar na sua respetiva mesa.
-
 
 
 
