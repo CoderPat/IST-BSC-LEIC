@@ -14,7 +14,11 @@ Pela natureza do problema, é possível concluir que a rede social pode ser desc
 \section{A solução}
 Uma abordagem mais ignorante e intuitiva seria, para todos os vértices, tirar-los, um a um, e testar se originava dois grafos distintos, através de uma \textit{depth/breath-first traversal}. É claro no entanto que esta ideia é computacionalmente cara pois vericar se ficamos com dois grafos distintos tem só por si custo linear. \\ 
 Para arranjar uma solução mais eficiente basta analisar o que define uma articulação de um grafo. Se uma articulação divide um grafo em duas componentes separadas, então se executarmos uma \textit{depth-first traversal}, os elementos de cada componente vão estar antes e depois da passagem pela articulação (pois não há outra ligação entre os componentes). Para além disso, se introduzir-mos a noção do \textit{lowpoint} de um vértice numa \textit{depth-first traversal}, que corresponde a qual o antepassado com menor tempo de descoberta ao qual é possível chegar desde o vértice sem andar para trás na árvore de travessia, também é possível verificar que os vértices depois de uma articulação na travessia nunca podem chegar a antepassados da articulação (pois tem de passar por ela), sendo que tem de obrigatoriamente ter um lowpoint maior que o tempo de descoberta do vértice articulação.\\
-TODO ABRANTES: descricao do algoritmo
+...\\
+a) A raiz tem dois ou mais filhos;\\
+b) Sendo o vertice y filho de um vertice v, v é um articulação se e só se discovery(v) $>=$ lowpoint(y).\\
+Sendo assim o algoritmo usado para encontrar todas as articulações de um grafo consiste em fazer uma depth-first traversal, de seguida calcular os lowpoints para cada vertice e por último verificar quais os vértices que respeitam as condições a) e b).\\
+
 \section{Análise de Complexidade}
 \subsection{Analise Teórica}
 Designemos por $T(V,E)$ a funcão que, dado o conjunto dos vertices e arestas, devolve o tempo que o algoritmo demora a executar. O algoritmo executa apenas uma vez uma \textit{depth-first search}, com a complexidade adicional de calcular os lowpoints e retirar as articulações. Assim
