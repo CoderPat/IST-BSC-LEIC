@@ -1,6 +1,13 @@
 body {
-    background-image: url("../bg_pattern.jpg");
-    background-repeat: repeat;
+    background-image: url("../background.png");
+}
+
+.title{
+	font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+	font-size: 300%;
+	color: #FFFFFF;
+	padding-left: 50px;
 }
 
 
@@ -9,7 +16,7 @@ body {
     background: none;
 }
 
-
+/*Main buttons styling*/
 
 .main_buttons_div {
     position: absolute;
@@ -25,16 +32,24 @@ img.main_icons {
 
 figcaption.main_button_text{
 	font-family: 'Open Sans', sans-serif;
+	color: #FFFFFF;
 	font-weight: 600; 
 	font-size: 200%
 }
 
+/*Footer buttons styling */
 
+.rotate_button_div {
+    position: absolute;
+    left: 49%;
+    bottom: 5%;
+    width: 100px ;
+}
 
 .footer_buttons_div {
 	position: absolute;
 	bottom: 5%;
-	right: 5%;
+	right: 3%;
 }
 
 img.footer_icons {
@@ -45,6 +60,7 @@ img.footer_icons {
 
 figcaption.footer_button_text{
 	font-family: 'Open Sans', sans-serif;
+	color: #FFFFFF;
 	font-weight: 600; 
 	font-size: 130%
 }
@@ -73,7 +89,7 @@ figcaption.footer_button_text{
     border: 1px solid #888;
     width: 80%; /* Could be more or less, depending on screen size */
 	font-family: 'Open Sans', sans-serif;
-	font-weight: bold;
+	font-weight: 600;
 }
 
 /* The Close Button */
