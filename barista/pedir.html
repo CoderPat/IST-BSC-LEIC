@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    	<meta charset="utf-8">
+    	<title>BarISTa</title>
+    	<link rel="stylesheet" href="css/style.css">
+        <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,800' rel='stylesheet' type='text/css'>
+		
+	</head>
+
+	<body>
+		
+		<!-- Order Buttons-->
+		<div class="title"><u><u>Pedir</u></u></div>
+		<div id="order_section">
+			<div>
+				<button class="button"onclick="not_implemented_fn()">
+					<div class="order_buttons" > Consultar <br> Pedido </div>
+				</button>
+			</div>
+			<div>
+				<button class="button"onclick="not_implemented_fn()">
+					<div class="order_buttons"> Submeter <br> Pedido</div>
+				</button>
+			</div>
+		</div>
+
+		
+		<!-- Menu buttons-->
+		<div id="section_menu" style="position:absolute;right:45%;top:5%;">
+			<div class="menu_buttons">
+			<button class="button" id="drinks_button" onclick=show_menu("Drinks_content")>
+			<img class="main_icons" src="icons/food_drink.png" id="rotate_icon">
+			<figcaption class="main_button_text"> Bebidas </figcaption>
+			</div>
+			<div class="menu_buttons">
+			<button class="button" id="create_cocktail_button" onclick=show_menu("Create_Cocktail_content")>
+			<img class="main_icons"" src="icons/food_drink.png" id="rotate_icon">
+			<figcaption class="main_button_text"> Criar Bebida </figcaption>
+			</div>
+			<div class="menu_buttons">
+			<button class="button" id="snacks_button" onclick=show_menu("Snacks_content")>
+			<img class= "main_icons" src="icons/food_drink.png" id="rotate_icon">
+			<figcaption class="main_button_text"> Snacks </figcaption>
+			</div>
+		</div>
+		
+		<!-- Contents for the Drinks button-->
+		<div class="menu_content" id="Drinks_content">
+			<div class="menu_header">Bebidas</div>
+		</div>
+		
+		<!-- Contents for the Create cocktail button-->
+		<div class="menu_content" id="Create_Cocktail_content">
+			<div class="menu_header">Criar Cocktail</div>
+		</div>
+		
+		<!-- Contents for the Snacks button-->
+		<div class="menu_content" id="Snacks_content">
+			<div class="menu_header">Snacks</div>
+		</div>
+		
+		
+		<!-- Footer Buttons-->
+        <div class="rotate_button_div">
+
+        <button class="button" id="rotate_button" onclick="not_implemented_fn()">
+        <img class="footer_icons" src="icons/rotate.png" id="rotate_icon">
+        <figcaption class="footer_button_text"> Rodar </figcaption>
+        </button>
+
+        </div>
+
+        <div class="footer_buttons_div">
+
+        <button class="button" id="money_button" onclick="not_implemented_fn()">
+        <img class="footer_icons" src="icons/money.png" id="money_icon">
+        <figcaption class="footer_button_text"> Pagar </figcaption>
+        </button>
+
+        <button class="button" id="bill_button" onclick="not_implemented_fn()">
+        <img class="footer_icons" src="icons/bill.png" id="bill_icon">
+        <figcaption class="footer_button_text"> Conta </figcaption>
+        </button>
+
+        <button class="button" id="help_button" onclick="not_implemented_fn()">
+        <img class="footer_icons" src="icons/help.png" id="help_icon">
+        <figcaption class="footer_button_text"> Ajuda </figcaption>
+        </button>
+
+        </div>
+
+
+        <!-- Not Implemeted Box -->
+        <div id="not_implemented_box" class="modal">
+
+            <!-- Box content -->
+            <div class="modal_content">
+                <span class="close">x</span>
+                <p>Funcionalidade nao implementada</p>
+            </div>
+        </div>
+
+    <script src="js/modals.js"></script>
+	</body>
+</html>

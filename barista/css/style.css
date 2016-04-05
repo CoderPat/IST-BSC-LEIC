@@ -15,11 +15,13 @@ body {
 
 
 .title{
-	font-family: 'Open Sans', sans-serif;
+	font-family: 'Adam.Cg.Pro', sans-serif;
     font-weight: 600;
 	font-size: 300%;
 	color: #FFFFFF;
 	padding-left: 50px;
+	padding-top:10px;
+	width:400px;
 }
 
 
@@ -118,4 +120,57 @@ figcaption.footer_button_text{
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+/* css for Pedir page*/
+#section_menu{
+	position:absolute;
+	right:45%;
+	top:5%;
+}
+
+#order_section{
+	position:absolute;
+	top:30%;
+	padding-left:30px;
+}
+
+
+
+.order_buttons{
+	font-family: 'Open Sans', sans-serif;
+	color: #FFFFFF;
+	font-weight: 600; 
+	font-size: 200%;
+	border-radius: 20px 20px 20px 20px;
+	text-align:center;
+	background-color: #63AD21;
+	padding-top:20px;
+	padding-bottom:20px;
+	padding-left:20px;
+	padding-right:20px;
+	margin-bottom:20px;	
+}
+
+.menu_content{
+	position:absolute;
+	right:0%;
+	bottom:20%;
+	display:none;
+	background-color: #f8f8f8;
+	border-radius: 25px 0px 0px 25px;
+	width: 1000px;
+	height:700px;
+	
+}
+.menu_header{
+	background: #63AD21;
+	font-family: 'Open Sans', sans-serif;
+    font-weight: 300;
+	font-size: 300%;
+	color: #FFFFFF;
+	border-radius: 25px 0px 0px 0px;
+	padding-left: 50px;
+	padding-top:20px;
+	padding-bottom:10px;
 }
