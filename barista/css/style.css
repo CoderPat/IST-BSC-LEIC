@@ -2,26 +2,37 @@ body {
     background-image: url("../background.png");
 }
 
+
 /*Coverflow*/
+
 
 .ui-coverflow-wrapper{
     position: absolute;
     height:450px;
-    margin-top: 5%;
+    margin-top:8%;
 }
 .ui-state-active{
     border:0px;
 }
 
+.cover_img{
+  width:400px;
+  height:400px  
+}
+/*-----------------*/
 
 .title{
 	font-family: 'Adam.Cg.Pro', sans-serif;
-    font-weight: 600;
+	font-weight: 600;
 	font-size: 300%;
 	color: #FFFFFF;
+	background:linear-gradient(#25488e,#101f3d);
 	padding-left: 50px;
 	padding-top:10px;
-	width:400px;
+	height:70px;
+	margin-top:-10px;
+	margin-left:-10px;
+	margin-right:-10px;
 }
 
 
@@ -55,20 +66,20 @@ figcaption.main_button_text{
 
 .rotate_button_div {
     position: absolute;
-    left: 48%;
-    bottom: 5%;
-    width: 100px ;
+    left: 47.75%;
+    bottom: 2.5%;
+    width: 100px;
 }
 
 .footer_buttons_div {
 	position: absolute;
-	bottom: 5%;
+	bottom: 2.5%;
 	right: 3%;
 }
 
 img.footer_icons {
-	height: 100px;
-	width: 100px;
+	height: 80px;
+	width: 80px;
 }
 
 
@@ -122,11 +133,66 @@ figcaption.footer_button_text{
     cursor: pointer;
 }
 
+
+/* Css for Votar música page */
+
+#search_box{
+  position:absolute;
+  right: 10px;
+  top: 10px;
+  background-color: #eaf8fc;
+  background-image: linear-gradient(#fff, #d4e8ec);
+  border-radius: 25px;    
+  border-width: 2px;
+  border-style: solid;
+  border-color: #c4d9df #a4c3ca #83afb7;            
+  width: 400px;
+  height: 35px;
+  padding: 10px;
+  /*margin: 100px auto 50px;
+  overflow: hidden; /* Clear floats */
+}
+
+#search {
+    padding: 5px 9px;
+    height: 23px;
+    width: 270px;
+    border: 1px solid #a4c3ca;
+    font: normal 13px 'trebuchet MS', arial, helvetica;
+    background: #f1f1f1;
+    border-radius: 50px 3px 3px 50px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) inset, 0 1px 0 rgba(255, 255, 255, 1);            
+}
+
+
+#submit
+{       
+    background-color:#008ae6;
+    background-image: linear-gradient(#95d788, #008ae6);
+    border-radius: 3px 50px 50px 3px;    
+    border-width: 1px;
+    border-style: solid;
+    border-color: #7eba7c #578e57 #447d43;
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.3), 
+                0 1px 0 rgba(255, 255, 255, 0.3) inset;
+    height: 35px;
+    margin: 0 0 0 10px;
+    padding: 0;
+    width: 90px;
+    cursor: pointer;
+    font: bold 14px Arial, Helvetica;
+    color: #23441e;    
+    text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+}
+
+
+
 /* css for Pedir page*/
 #section_menu{
 	position:absolute;
-	right:45%;
-	top:5%;
+	right:42%;
+	top:9%
+	
 }
 
 #order_section{
@@ -160,7 +226,7 @@ figcaption.footer_button_text{
 	background-color: #f8f8f8;
 	border-radius: 25px 0px 0px 25px;
 	width: 1000px;
-	height:700px;
+	height:665px;
 	
 }
 .menu_header{

@@ -27,9 +27,9 @@ window.onclick = function(event) {
 function show_menu(x){
 	var menu_section = document.getElementById("section_menu");
 	var el_showned = document.getElementById(x);
-	if(menu_section.style.right == "45%"){
+	if(menu_section.style.right == "44%"){
 		menu_section.style.right = 65 + "%";
-		menu_section.style.top = 9 + "%";
+		/*menu_section.style.top = 9 + "%";*/
 		el_showned.style.display = "block";
 		previous_displayed = el_showned;
 	}
@@ -41,7 +41,7 @@ function show_menu(x){
 	
 	else {
 		previous_displayed.style.display = "none";
-		menu_section.style.right = 45 + "%";
-		menu_section.style.top = 5 + "%";
+		menu_section.style.right = 44 + "%";
+		/*menu_section.style.top = 5 + "%";*/
 	}
 }
