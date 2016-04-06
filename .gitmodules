@@ -1,0 +1,3 @@
+[submodule "barista/coverflow"]
+	path = barista/coverflow
+	url = git@github.com:coverflowjs/coverflow.git
