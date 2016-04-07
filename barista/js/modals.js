@@ -1,10 +1,10 @@
 
 // Get the modal
 var not_implemented_box = document.getElementById("not_implemented_box");
+var vote_message = document.getElementById("vote_message");
 
 // Get the <span> element that closes the modal
 var close_span = document.getElementsByClassName("close")[0];
-
 
 // When the user clicks on the button, open the modal 
 function not_implemented_fn() {
@@ -20,10 +20,13 @@ close_span.onclick = function() {
 window.onclick = function(event) {
     if (event.target == not_implemented_box) {
         not_implemented_box.style.display = "none";
+	}
+	else if(event.target == vote_message){
+		vote_message.style.display = "none";
     }
 }
 
-
+// When user clicks on one of the menu buttons in pedir page
 function show_menu(x){
 	var menu_section = document.getElementById("section_menu");
 	var el_showned = document.getElementById(x);
@@ -44,4 +47,12 @@ function show_menu(x){
 		menu_section.style.right = 44 + "%";
 		/*menu_section.style.top = 5 + "%";*/
 	}
+}
+
+//when user clicks on Votar
+function voted(){
+	vote_message.style.display = "block";
+}
+document.getElementsByClassName("close")[1].onclick= function() {
+    vote_message.style.display = "none";
 }

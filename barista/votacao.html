@@ -8,6 +8,7 @@
 
         <link rel="stylesheet" href="coverflow/dist/coverflow.css">
         <script src="coverflow/libs/jquery-ui/jquery-1.10.2.js"></script>
+		<script src="js/music_selection.js"></script>
 
 	</head>
 
@@ -17,31 +18,45 @@
         Votar Musica
         </div>
         
-        <!--<div id = "top_buttons">
-	  <button class="button" id="rotate_button" onclick="not_implemented_fn()">
-	  <img class="footer_icons" src="icons/rotate.png" id="rotate_icon">
-	  <figcaption class="footer_button_text"> Rodar </figcaption>
-	 
-	</div>-->
+        <div id = "top_buttons_section">
+			<button class="top_button" id="top_music_button"> + Votadas </button>
+			<button class="top_button" id="all_button" onclick="not_implemented_fn()"> Todas </button>
+		</div>
 	
-	<form id="search_box" action="">
-	    <input id="search" type="text" placeholder="Introduza o nome da música">
-	    <input id="submit" type="submit" value="Search">
-	</form>
+		<form id="search_box" action="">
+			<input id="search" type="text" placeholder="Introduza o nome da música">
+			<input id="submit" type="submit" value="Search">
+		</form>
+		
+		
 	
 
 		<!-- TODO: CoverFlow and Top Buttons-->
 		<div>
 			<div id="coverflow">
-				<img class="cover_img" src="icons/z-m.jpg" />
-				<img class="cover_img" src="icons/snow.jpg" />
-				<img class="cover_img" src="icons/y.jpg" />
-				<img class="cover_img" src="icons/su.jpg"/>
-				<img class="cover_img" src="icons/z-a.jpg" />
+				<img id="music_1" class="cover_img" src="icons/z-m.jpg" />
+				<img id="music_2" class="cover_img" src="icons/snow.jpg" />
+				<img id="music_3" class="cover_img" src="icons/y.jpg" />
+				<img id="music_4" class="cover_img" src="icons/su.jpg"/>
+				<img id="music_5"class="cover_img" src="icons/z-a.jpg" />
 			</div>
 		</div>
 		<div id="coverflow-slider"></div>
-
+		
+		<!-- Vote button -->
+		<div id="vote_section">
+		  <button id="vote_button" onclick="voted()">Votar</button>
+		</div>
+		
+		
+		<div id="home_button_div">
+			<button class="button" id="home_button" onclick="location.href='barista.html';">
+			<img class="footer_icons" src="icons/Home.png" id="rotate_icon">
+			<figcaption class="footer_button_text"> Início </figcaption>
+			</button>
+		</div>
+		
+		
         <div class="rotate_button_div">
 
         <button class="button" id="rotate_button" onclick="not_implemented_fn()">
@@ -80,6 +95,19 @@
                 <p>Funcionalidade nao implementada</p>
             </div>
         </div>
+		
+		
+		<!-- Vote Message -->
+		<div id="vote_message" class="modal">
+
+            <!-- Box content -->
+            <div class="modal_content">
+                <span id="close_vote_message" class="close">x</span>
+                <p>O seu voto foi aceite, obrigado!</p>
+            </div>
+        </div>
+
+		<!------------------------------------------------------->
 
     <script src="coverflow/dist/coverflow.min.js"></script>
     <script src="js/modals.js"></script>

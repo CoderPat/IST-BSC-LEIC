@@ -63,6 +63,11 @@ figcaption.main_button_text{
 }
 
 /*Footer buttons styling */
+#home_button_div{
+	position: absolute;
+	left:3%;
+	bottom:2.5%;
+}
 
 .rotate_button_div {
     position: absolute;
@@ -136,6 +141,29 @@ figcaption.footer_button_text{
 
 /* Css for Votar música page */
 
+#top_buttons_section{
+	position:absolute;
+	left:40%;
+	top:2.6%;
+	width:350px;
+}
+
+.top_button{
+	margin-left:7%;
+	font-family: 'Open Sans', sans-serif;
+	color: #FFFFFF;
+	font-weight: 600; 
+	font-size: 200%;
+	background:transparent;
+	border:transparent;
+	border-radius: 10px 10px 10px 10px;
+}
+
+.top_button:hover,
+.top_button:focus {
+    background-color: #0073e6;
+    cursor: pointer;
+}
 #search_box{
   position:absolute;
   right: 10px;
@@ -149,8 +177,6 @@ figcaption.footer_button_text{
   width: 400px;
   height: 35px;
   padding: 10px;
-  /*margin: 100px auto 50px;
-  overflow: hidden; /* Clear floats */
 }
 
 #search {
@@ -183,6 +209,18 @@ figcaption.footer_button_text{
     font: bold 14px Arial, Helvetica;
     color: #23441e;    
     text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+}
+
+#vote_button{
+	position:absolute;
+	left: 920px;
+	font-family: 'Open Sans', sans-serif;
+	color: #000000;
+	font-weight: 300; 
+	font-size: 150%;
+	background-color:#f1f1f1;
+	border-radius: 5px 5px 5px 5px;
+	width:100px;
 }
 
 
@@ -240,3 +278,5 @@ figcaption.footer_button_text{
 	padding-top:20px;
 	padding-bottom:10px;
 }
+
+
