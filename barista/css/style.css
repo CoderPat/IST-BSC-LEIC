@@ -17,7 +17,7 @@ body {
 
 .cover_img{
   width:400px;
-  height:400px  
+  height:400px
 }
 /*-----------------*/
 
@@ -58,7 +58,7 @@ img.main_icons {
 figcaption.main_button_text{
 	font-family: 'Open Sans', sans-serif;
 	color: #FFFFFF;
-	font-weight: 600; 
+	font-weight: 600;
 	font-size: 200%
 }
 
@@ -74,6 +74,7 @@ figcaption.main_button_text{
     left: 47.75%;
     bottom: 2.5%;
     width: 100px;
+    bottom:0;
 }
 
 .footer_buttons_div {
@@ -91,7 +92,7 @@ img.footer_icons {
 figcaption.footer_button_text{
 	font-family: 'Open Sans', sans-serif;
 	color: #FFFFFF;
-	font-weight: 600; 
+	font-weight: 600;
 	font-size: 130%
 }
 
@@ -152,7 +153,7 @@ figcaption.footer_button_text{
 	margin-left:7%;
 	font-family: 'Open Sans', sans-serif;
 	color: #FFFFFF;
-	font-weight: 600; 
+	font-weight: 600;
 	font-size: 200%;
 	background:transparent;
 	border:transparent;
@@ -170,10 +171,10 @@ figcaption.footer_button_text{
   top: 10px;
   background-color: #eaf8fc;
   background-image: linear-gradient(#fff, #d4e8ec);
-  border-radius: 25px;    
+  border-radius: 25px;
   border-width: 2px;
   border-style: solid;
-  border-color: #c4d9df #a4c3ca #83afb7;            
+  border-color: #c4d9df #a4c3ca #83afb7;
   width: 400px;
   height: 35px;
   padding: 10px;
@@ -187,19 +188,19 @@ figcaption.footer_button_text{
     font: normal 13px 'trebuchet MS', arial, helvetica;
     background: #f1f1f1;
     border-radius: 50px 3px 3px 50px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) inset, 0 1px 0 rgba(255, 255, 255, 1);            
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) inset, 0 1px 0 rgba(255, 255, 255, 1);
 }
 
 
 #submit
-{       
+{
     background-color:#008ae6;
     background-image: linear-gradient(#95d788, #008ae6);
-    border-radius: 3px 50px 50px 3px;    
+    border-radius: 3px 50px 50px 3px;
     border-width: 1px;
     border-style: solid;
     border-color: #7eba7c #578e57 #447d43;
-    box-shadow: 0 0 1px rgba(0, 0, 0, 0.3), 
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.3),
                 0 1px 0 rgba(255, 255, 255, 0.3) inset;
     height: 35px;
     margin: 0 0 0 10px;
@@ -207,7 +208,7 @@ figcaption.footer_button_text{
     width: 90px;
     cursor: pointer;
     font: bold 14px Arial, Helvetica;
-    color: #23441e;    
+    color: #23441e;
     text-shadow: 0 1px 0 rgba(255,255,255,0.5);
 }
 
@@ -216,13 +217,16 @@ figcaption.footer_button_text{
 	left: 920px;
 	font-family: 'Open Sans', sans-serif;
 	color: #000000;
-	font-weight: 300; 
+	font-weight: 300;
 	font-size: 150%;
 	background-color:#f1f1f1;
 	border-radius: 5px 5px 5px 5px;
 	width:100px;
 }
 
+/*Dropable part*/
+
+#div1 {width:350px;height:70px;padding:10px;border:1px solid #aaaaaa;}
 
 
 /* css for Pedir page*/
@@ -230,7 +234,7 @@ figcaption.footer_button_text{
 	position:absolute;
 	right:42%;
 	top:9%
-	
+
 }
 
 #order_section{
@@ -239,12 +243,19 @@ figcaption.footer_button_text{
 	padding-left:30px;
 }
 
+/*cenas menu*/
+
+
+ul#menu li {
+    display: inline;
+}
+
 
 
 .order_buttons{
 	font-family: 'Open Sans', sans-serif;
 	color: #FFFFFF;
-	font-weight: 600; 
+	font-weight: 600;
 	font-size: 200%;
 	border-radius: 20px 20px 20px 20px;
 	text-align:center;
@@ -253,11 +264,11 @@ figcaption.footer_button_text{
 	padding-bottom:20px;
 	padding-left:20px;
 	padding-right:20px;
-	margin-bottom:20px;	
+	margin-bottom:20px;
 }
 
 .menu_content{
-	position:absolute;
+	position:fixed;
 	right:0%;
 	bottom:20%;
 	display:none;
@@ -265,12 +276,28 @@ figcaption.footer_button_text{
 	border-radius: 25px 0px 0px 25px;
 	width: 1000px;
 	height:665px;
-	
+  overflow: scroll;
 }
+
+.list{
+	position:fixed;
+	right:0%;
+	bottom:20%;
+	display:none;
+	background-color: #f8f8f8;
+	border-radius: 25px 0px 0px 25px;
+	width: 400px;
+	height: 665px;
+  overflow: scroll;
+}
+
 .menu_header{
+  position:fixed;
 	background: #63AD21;
 	font-family: 'Open Sans', sans-serif;
     font-weight: 300;
+  width: 1000px;
+  height: 100px;
 	font-size: 300%;
 	color: #FFFFFF;
 	border-radius: 25px 0px 0px 0px;
@@ -280,3 +307,69 @@ figcaption.footer_button_text{
 }
 
 
+.button_men{
+  width: 200px;
+  height:200px;
+}
+
+table, th, td {
+    margin-top: 110px;
+    margin-left: 10px;
+    border: 10px solid #f8f8f8;
+}
+
+/* List/Box */
+.list {
+  background: #888;
+
+  display: none; /* Hidden by default */
+
+}
+
+/* Modal Content/Box */
+.list_content {
+  position:fixed;
+	background: #63A;
+	font-family: 'Open Sans', sans-serif;
+    font-weight: 300;
+  width: 1000px;
+	font-size: 300%;
+	color: #FFFFFF;
+	border-radius: 25px 0px 0px 0px;
+	padding-left: 50px;
+}
+
+.list_order {
+  margin-top: 180px;
+  display: none; /* Hidden by default */
+
+}
+
+
+.impar {
+  background-color: #fff;
+
+}
+
+.close_s {
+    color: #aaa;
+    float: right;
+	font-family: 'Open Sans', sans-serif;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close_s:hover,
+.close_s:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+ul#bebidas li {
+  display: inline-block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}

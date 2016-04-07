@@ -5,11 +5,12 @@
     	<title>BarISTa</title>
     	<link rel="stylesheet" href="css/style.css">
         <link href='fonts/open_sans.css' rel='stylesheet' type='text/css'>
-		
+				<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
 	</head>
 
 	<body>
-		
+
 		<!-- Order Buttons-->
 		<div class="title">Pedir</div>
 		<div id="order_section">
@@ -25,7 +26,7 @@
 			</div>
 		</div>
 
-		
+
 		<!-- Menu buttons-->
 		<div id="section_menu"style="position:absolute;right:44%;top:9%">
 			<div class="menu_buttons">
@@ -44,23 +45,68 @@
 			<figcaption class="main_button_text"> Snacks </figcaption>
 			</div>
 		</div>
-		
+
 		<!-- Contents for the Drinks button-->
 		<div class="menu_content" id="Drinks_content">
-			<div class="menu_header">Bebidas</div>
+			<div class="menu_header">
+				<ul id="menu">
+					<li>Bebidas</li>
+					<li><button type="button" onclick="list() add(1)"> < </button></li>
+				</ul>
+			</div>
+			<div><table>
+			  <tr onclick="item(pe)">
+			    <th><img  class="button_men" src="icons/vodka_cola.jpg" ></th>
+					<th> Bellini <br> 100ml Suco de Pêssego, 50ml Espumante </th>
+					<th><form >
+						Quantity :
+						<input type="number" id="quant_num"  name="quantity" min="1" max="1000">
+					</form></th>
+			  </tr>
+			  <tr >
+					<div class="impar">
+					<th><button type="button" onclick="alert('Hello world!')"><img class="button_men" src="icons/vodka_cola.jpg"></button></th>
+					<th>Bloody Mary <br> </th>
+				</div>
+				</tr>
+			  <tr>
+					<th><button type="button" onclick="alert('Hello world!')"><img class="button_men" src="icons/vodka_cola.jpg"></button></th>			    <td>$100</td>
+			  </tr>
+			</table></div>
 		</div>
-		
+
+
+<!--      See Order        -->
+		<div id="list_box" class="list">
+
+				<!-- Box content -->
+				<div class="list_content">
+						<span class="close_s">x</span>
+						<p>Adicionar</p>
+				</div>
+				<div id="pe" class="list_order">
+					<ul id="bebidas">
+							<li ><a>Bellini</a></li>
+							<li><p id="demo" ></p></li>
+					</ul>
+				</div>
+
+				<!-- ondrop="drop(event)" ondragover="allowDrop(event)"-->
+		</div>
+
+
+
 		<!-- Contents for the Create cocktail button-->
 		<div class="menu_content" id="Create_Cocktail_content">
 			<div class="menu_header">Criar Cocktail</div>
 		</div>
-		
+
 		<!-- Contents for the Snacks button-->
 		<div class="menu_content" id="Snacks_content">
 			<div class="menu_header">Snacks</div>
 		</div>
-		
-		
+
+
 		<!-- Footer Buttons-->
 		<div id="home_button_div">
 			<button class="button" id="home_button" onclick="location.href='barista.html';">
@@ -68,7 +114,7 @@
 			<figcaption class="footer_button_text"> Início </figcaption>
 			</button>
 		</div>
-		
+
         <div class="rotate_button_div">
 
         <button class="button" id="rotate_button" onclick="not_implemented_fn()">
