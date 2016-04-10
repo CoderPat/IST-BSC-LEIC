@@ -14,5 +14,5 @@
   font-family: 'Open Sans';
   font-style: normal;
   font-weight: 800;
-  src: local('Open Sans Extrabold'), local('OpenSans-Extrabold'), url('./OpenSans-Extrabold.ttf') format('truetype');
+  src: local('Open Sans Extrabold'), local('OpenSans-Extrabold'), url('./OpenSans-ExtraBold.ttf') format('truetype');
 }

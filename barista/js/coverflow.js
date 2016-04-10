@@ -6,12 +6,6 @@ $(function() {
 								        }
 	});
 
-	$('#coverflow img').click(function() {
-		if (!$(this).hasClass('ui-state-active')) {
-				return;
-		}
 
-		$('#coverflow').coverflow('next');
-	});
 });
 });
