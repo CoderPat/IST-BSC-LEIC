@@ -4,11 +4,22 @@
     	<meta charset="utf-8">
     	<title>BarISTa</title>
     	<link rel="stylesheet" href="css/style.css">
+    	<link rel="stylesheet" href="css/coverflow.css">
         <link href='fonts/open_sans.css' rel='stylesheet' type='text/css'>
 
-        <link rel="stylesheet" href="coverflow/dist/coverflow.css">
-        <script src="coverflow/libs/jquery-ui/jquery-1.10.2.js"></script>
-		<script src="js/music_selection.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.js"></script>
+
+        <!-- Optional: Reflection -->
+		<script type="text/javascript" src="coverflow/reflection.js"></script>
+
+		<!-- interpolate, depends on jQ 1.8.0+ -->
+		<script src="coverflow/jquery.interpolate.min.js"></script>
+
+		<!-- Coverflow -->
+		<script src="coverflow/jquery.coverflow.js"></script>
+
+		<script src="js/coverflow.js"></script>
 
 	</head>
 
@@ -20,28 +31,28 @@
         
         <div id = "top_buttons_section">
 			<button class="top_button" id="top_music_button"> + Votadas </button>
-			<button class="top_button" id="all_button" onclick="not_implemented_fn()"> Todas </button>
+			<button class="top_button" id="all_button" > Todas </button>
 		</div>
 	
 		<form id="search_box" action="">
 			<input id="search" type="text" placeholder="Introduza o nome da música">
-			<input id="submit" type="submit" value="Search">
+			<input id="submit" type="button" value="Search">
 		</form>
 		
 		
 	
 
 		<!-- TODO: CoverFlow and Top Buttons-->
-		<div>
-			<div id="coverflow">
-				<img id="music_1" class="cover_img" src="icons/z-m.jpg" />
-				<img id="music_2" class="cover_img" src="icons/snow.jpg" />
-				<img id="music_3" class="cover_img" src="icons/y.jpg" />
-				<img id="music_4" class="cover_img" src="icons/su.jpg"/>
-				<img id="music_5"class="cover_img" src="icons/z-a.jpg" />
-			</div>
+		<br><br><br><br><br><br><br>
+		<div class="coverflow">
+			<img class="cover" id="music_1" src="icons/z-m.jpg" />
+			<img class="cover" id="music_2" src="icons/snow.jpg" />
+			<img class="cover" id="music_3" src="icons/y.jpg" />
+			<img class="cover" id="music_4" src="icons/su.jpg"/>
+			<img class="cover" id="music_5" src="icons/z-a.jpg" />
 		</div>
-		<div id="coverflow-slider"></div>
+		<br><br><br>
+
 		
 		<!-- Vote button -->
 		<div id="vote_section">
@@ -107,11 +118,7 @@
             </div>
         </div>
 
-		<!------------------------------------------------------->
-
-    <script src="coverflow/dist/coverflow.min.js"></script>
     <script src="js/modals.js"></script>
-    <script src="js/coverflow.js"></script>
 	</script>
 	</body>
 </html>

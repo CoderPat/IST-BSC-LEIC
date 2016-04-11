@@ -1,4 +1,3 @@
-var vote_message = document.getElementById("vote_message");
 var input = document.getElementById('quant_num');
 input.value;
 
@@ -25,13 +24,6 @@ function show_menu(x){
 	}
 }
 
-//when user clicks on Votar
-function voted(){
-	vote_message.style.display = "block";
-}
-document.getElementsByClassName("close")[1].onclick= function() {
-    vote_message.style.display = "none";
-}
 
 /*When the user cliks on a order*/
 

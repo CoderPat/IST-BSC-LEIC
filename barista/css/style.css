@@ -3,23 +3,13 @@ body {
 }
 
 
-/*Coverflow*/
 
-
-.ui-coverflow-wrapper{
-    position: absolute;
-    height:450px;
-    margin-top:8%;
-}
-.ui-state-active{
-    border:0px;
+.coverflow .cover {
+  height: 400px;
+  width: 400px;
+  cursor: pointer;
 }
 
-.cover_img{
-  width:400px;
-  height:400px
-}
-/*-----------------*/
 
 .title{
 	font-family: 'Open Sans', sans-serif;
@@ -101,7 +91,7 @@ figcaption.footer_button_text{
 .modal {
     display: none; /* Hidden by default */
     position: absolute; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    z-index: 100; /* Sit on top */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
@@ -165,6 +155,7 @@ figcaption.footer_button_text{
     background-color: #0073e6;
     cursor: pointer;
 }
+
 #search_box{
   position:absolute;
   right: 10px;
