@@ -12,6 +12,8 @@ function get_html_cover_tag(music_info, percentage = false){
 
 $(window).load(function(){
 
+	$('#search').keyboard({ layout: 'qwerty' });
+
 	$('.coverflow').coverflow({
 		index: 			0,
 		change:			function(event, cover) {
