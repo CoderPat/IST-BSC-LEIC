@@ -43,11 +43,11 @@ $(window).load(function(){
 	    none_voted_message.style.display = "none";
 	});
 
-	var all_musics = [["Mumford and Sons", "qualquercoisa", "icons/z-m.jpg", 0], 
-					  ["Snow Patrol", "qualquercoisa", "icons/snow.jpg", 0],
-					  ["Yes and Yes", "qualquercoisa", "icons/y.jpg", 0], 
-					  ["Arcade fire", "qualquercoisa", "icons/su.jpg", 0],
-					  ["Aqua" ,"qualquercoisa", "icons/z-a.jpg", 0]];
+	var all_musics = [["Mumford and Sons", "Believe", "icons/z-m.jpg", 0], 
+					  ["Snow Patrol", "Chasing Cars", "icons/snow.jpg", 0],
+					  ["Years and Years", "Take Shelter", "icons/y.jpg", 0], 
+					  ["Arcade fire", "Wake Up", "icons/su.jpg", 0],
+					  ["Aqua" ,"Barbie Girl", "icons/z-a.jpg", 0]];
 
 
 
