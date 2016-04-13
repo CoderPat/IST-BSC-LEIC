@@ -1,6 +1,9 @@
 
 // Get the modal
 var not_implemented_box = document.getElementById("not_implemented_box");
+var vote_message = document.getElementById("vote_message");
+var not_found_message= document.getElementById("not_found_message");
+var none_voted_message= document.getElementById("none_voted_message");
 
 // Get the <span> element that closes the modal
 var close_span = document.getElementsByClassName("close")[0];
@@ -23,6 +26,13 @@ window.onclick = function(event) {
 	}
 	else if(event.target == vote_message){
 		vote_message.style.display = "none";
+    }
+	
+	else if(event.target == not_found_message){
+		not_found.style.display = "none";
+    }
+	else if(event.target == none_voted_message){
+		none_voted_message.style.display = "none";
     }
 }
 
