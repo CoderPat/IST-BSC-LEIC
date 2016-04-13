@@ -71,7 +71,7 @@ $(window).load(function(){
 
 		$('.coverflow').empty();
 		for(var i = 0, len=all_musics.length; i< len; i++){
-			if(all_musics[i][0].indexOf(search_term) !== -1){
+			if(all_musics[i][0].toLowerCase().indexOf(search_term.toLowerCase()) !== -1 || all_musics[i][1].toLowerCase().indexOf(search_term.toLowerCase()) != -1){
 				$('.coverflow').append(get_html_cover_tag(all_musics[i]));
 			}
 		}
