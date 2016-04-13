@@ -3,12 +3,41 @@ body {
 }
 
 
-
 .coverflow .cover {
   height: 400px;
   width: 400px;
   cursor: pointer;
 }
+
+#covers_info { 
+  position:   relative;
+  text-align:   center;
+  z-index:    999;
+}
+
+#percentage_votes {
+  font-family: 'Open Sans', sans-serif;
+  color: #FFFFFF;
+  font-weight: 600;
+  font-size: 200%;
+  position:   relative;
+  text-align:   center;
+}
+
+#artist_name {
+  font-family: 'Open Sans', sans-serif;
+  color: #FFFFFF;
+  font-weight: 600;
+  font-size: 200%;
+}
+
+#music_name {
+  font-family: 'Open Sans', sans-serif;
+  color: #FFFFFF;
+  font-weight: 600;
+  font-size: 200%;
+}
+
 
 
 .title{

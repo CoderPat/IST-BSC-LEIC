@@ -1,6 +1,26 @@
+function get_html_cover_tag(music_info, percentage = false){
+	 var html_tag = "<img class='cover' ";
+
+	 if(percentage){
+	 	html_tag += "data-percentage='" + percentage + "%'";
+	 }
+
+	 html_tag += "data-artist='" + music_info[0] + "' data-title='" + music_info[1] + "' src='" + music_info[2] + "' />";
+
+	 return html_tag;
+}
+
 $(window).load(function(){
 
-	$('.coverflow').coverflow({index:2});
+	$('.coverflow').coverflow({
+		index: 			0,
+		change:			function(event, cover) {
+			var img = $(cover).children().andSelf().filter('img').last();
+			$('#artist_name').text(img.data('artist') || 'unknown');
+			$('#music_name').text(img.data('title') || 'unknown');
+			$('#percentage_votes').html(img.data('percentage') || '&nbsp;');
+		}
+	});
 
 	$('.coverflow').coverflow('option', 'enableClick', true);
 
@@ -8,36 +28,39 @@ $(window).load(function(){
 	var vote_message = document.getElementById("vote_message");
 
 
-	document.getElementsByClassName("close")[1].onclick= function() {
+	$('#close_vote_message').click( function() {
 	    vote_message.style.display = "none";
-	}
+	});
 
-	var all_musics = [["wilder mind", "<img class='cover' id='music_1' src='icons/z-m.jpg' />"], 
-					  ["just say yes", "<img class='cover' id='music_2' src='icons/snow.jpg' />"],
-					  ["communion", "<img class='cover' id='music_3' src='icons/y.jpg' /> "], 
-					  ["arcade fire", "<img class='cover' id='music_4' src='icons/su.jpg' /> "],
-					  ["barbie girl" ,"<img class='cover' id='music_5' src='icons/z-a.jpg' /> "]]
+	var all_musics = [["Mumford and Sons", "qualquercoisa", "icons/z-m.jpg", 0], 
+					  ["Snow Patrol", "qualquercoisa", "icons/snow.jpg", 0],
+					  ["Yes and Yes", "qualquercoisa", "icons/y.jpg", 0], 
+					  ["Arcade fire", "qualquercoisa", "icons/su.jpg", 0],
+					  ["Aqua" ,"qualquercoisa", "icons/z-a.jpg", 0]];
 
-	var top_musics = ["<img class='cover' id='music_1' src='icons/z-m.jpg' />", 
-					  "<img class='cover' id='music_2' src='icons/snow.jpg' />",
-					  "<img class='cover' id='music_5' src='icons/z-a.jpg' /> "]
 
 
 	$('#top_music_button').click(function(){
 		$('.coverflow').empty();
+
+		var top_musics = all_musics.slice();
+		var total_votes = top_musics.reduce(function(sum, music_info){return sum + music_info[3]}, 0);
+		top_musics.sort(function(music_info1, music_info2){return music_info2[3] - music_info1[3]})
+
 		for(var i = 0, len=top_musics.length; i< len; i++){
-			$('.coverflow').append(top_musics[i]);
+			if(top_musics[i][3] !== 0){
+				$('.coverflow').append(get_html_cover_tag(top_musics[i], top_musics[i][3]*100/total_votes));
+			}
 		}
-		$('.coverflow').coverflow('index', Math.floor(top_musics.length / 2));
+		$('.coverflow').coverflow('index', 0);
 		$('.coverflow').coverflow('refresh');
 	});
 
 	$('#all_button').click(function(){
 
-
 		$('.coverflow').empty();
 		for(var i = 0, len=all_musics.length; i< len; i++){
-			$('.coverflow').append(all_musics[i][1]);
+			$('.coverflow').append(get_html_cover_tag(all_musics[i]));
 		}
 		$('.coverflow').coverflow('index', Math.floor(all_musics.length / 2));
 		$('.coverflow').coverflow('refresh');
@@ -49,7 +72,7 @@ $(window).load(function(){
 		$('.coverflow').empty();
 		for(var i = 0, len=all_musics.length; i< len; i++){
 			if(all_musics[i][0].indexOf(search_term) !== -1){
-				$('.coverflow').append(all_musics[i][1]);
+				$('.coverflow').append(get_html_cover_tag(all_musics[i]));
 			}
 		}
 		$('.coverflow').coverflow('index', 0);
@@ -57,10 +80,14 @@ $(window).load(function(){
 	});
 
 
+	$('#all_button').trigger('click');
+
+
+	//when user clicks on Votar
+	$('#vote_button').click( function(){
+		vote_message.style.display = "block";
+		var voted = $('.coverflow').coverflow('index');
+		all_musics[voted][3] += 1;
+	});
 
 });
-
-//when user clicks on Votar
-function voted(){
-	vote_message.style.display = "block";
-}
