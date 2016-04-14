@@ -43,7 +43,7 @@ $(window).load(function(){
 	    none_voted_message.style.display = "none";
 	});
 
-	var all_musics = [["Mumford and Sons", "Believe", "icons/z-m.jpg", 0], 
+	var all_musics = [["Mumford & Sons", "Believe", "icons/z-m.jpg", 0], 
 					  ["Snow Patrol", "Chasing Cars", "icons/snow.jpg", 0],
 					  ["Years and Years", "Take Shelter", "icons/y.jpg", 0], 
 					  ["Arcade fire", "Wake Up", "icons/su.jpg", 0],
@@ -115,5 +115,23 @@ $(window).load(function(){
 		var voted = $('.coverflow').coverflow('index');
 		all_musics[voted][3] += 1;
 	});
+	
+	
+	// A tocar icon funcionality
+	$('#musicPlaying_button').balloon({ tipSize: 30,
+										showDuration: "slow",
+										showAnimation: function(d, c) { this.fadeIn(d, c);},
+										css: {
+											border: 'solid 4px #5baec0',
+											boxShadow: "2px 2px 2px #888",
+											padding: '10px',
+											fontFamily: 'Open Sans',
+											fontSize: '150%',
+											lineHeight: '2',
+											backgroundColor: '#eaf8fc',
+											color: '#5baec0'
+										}
+									});
 
 });
+
