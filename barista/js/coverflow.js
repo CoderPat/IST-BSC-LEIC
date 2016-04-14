@@ -1,3 +1,5 @@
+var is_in_top_musics = false;
+
 function get_html_cover_tag(music_info, percentage = false){
 	 var html_tag = "<img class='cover' ";
 
@@ -54,6 +56,7 @@ $(window).load(function(){
 	$('#top_music_button').click(function(){
 		$('.coverflow').empty();
 		
+		is_in_top_musics = true;
 		var none_voted = true;
 		var none_voted_message = document.getElementById("none_voted_message");
 		var top_musics = all_musics.slice();
@@ -63,7 +66,7 @@ $(window).load(function(){
 		for(var i = 0, len=top_musics.length; i< len; i++){
 			if(top_musics[i][3] !== 0){
 				none_voted = false;
-				$('.coverflow').append(get_html_cover_tag(top_musics[i], top_musics[i][3]*100/total_votes));
+				$('.coverflow').append(get_html_cover_tag(top_musics[i], Math.round(top_musics[i][3]*100/total_votes)));
 			}
 		}
 		$('.coverflow').coverflow('index', 0);
@@ -75,6 +78,7 @@ $(window).load(function(){
 	});
 
 	$('#all_button').click(function(){
+		is_in_top_musics = false;
 
 		$('.coverflow').empty();
 		for(var i = 0, len=all_musics.length; i< len; i++){
@@ -85,6 +89,8 @@ $(window).load(function(){
 	});
 
 	$('#submit').click(function(){
+		is_in_top_musics = false;
+
 		var search_term = document.getElementById("search").value;
 		var message_not_found = document.getElementById("not_found_message");
 		var found= false;
@@ -112,8 +118,14 @@ $(window).load(function(){
 	//when user clicks on Votar
 	$('#vote_button').click( function(){
 		vote_message.style.display = "block";
-		var voted = $('.coverflow').coverflow('index');
-		all_musics[voted][3] += 1;
+		var voted = $('.coverflow').coverflow('cover');
+		all_musics.find(function(music_info){ 
+							return music_info[0] === voted.data('artist') &&
+								   music_info[1] === voted.data('title');
+						})[3]++;
+		if( is_in_top_musics ){
+			$('#top_music_button').trigger('click');
+		}
 	});
 	
 	
