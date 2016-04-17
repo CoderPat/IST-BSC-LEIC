@@ -79,7 +79,8 @@ void Graph::find_shortest_paths(const std::vector<int>& origins,
     for(int i = 0 ; i < (int) origins.size(); i++){
         __dijkstras(origins[i]-1, positive_weigths, distances[i]);
         for(int j=0; j < _number_of_vertices; j++)
-            distances[i][j] += bell_distances[j] - bell_distances[origins[i]-1];;
+            if(distances[i][j] != std::numeric_limits<int>::max())
+                distances[i][j] += bell_distances[j] - bell_distances[origins[i]-1];;
     }
     
 }
