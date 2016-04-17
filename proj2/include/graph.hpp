@@ -1,3 +1,6 @@
+#ifndef GRAPH_H
+#define GRAPH_H
+
 #include <list>
 #include <vector>
 
@@ -34,7 +37,7 @@ public:
      * @param vertex2
      *          the index of the second vertex
      */
-    void add_edge(int vertex1, int vertex2);
+    void add_edge(int vertex1, int vertex2, int weight);
 
     /**
      * Executes the bellman-ford algorithm, with a virtual vertex, 
@@ -55,7 +58,7 @@ public:
      * @param distances
      *          the vector to save the distances calculated
      */
-    void __dijkstras(int source_vertex, , const std::vector<std::vector<int> >& weights, std::vector<int>& distances);
+    void __dijkstras(int source_vertex, const std::vector<std::vector<int> >& weights, std::vector<int>& distances);
 
      /**
      * Finds the shortest distance from a list of vertex, to all verteces
@@ -70,3 +73,5 @@ public:
 
 
 };
+
+#endif

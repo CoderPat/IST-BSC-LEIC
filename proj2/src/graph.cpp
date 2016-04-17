@@ -1,6 +1,7 @@
 #include <vector>
 #include <list>
 #include <iterator>
+#include <limits>
 #include "graph.hpp"
 #include "vertexheap.hpp"
 
@@ -11,7 +12,7 @@ Graph::Graph(int number_of_vertices) : _number_of_vertices(number_of_vertices),
 
 
 /** Adds the each vertex to the internal lists of the other one */
-void Graph::addEdge(int vertex1, int vertex2, int weight){
+void Graph::add_edge(int vertex1, int vertex2, int weight){
     //Change 1-based identation to 0-based identation
     vertex1--; vertex2--;
 
@@ -24,27 +25,49 @@ void Graph::__bellman_ford_reweight(std::vector<int>& distances){
     //TODO
 }
 
-void Graph::__dijkstra(int source_vertex, 
-                       std::vector<int>& distance_vector, 
-                       const std::vector<std::vector<int> >& weights){
+void Graph::__dijkstras(int source_vertex, 
+                       const std::vector<std::vector<int> >& weights,
+                       std::vector<int>& distance_vector){
 
     VertexHeap vertex_heap(source_vertex, _number_of_vertices);
-    //TODO
+    std::vector<bool> visited(_number_of_vertices, false);
+    for(int i = 0; (unsigned) i < distance_vector.size(); i++)
+        distance_vector[i] = std::numeric_limits<int>::max();
+    distance_vector[source_vertex] = 0;
+
+    while(!vertex_heap.empty()){
+        int vertex, distance;
+        vertex_heap.pop(vertex, distance);
+
+        visited[vertex] = true;
+
+        for(std::list<int>::iterator adj_vertex_it = _graph_lists[vertex].begin(); adj_vertex_it != _graph_lists[vertex].end(); adj_vertex_it++){
+            int new_distance = distance + weights[vertex][*adj_vertex_it];
+            if(!visited[*adj_vertex_it] && distance_vector[*adj_vertex_it] > new_distance){
+                vertex_heap.has_vertex(*adj_vertex_it) ? 
+                                    vertex_heap.update_distance(*adj_vertex_it , new_distance) :
+                                    vertex_heap.insert_vertex(*adj_vertex_it, new_distance);
+                distance_vector[*adj_vertex_it] = new_distance;
+            }
+        }
+        
+    }
 }
 
 void Graph::find_shortest_paths(const std::vector<int>& origins, 
                                 std::vector<std::vector<int> >& distances){
 
     std::vector<int> bell_distances;
-    std::vector<std::vector<int> > positive_weigths (std::vector<int>(_number_of_vertices, 0) );
+    std::vector<std::vector<int> > positive_weigths(_number_of_vertices, std::vector<int>(_number_of_vertices, 0) );
+    /*
     __bellman_ford(bell_distances);
 
-    for(int vertex = 0; vertex < _number_of_vertices; vertex++)
+     for(int vertex = 0; vertex < _number_of_vertices; vertex++)
         for(std::list<int>::iterator adj_vertex_it = _graph_lists[vertex].begin(); adj_vertex_it != _graph_lists[vertex].end(); adj_vertex_it++)
             positive_weigths[vertex][*adj_vertex_it] = _edges_weights[vertex][*adj_vertex_it] + 
                                                        bell_distances[vertex] - bell_distances[*adj_vertex_it];
 
-
-
+    */
     
 }
+

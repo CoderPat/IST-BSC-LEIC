@@ -24,6 +24,8 @@ public:
       
     bool empty();
 
+    bool has_vertex(int vertex);
+
     void pop(int& vertex, int& value);
 
     void insert_vertex(int vertex, int value);

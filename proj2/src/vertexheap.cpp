@@ -8,7 +8,7 @@ VertexHeap::VertexHeap(int root, int number_of_vertices) : _heap_size(0),
                                                            _heap_vector(number_of_vertices, 0),
                                                            _vertex_to_pos(number_of_vertices, 0) ,
                                                            _pos_to_vertex(number_of_vertices, 0){ 
-    for(int i = 0; i < _vertex_to_pos.size(); i++)
+    for(int i = 0; (unsigned) i < _vertex_to_pos.size(); i++)
         _pos_to_vertex[i] = _vertex_to_pos[i] = i;
 
     insert_vertex(root, 0);
@@ -34,6 +34,10 @@ void VertexHeap::insert_vertex(int vertex, int value){
         switch_vertices(_vertex_to_pos[vertex], _heap_size);
 
     __push_up(_heap_size++);
+}
+
+bool VertexHeap::has_vertex(int vertex){
+    return _heap_size != 0 && _vertex_to_pos[vertex] < _heap_size;
 }
 
 void VertexHeap::update_distance(int vertex, int new_distance){
