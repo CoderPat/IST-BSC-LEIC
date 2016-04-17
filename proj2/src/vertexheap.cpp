@@ -4,6 +4,7 @@
 #define LEFT true
 #define RIGHT false
 
+/** Contructor to initialise heap */
 VertexHeap::VertexHeap(int root, int number_of_vertices) : _heap_size(0),
                                                            _heap_vector(number_of_vertices, 0),
                                                            _vertex_to_pos(number_of_vertices, 0) ,
@@ -14,11 +15,18 @@ VertexHeap::VertexHeap(int root, int number_of_vertices) : _heap_size(0),
     insert_vertex(root, 0);
 }
 
-
+/* Checks if the heap is empty*/
 bool VertexHeap::empty(){
         return _heap_size == 0;
 }
 
+/*Checks if a vertex is in the heap by checking if its index is smaller than the tree size */
+bool VertexHeap::has_vertex(int vertex){
+    return _heap_size != 0 && _vertex_to_pos[vertex] < _heap_size;
+}
+
+
+/* Pops the minimum valued vertex, and corrects the heap */ 
 void VertexHeap::pop(int& vertex, int& value){
     switch_vertices(0, _heap_size-- - 1);
     __push_down(0);
@@ -26,6 +34,7 @@ void VertexHeap::pop(int& vertex, int& value){
     vertex = _pos_to_vertex[_heap_size];
 }
 
+/* Inserts a vertex at the end of the heap and then corrects the heap */
 void VertexHeap::insert_vertex(int vertex, int value){
 
     _heap_vector[_vertex_to_pos[vertex]] = value;
@@ -36,11 +45,8 @@ void VertexHeap::insert_vertex(int vertex, int value){
     __push_up(_heap_size++);
 }
 
-bool VertexHeap::has_vertex(int vertex){
-    return _heap_size != 0 && _vertex_to_pos[vertex] < _heap_size;
-}
-
-void VertexHeap::update_distance(int vertex, int new_distance){
+/* Updates the value of a vertex and then corrects the heap */
+void VertexHeap::update_value(int vertex, int new_distance){
     int index = _vertex_to_pos[vertex];
     _heap_vector[index] = new_distance;
     __push_up(index);

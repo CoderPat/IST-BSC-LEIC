@@ -45,7 +45,7 @@ void Graph::__dijkstras(int source_vertex,
             int new_distance = distance + weights[vertex][*adj_vertex_it];
             if(!visited[*adj_vertex_it] && distance_vector[*adj_vertex_it] > new_distance){
                 vertex_heap.has_vertex(*adj_vertex_it) ? 
-                                    vertex_heap.update_distance(*adj_vertex_it , new_distance) :
+                                    vertex_heap.update_value(*adj_vertex_it , new_distance) :
                                     vertex_heap.insert_vertex(*adj_vertex_it, new_distance);
                 distance_vector[*adj_vertex_it] = new_distance;
             }
