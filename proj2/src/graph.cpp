@@ -22,7 +22,19 @@ void Graph::add_edge(int vertex1, int vertex2, int weight){
 
 
 void Graph::__bellman_ford_reweight(std::vector<int>& distances){
-    //TODO
+    for(int i = 0; i < _number_of_vertices; i++) {
+      distances[i] = std::numeric_limits::infinity();
+    } 
+    for(int i = 0; i < _number_of_vertices; i++)
+        if(distance[vertex2] > 0)
+            distance[vertex2] = 0;
+    }
+    for(int i = _0; i < _number_of_vertices; i++){
+      for(int j = 0; j < _number_of_vertices; j++)
+        for(std::list<int>::iterator vertex_it = _graph_lists[j].begin(); vertex_it != _graph_lists[*vertex_it].end(); vertex_it++)
+          if(distance[vertex2] > distance[vertex1] + _edges_weights[vertex1][vertex2])
+             distance[vertex2] = distance[vertex1] + _edges_weights[vertex1][vertex2];
+    } 
 }
 
 void Graph::__dijkstras(int source_vertex, 
