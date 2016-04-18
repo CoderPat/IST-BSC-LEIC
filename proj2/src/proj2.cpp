@@ -1,6 +1,7 @@
 #include "graph.hpp"
 #include <vector>
 #include <limits>
+#include <numeric>
 #include <iostream>
 
 int main() {
@@ -13,12 +14,10 @@ int main() {
 	std::cin >> num_vertices >> num_branches >> num_connections;
 
 	//Get branches
-	std::vector<int> branches;
-	for(int i = 0; i < num_branches; i++) {
-		int branch;
-		std::cin >> branch;
-		branches.push_back(branch);
-	}
+	std::vector<int> branches(num_branches, 0);
+	for(int i = 0; i < num_branches; i++) 
+		std::cin >> branches[i];
+	
 
 	//Create graph and get edges
 	Graph graph = Graph(num_vertices);
@@ -29,28 +28,11 @@ int main() {
 	}
 
 	//Create distances matrix
-	std::vector<std::vector<int> > distances(num_branches, std::vector<int>(num_vertices, 0));	
+	std::vector<int> distances(num_branches, 0);	
+	int distance, location;
 
 	//Apply Johnson algorithm to vertices in branches and update distances
-	graph.find_shortest_paths(branches, distances);
-
-	//Find location with lowest distance to all branches
-	int distance = std::numeric_limits<int>::max(), location = 0;
-	for(int i = 0; i < num_vertices; i++){
-		int temp_distance = 0;
-		for(int j = 0; j < num_branches; j++) {
-			if(distances[j][1] == std::numeric_limits<int>::max()) {
-				temp_distance = std::numeric_limits<int>::max();
-				break;
-			}
-			temp_distance += distances[j][i];
-		}
-		if(distance > temp_distance) {
-			distance = temp_distance;
-			location = i; 
-		}
-		temp_distance = 0;
-	}
+	graph.find_shortest_paths(branches, distances, location, distance);
 
 	if(distance == std::numeric_limits<int>::max()) {
 		std::cout << "N" << std::endl;
@@ -66,7 +48,7 @@ int main() {
 	//Prints minimal distance between all branches and best meeting location
 	location--;
 	for(int i = 0; i < num_branches; i++) 
-		std::cout << distances[i][location] << " ";
+		std::cout << distances[i] << " ";
 	std::cout << std::endl;
 
 	return 0;

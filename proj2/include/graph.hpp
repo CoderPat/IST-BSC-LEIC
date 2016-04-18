@@ -14,10 +14,8 @@ private:
     int _number_of_vertices;
 
     /** The internal graph representation, as a vector of lists */
-    std::vector<std::list<int> > _graph_lists;
+    std::vector<std::list<std::pair<int, int> > > _graph_lists;
 
-    /** The weight matrix for the edges */
-    std::vector<std::vector<int> > _edges_weights;
 
 
 public:
@@ -58,7 +56,7 @@ public:
      * @param distances
      *          the vector to save the distances calculated
      */
-    void __dijkstras(int source_vertex, const std::vector<std::vector<int> >& weights, std::vector<int>& distances);
+    void __dijkstras(int source_vertex, std::vector<int>& distances);
 
      /**
      * Finds the shortest distance from a list of vertex, to all verteces
@@ -69,7 +67,9 @@ public:
      *          the matrix to save the distances (num_sources x num_vertex)
      */
     void find_shortest_paths(const std::vector<int>& origins,
-                             std::vector<std::vector<int> >& dist_matrix);
+                               std::vector<int>& origin_distances,
+                               int& location,
+                               int& dist);
 
 
 };
