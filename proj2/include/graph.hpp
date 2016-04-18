@@ -37,6 +37,11 @@ public:
     void add_edge(int vertex1, int vertex2, int weight);
 
     /**
+     * Invertes all the edges in the graph 
+     */
+    void __invert_graph();
+
+    /**
      * Executes the bellman-ford algorithm, with a virtual vertex, 
      * and returns the shortest distances from that vertex
      *
@@ -50,8 +55,6 @@ public:
      *
      * @param source_vertex
      *          the source vertex for the paths
-     * @param weights
-     *          the weight matrix to use (must only have positive weights)
      * @param distances
      *          the vector to save the distances calculated
      */
@@ -62,11 +65,16 @@ public:
      *
      * @param origins
      *          the list of vertex to calculate the distances
-     * @param dist_matrix
-     *          the matrix to save the distances (num_sources x num_vertex)
+     * @param origins_distances
+     *          the vector to save the distances to the best meetup
+     * @param location
+     *          the variable to save the best meetup location
+     * @param dist
+     *          the variable to save the overall sum of the distances
+     *
      */
-    void find_shortest_paths(const std::vector<int>& origins,
-                               std::vector<int>& origin_distances,
+    void find_best_meetup(const std::vector<int>& origins,
+                               std::vector<int>& origins_distances,
                                int& location,
                                int& dist);
 

@@ -1,7 +1,6 @@
 #include "graph.hpp"
 #include <vector>
 #include <limits>
-#include <numeric>
 #include <iostream>
 
 int main() {
@@ -32,15 +31,12 @@ int main() {
 	int distance, location;
 
 	//Apply Johnson algorithm to vertices in branches and update distances
-	graph.find_shortest_paths(branches, distances, location, distance);
+	graph.find_best_meetup(branches, distances, location, distance);
 
 	if(distance == std::numeric_limits<int>::max()) {
 		std::cout << "N" << std::endl;
 		return 0;
 	}
-
-	//Calculate best meeting location correct id
-	location++;
 
 	//Prints best meeting location and its distance from all branches
 	std::cout << location << " " << distance << std::endl;
