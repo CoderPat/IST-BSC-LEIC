@@ -7,7 +7,7 @@
 
 /** Constructor to simply size the vertex vector */
 Graph::Graph(int number_of_vertices) : _number_of_vertices(number_of_vertices), 
-                                       _graph_lists(number_of_vertices, std::list<std::pair<int, int> >()) {}
+                                       _graph_lists(number_of_vertices, std::vector<std::pair<int, int> >()) {}
 
 
 /** Adds the each vertex to the internal lists of the other one */
@@ -25,7 +25,7 @@ void Graph::__bellman_ford_reweight(std::vector<int>& distances){
     
     for(int i = 0; i < _number_of_vertices; i++)
         for(int j = 0; j < _number_of_vertices; j++)
-            for(std::list<std::pair<int, int> >::iterator vertex_pair_it = _graph_lists[j].begin(); vertex_pair_it != _graph_lists[j].end(); vertex_pair_it++)
+            for(std::vector<std::pair<int, int> >::iterator vertex_pair_it = _graph_lists[j].begin(); vertex_pair_it != _graph_lists[j].end(); vertex_pair_it++)
                 if(distances[(*vertex_pair_it).first] > distances[j] + (*vertex_pair_it).second)
                     distances[(*vertex_pair_it).first] = distances[j] + (*vertex_pair_it).second;
 }
@@ -35,6 +35,7 @@ void Graph::__dijkstras(int source_vertex,
 
     VertexHeap vertex_heap(source_vertex, _number_of_vertices);
     std::vector<bool> visited(_number_of_vertices, false);
+
     for(int i = 0; (unsigned) i < distance_vector.size(); i++)
         distance_vector[i] = std::numeric_limits<int>::max();
     distance_vector[source_vertex] = 0;
@@ -45,13 +46,14 @@ void Graph::__dijkstras(int source_vertex,
 
         visited[vertex] = true;
 
-        for(std::list<std::pair<int, int> >::iterator vertex_pair_it = _graph_lists[vertex].begin(); vertex_pair_it != _graph_lists[vertex].end(); vertex_pair_it++){
-            int new_distance = distance + (*vertex_pair_it).second;
-            if(!visited[(*vertex_pair_it).first] && distance_vector[(*vertex_pair_it).first] > new_distance){
-                vertex_heap.has_vertex((*vertex_pair_it).first) ? 
-                                    vertex_heap.update_value((*vertex_pair_it).first , new_distance) :
-                                    vertex_heap.insert_vertex((*vertex_pair_it).first, new_distance);
-                distance_vector[(*vertex_pair_it).first] = new_distance;
+        for(std::vector<std::pair<int, int> >::iterator vertex_pair_it = _graph_lists[vertex].begin(); vertex_pair_it != _graph_lists[vertex].end(); vertex_pair_it++){
+            int adj_vertex = (*vertex_pair_it).first, weight = (*vertex_pair_it).second;
+            int new_distance = distance + weight;
+            if(!visited[adj_vertex] && distance_vector[adj_vertex] > new_distance){
+                vertex_heap.has_vertex(adj_vertex) ? 
+                                    vertex_heap.update_value(adj_vertex , new_distance) :
+                                    vertex_heap.insert_vertex(adj_vertex, new_distance);
+                distance_vector[adj_vertex] = new_distance;
             }
         }
         
@@ -71,7 +73,7 @@ void Graph::find_shortest_paths(const std::vector<int>& origins,
     __bellman_ford_reweight(bell_distances);
 
     for(int vertex = 0; vertex < _number_of_vertices; vertex++)
-        for(std::list<std::pair<int, int> >::iterator vertex_pair_it = _graph_lists[vertex].begin(); vertex_pair_it != _graph_lists[vertex].end(); vertex_pair_it++)
+        for(std::vector<std::pair<int, int> >::iterator vertex_pair_it = _graph_lists[vertex].begin(); vertex_pair_it != _graph_lists[vertex].end(); vertex_pair_it++)
             (*vertex_pair_it).second = (*vertex_pair_it).second + bell_distances[vertex] - bell_distances[(*vertex_pair_it).first];
 
     for(int i = 0 ; i < (int) origins.size(); i++){
@@ -95,9 +97,9 @@ void Graph::find_shortest_paths(const std::vector<int>& origins,
         return;
 
 
-    std::vector<std::list<std::pair<int, int> > > inverted_graph (_number_of_vertices, std::list<std::pair<int, int> >());
+    std::vector<std::vector<std::pair<int, int> > > inverted_graph (_number_of_vertices, std::vector<std::pair<int, int> >());
     for(int vertex = 0; vertex < _number_of_vertices; vertex++)
-        for(std::list<std::pair<int, int> >::iterator vertex_pair_it = _graph_lists[vertex].begin(); vertex_pair_it != _graph_lists[vertex].end(); vertex_pair_it++)
+        for(std::vector<std::pair<int, int> >::iterator vertex_pair_it = _graph_lists[vertex].begin(); vertex_pair_it != _graph_lists[vertex].end(); vertex_pair_it++)
             inverted_graph[(*vertex_pair_it).first].push_back(std::make_pair(vertex, (*vertex_pair_it).second));
 
 

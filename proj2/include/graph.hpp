@@ -1,7 +1,6 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
-#include <list>
 #include <vector>
 
 /**
@@ -14,7 +13,7 @@ private:
     int _number_of_vertices;
 
     /** The internal graph representation, as a vector of lists */
-    std::vector<std::list<std::pair<int, int> > > _graph_lists;
+    std::vector<std::vector<std::pair<int, int> > > _graph_lists;
 
 
 
