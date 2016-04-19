@@ -7,7 +7,7 @@ function get_html_cover_tag(music_info, percentage = false){
 	 	html_tag += "data-percentage='" + percentage + "%'";
 	 }
 
-	 html_tag += "data-artist='" + music_info[0] + "' data-title='" + music_info[1] + "' src='" + music_info[2] + "' />";
+	 html_tag += "data-artist='" + music_info[0] + "' data-title='" + music_info[1] + "' src='" + music_info[3] + "' />";
 
 	 return html_tag;
 }
@@ -45,11 +45,16 @@ $(window).load(function(){
 	    none_voted_message.style.display = "none";
 	});
 
-	var all_musics = [["Mumford & Sons", "Believe", "icons/z-m.jpg", 0], 
-					  ["Snow Patrol", "Chasing Cars", "icons/snow.jpg", 0],
-					  ["Years and Years", "Take Shelter", "icons/y.jpg", 0], 
-					  ["Arcade fire", "Wake Up", "icons/su.jpg", 0],
-					  ["Aqua" ,"Barbie Girl", "icons/z-a.jpg", 0]];
+	var saved = decookienize("all_musics");
+	if(saved==false){
+		var all_musics = [["Mumford & Sons", "Believe", "Alternativo", "icons/z-m.jpg", 0], 
+					  	 ["Snow Patrol", "Chasing Cars", "Alternativo", "icons/snow.jpg", 0],
+					  	 ["Years and Years", "Take Shelter", "Eletronica", "icons/y.jpg", 0], 
+					  	 ["Arcade fire", "Wake Up", "Alternativo", "icons/su.jpg", 0],
+					  	 ["Aqua" ,"Barbie Girl", "Pop", "icons/z-a.jpg", 0]];
+	} else{
+		var all_musics = saved;
+	}
 
 
 
@@ -60,13 +65,13 @@ $(window).load(function(){
 		var none_voted = true;
 		var none_voted_message = document.getElementById("none_voted_message");
 		var top_musics = all_musics.slice();
-		var total_votes = top_musics.reduce(function(sum, music_info){return sum + music_info[3]}, 0);
-		top_musics.sort(function(music_info1, music_info2){return music_info2[3] - music_info1[3]})
+		var total_votes = top_musics.reduce(function(sum, music_info){return sum + music_info[4]}, 0);
+		top_musics.sort(function(music_info1, music_info2){return music_info2[4] - music_info1[4]})
 
 		for(var i = 0, len=top_musics.length; i< len; i++){
-			if(top_musics[i][3] !== 0){
+			if(top_musics[i][4] !== 0){
 				none_voted = false;
-				$('.coverflow').append(get_html_cover_tag(top_musics[i], Math.round(top_musics[i][3]*100/total_votes)));
+				$('.coverflow').append(get_html_cover_tag(top_musics[i], Math.round(top_musics[i][4]*100/total_votes)));
 			}
 		}
 		$('.coverflow').coverflow('index', 0);
@@ -97,7 +102,9 @@ $(window).load(function(){
 		
 		$('.coverflow').empty();
 		for(var i = 0, len=all_musics.length; i< len; i++){
-			if(all_musics[i][0].toLowerCase().indexOf(search_term.toLowerCase()) !== -1 || all_musics[i][1].toLowerCase().indexOf(search_term.toLowerCase()) != -1){
+			if(all_musics[i][0].toLowerCase().indexOf(search_term.toLowerCase()) !== -1 || 
+			   all_musics[i][1].toLowerCase().indexOf(search_term.toLowerCase()) !== -1 ||
+			   all_musics[i][2].toLowerCase().indexOf(search_term.toLowerCase()) !== -1){
 				$('.coverflow').append(get_html_cover_tag(all_musics[i]));
 				found = true;
 			}
@@ -122,10 +129,11 @@ $(window).load(function(){
 		all_musics.find(function(music_info){ 
 							return music_info[0] === voted.data('artist') &&
 								   music_info[1] === voted.data('title');
-						})[3]++;
+						})[4]++;
 		if( is_in_top_musics ){
 			$('#top_music_button').trigger('click');
 		}
+		cookienize(all_musics, "all_musics");
 	});
 	
 	
