@@ -7,7 +7,12 @@ var none_voted_message= document.getElementById("none_voted_message");
 
 // Get the <span> element that closes the modal
 var close_span = document.getElementsByClassName("close")[0];
+var close_span1 = document.getElementsByClassName("closecart")[0];
 
+// When the user clicks on <span> (x), close the modal
+close_span1.onclick = function() {
+    cart.style.display = "none";
+}
 
 // When the user clicks on the button, open the modal
 function not_implemented_fn() {
@@ -27,7 +32,7 @@ window.onclick = function(event) {
 	else if(event.target == vote_message){
 		vote_message.style.display = "none";
     }
-	
+
 	else if(event.target == not_found_message){
 		not_found.style.display = "none";
     }
@@ -35,4 +40,3 @@ window.onclick = function(event) {
 		none_voted_message.style.display = "none";
     }
 }
-

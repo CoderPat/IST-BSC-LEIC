@@ -7,6 +7,21 @@
         <link href='fonts/open_sans.css' rel='stylesheet' type='text/css'>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 
+	<style>
+
+	/* Iconfonts
+	 * ============================ */
+	@import "http://weloveiconfonts.com/api/?family=fontawesome";
+	@import "http://weloveiconfonts.com/api/?family=brandico";
+	[class*="fontawesome-"]:before {
+	  font-family: "FontAwesome", sans-serif;
+	}
+
+	[class*="brandico-"]:before {
+	  font-family: "brandico", sans-serif;
+	}
+
+	</style>
 	</head>
 
 	<body>
@@ -15,8 +30,11 @@
 		<div class="title">Pedir</div>
 		<div id="order_section">
 			<div>
-				<button class="button"onclick="not_implemented_fn()">
-					<div class="order_buttons" > Consultar <br> Pedido </div>
+				<button class="button"onclick="item(cart)">
+					<div class="order_buttons fontawesome-shopping-cart" >
+						Consultar <br> Pedido
+						<span class='cart-quantity empty'>0</span>
+					</div>
 				</button>
 			</div>
 			<div>
@@ -49,50 +67,41 @@
 		<!-- Contents for the Drinks button-->
 		<div class="menu_content" id="Drinks_content">
 			<div class="menu_header">
-				<ul id="menu">
-					<li>Bebidas</li>
-					<li><button type="button" onclick="list() add(1)"> < </button></li>
-				</ul>
+				<a>Bebidas</a>
 			</div>
-			<div><table>
-			  <tr onclick="item(pe)">
-			    <th><img  class="button_men" src="icons/vodka_cola.jpg" ></th>
-					<th> Bellini <br> 100ml Suco de Pêssego, 50ml Espumante </th>
-					<th><form >
-						Quantity :
-						<input type="number" id="quant_num"  name="quantity" min="1" max="1000">
-					</form></th>
-			  </tr>
-			  <tr >
-					<div class="impar">
-					<th><button type="button" onclick="alert('Hello world!')"><img class="button_men" src="icons/vodka_cola.jpg"></button></th>
-					<th>Bloody Mary <br> </th>
-				</div>
-				</tr>
-			  <tr>
-					<th><button type="button" onclick="alert('Hello world!')"><img class="button_men" src="icons/vodka_cola.jpg"></button></th>			    <td>$100</td>
-			  </tr>
-			</table></div>
+			<p class="bebidas">Bebidas alcoolicas</p>
+			<section class="shop"></section>
+
+			<p class="bebidas">Bebidas não alcoolicas</p>
+			<section class="shop1"></section>
 		</div>
 
 
-	<!-- See Order -->
-		<div id="list_box" class="list">
 
-				<!-- Box content -->
-				<div class="list_content">
-						<span class="close_s">x</span>
-						<p>Adicionar</p>
-				</div>
-				<div id="pe" class="list_order">
-					<ul id="bebidas">
-							<li ><a>Bellini</a></li>
-							<li><p id="demo" ></p></li>
-					</ul>
-				</div>
+		<!-- / Product Templates for Shop & Cart -->
 
-				<!-- ondrop="drop(event)" ondragover="allowDrop(event)"-->
-		</div>
+		<script id='productTemplate' type='text/template'>
+		  <div class="product">
+				<div class="merdas"></div>
+				<div class="p"></div>
+			  <div class="button">
+			  <div class="price"></div>
+			  <a class="addtocart">
+			  <div class="add">Adicionar</div>
+			  <div class="added">Adicionado!</div>
+			  </a>
+			  </div>
+		  </div>
+		</script>
+		<script id='cartItem' type='text/template'>
+		  <li><div class="cart-product">
+		  <input class="quantity" value="1">
+		  </div><div class="cart-description">
+		  <h3></h3>
+		  <span class="subtotal"></span>
+		  </div></li>
+		</script>
+
 
 
 
@@ -104,6 +113,7 @@
 		<!-- Contents for the Snacks button-->
 		<div class="menu_content" id="Snacks_content">
 			<div class="menu_header">Snacks</div>
+			<section class="aperitivos"></section>
 		</div>
 
 
@@ -142,6 +152,33 @@
         </button>
 
         </div>
+
+
+				<!--Cart-->
+
+
+
+
+
+				<div id='cart' class="cartcenas">
+					<span class="closecart">x</span>
+
+				<h2>Consultar Pedido</h2>
+
+				<ul class='cart-items'></ul>
+				<div class='total'>
+					<div class='subtotalTotal'>
+						Total
+						<span>€0.00</span>
+					</div>
+					<a class='checkout'>
+						Efetuar Pedido
+					</a>
+					<p class='error'></p>
+				</div>
+				</div>
+
+
 
 
         <!-- Not Implemeted Box -->

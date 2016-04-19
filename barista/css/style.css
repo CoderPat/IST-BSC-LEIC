@@ -9,7 +9,7 @@ body {
   cursor: pointer;
 }
 
-#covers_info { 
+#covers_info {
   position:   relative;
   text-align:   center;
   z-index:    999;
@@ -158,6 +158,22 @@ figcaption.footer_button_text{
     cursor: pointer;
 }
 
+/*Close for card*/
+
+.closecart {
+    color: black;
+    float: right;
+	font-family: 'Open Sans', sans-serif;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.closecart:hover,
+.closecart:focus {
+    color: grey;
+    text-decoration: none;
+    cursor: pointer;
+}
 
 /* Css for Votar música page */
 
@@ -312,8 +328,8 @@ ul#menu li {
 }
 
 .menu_header{
-  position:fixed;
-	background: #63AD21;
+  position:relative;
+  background:linear-gradient(#25488e,#101f3d);
 	font-family: 'Open Sans', sans-serif;
     font-weight: 300;
   width: 1000px;
@@ -392,4 +408,340 @@ ul#bebidas li {
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.product {
+  background-size: 300px 150px;
+  position: relative;
+  z-index: 1;
+  float: left;
+  width: 1000px;
+  height: 250px;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  background-size: 250px 250px;
+  content: "";
+
+
+  /* Hide product descriptions */
+  /* On hover, adds overlay on top of product image */
+  /* On hover, fade in product descriptions */
+  /* Styles for each shop item */
+  /* "Add to Cart" Buttom with 3D transforms and keyframe animation (Works best in Chrome) */
+}
+
+
+
+
+.product:hover:before {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  display: inline-block;
+  width: 100%;
+  height: 300px;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+
+.product .merdas {
+  margin-left: 260px;
+  padding: 15px 0;
+  border-bottom: 1px dotted gray;
+  font-size: 30px;
+  color: #1c2a33;
+}
+.product .p {
+  margin-left: 270px;
+  margin-bottom: 30px;
+  font-size: 20px;
+  line-height: 1.5em;
+  color: #1c2a33;
+}
+.product .button {
+  position: relative;
+  display: block;
+  width: 150px;
+  height: 50px;
+  text-align: center;
+  perspective: 1000px;
+  /* Button magic */
+}
+.product .button .price {
+  position: relative;
+
+  z-index: 1;
+  left: 280px;
+  top: 47px; /*150px;*/
+  display: block;
+  width: 50px;
+  height: 46px;
+  border-right: 1px solid #9cdaf0;
+  border-radius: 2px 0 0 2px;
+  background: #fff;
+  line-height: 45px;
+  color: #515151;
+  transform: rotateY(0deg) translateZ(25px);
+}
+.product .button .addtocart {
+  position: absolute;
+  background: #7cbae6;
+  color: #fff;
+  left: 355px;
+  top: 50px;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: translateZ(-100px);
+  transition: transform 300ms;
+  cursor: pointer;
+}
+.product .button .addtocart > div {
+  position: absolute;
+  display: block;
+  width: 150px;
+  height: 50px;
+  border-radius: 0 2px 2px 0;
+  line-height: 50px;
+}
+.product .button .addtocart > .add {
+  background: #fff;
+  color: #fff;
+  background: #7cbae6;
+  transform: rotateY(0deg) translateZ(25px);
+  transition: background 150ms ease-out;
+}
+
+.product .button .addtocart > .added {
+  background: #f63;
+  color: #fff;
+  transform: rotateX(90deg) translateZ(25px);
+}
+.product .button .addtocart.active {
+  animation-name: rotate;
+  animation-duration: 1s;
+}
+
+
+
+.bebidas{
+  border-bottom: 1px solid #25488e;
+  font-size: 30px;
+  line-height: 1.5em;
+
+  color: #1c2a33;
+}
+
+
+
+
+
+
+/* Cart & Cart Items
+ * ============================ */
+.cartcenas{
+  display: none;
+  position: relative;
+}
+
+#cart {
+  background: #FFFFF1;
+  left: 0px;
+  height: 875px;
+  width: 300px;
+}
+
+#cart > h2 {
+  padding-top: 0.9em;
+  height: 64px;
+  padding-right: 1em;
+  border-left: 1px dotted #515151;
+  border-bottom: 1px solid #7cbae6;
+  margin: 0;
+  background: #0091FF;
+  font-weight: normal;
+  font-size: 1.2em;
+  text-align: left;
+  line-height: 64px;
+}
+
+/* Styles for each cart item */
+.cart-items {
+  padding: 0;
+}
+
+.cart-items > li {
+  margin: 30px 20px 30px;
+  border: 1px solid #333;
+  background: #202020;
+  list-style: none;
+}
+
+.cart-product {
+  position: relative;
+  display: inline-block;
+  height: 75px;
+  width: 75px;
+  background-size: cover;
+  vertical-align: top;
+}
+.cart-product input.quantity {
+  width: 75px;
+  height: 75px;
+  padding: 0;
+  border: 0;
+  border-right: 1px solid #333;
+  background: rgba(0, 0, 0, 0.5);
+  font-size: 2.5em;
+  line-height: 75px;
+  text-align: center;
+  color: #fff;
+}
+
+.cart-description {
+  display: inline-block;
+  height: 75px;
+  width: 160px;
+  margin-left: 10px;
+  text-align: right;
+  vertical-align: top;
+}
+.cart-description h3 {
+  margin: 8px;
+  font-size: 1em;
+  color: #7cbae6;
+}
+.cart-description .subtotal {
+  position: relative;
+  display: inline-block;
+  margin: 8px;
+  font-size: 0.8em;
+}
+
+/* Styling for Total Costs */
+.total {
+  margin-top: 50px;
+}
+
+.total > * {
+  display: block;
+  padding-bottom: 10px;
+  margin: 0 20px 10px 20px;
+  font-size: 0.8em;
+  text-align: left;
+}
+
+.total span {
+  float: right;
+  text-align: right;
+}
+
+.subtotalTotal {
+  border-bottom: 1px dotted #515151;
+}
+
+a.checkout {
+  height: 35px;
+  padding: 0;
+  margin-top: 30px;
+  border-radius: 3px;
+  background: #247ebe;
+  font-size: 1em;
+  text-align: center;
+  text-transform: uppercase;
+  line-height: 35px;
+  transition: background 150ms ease-out;
+  cursor: pointer;
+}
+a.checkout:hover {
+  background: #3c98da;
+}
+a.checkout.active {
+  animation-name: shake;
+  animation-duration: 800ms;
+}
+
+.error {
+  display: none;
+  text-align: center;
+}
+
+.error:after {
+  display: block;
+  font-size: 0.9em;
+  text-transform: none;
+  content: "Desculpe, o empregado nao se encontra disponivel!";
+}
+
+span.cart-quantity {
+  position: relative;
+  padding-top: -2px;
+  padding-left: 5px;
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #f63;
+  font-size: 0.6em;
+  line-height: 20px;
+  text-align: center;
+  color: #fff;
+}
+.cart-quantity.empty {
+  display: none;
+}
+
+
+
+
+
+
+
+/* Media Queries
+ * ============================ */
+@media (max-width: 720px) {
+  .product {
+    width: 100%;
+  }
+}
+@media (max-width: 420px) {
+  /* Hide text in the cart link to save room */
+  .cart-text > span {
+    display: none;
+  }
+}
+/* Keyframe Animations
+ * ============================ */
+@keyframes rotate {
+  35% {
+    transform: translateZ(-100px) rotateX(-90deg);
+  }
+  72% {
+    transform: translateZ(-100px) rotateX(-90deg);
+  }
+  100% {
+    transform: translateZ(-100px);
+  }
+}
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-5px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(5px);
+  }
 }
