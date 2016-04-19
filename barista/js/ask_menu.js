@@ -9,8 +9,10 @@ $(document).ready(function() {
 	};
 
 	var bebidas_nao_alcoolicas ={
-		'Arizona Sunset' : ['Arizona Sunset', "Sumo", 3, 'http://www.stepbystep.com/wp-content/uploads/2013/05/Arizona-Sunset-Cocktail-Recipe-21-e1368612439188.jpg', 1],
-    'Limonada' : ['Limonada', "Limao e açucar", 2, 'http://del.h-cdn.co/assets/cm/15/10/54f685750c488_-_the_ultimate_ketel_one_lemonade_hires-xl.jpg', 2]
+		'Arizona Sunset' : ['Arizona Sunset', "Sumo", 3, 'http://www.stepbystep.com/wp-content/uploads/2013/05/Arizona-Sunset-Cocktail-Recipe-21-e1368612439188.jpg', 5],
+    'Limonada' : ['Limonada', "Limao e açucar", 2, 'http://del.h-cdn.co/assets/cm/15/10/54f685750c488_-_the_ultimate_ketel_one_lemonade_hires-xl.jpg', 6],
+		'Caipirinha' : ['Caipirinha', "cachaça, limão-taiti não descascado, açúcar e gelo", 25, 'http://cucafrescaspirit.com/wp-content/files_mf/cache/th_e163919b020bc293009280a9f28b0587_cocktail_notes.png', 7]
+
 	};
 
 
@@ -125,6 +127,17 @@ $(document).ready(function() {
     updateCartQuantity();
     calculateAndUpdate();
   });
+
+	//checkout request
+
+	$('.checkout').on('click', function () {
+		$(this).addClass('active');
+		$('.error').css('display', 'block');
+		setTimeout(function () {
+			$('.checkout').removeClass('active');
+			$('.error').css('display', 'none');
+		}, 1000);
+	});
 
 	// Calculates subtotal for an item
 

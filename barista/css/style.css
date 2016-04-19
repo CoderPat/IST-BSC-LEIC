@@ -275,7 +275,7 @@ figcaption.footer_button_text{
 
 #order_section{
 	position:absolute;
-	top:30%;
+	top:40%;
 	padding-left:30px;
 }
 
@@ -553,6 +553,7 @@ ul#bebidas li {
 .cartcenas{
   display: none;
   position: relative;
+  overflow: scroll;
 }
 
 #cart {
@@ -564,12 +565,13 @@ ul#bebidas li {
 
 #cart > h2 {
   padding-top: 0.9em;
+  color: #fff;
   height: 64px;
   padding-right: 1em;
   border-left: 1px dotted #515151;
   border-bottom: 1px solid #7cbae6;
   margin: 0;
-  background: #0091FF;
+  background:linear-gradient(#25488e,#101f3d);
   font-weight: normal;
   font-size: 1.2em;
   text-align: left;
@@ -583,8 +585,7 @@ ul#bebidas li {
 
 .cart-items > li {
   margin: 30px 20px 30px;
-  border: 1px solid #333;
-  background: #202020;
+  background:linear-gradient(#25488e,#101f3d);
   list-style: none;
 }
 
@@ -620,9 +621,10 @@ ul#bebidas li {
 .cart-description h3 {
   margin: 8px;
   font-size: 1em;
-  color: #7cbae6;
+  color: #fff;
 }
 .cart-description .subtotal {
+  color: #fff;
   position: relative;
   display: inline-block;
   margin: 8px;
@@ -652,6 +654,7 @@ ul#bebidas li {
 }
 
 a.checkout {
+  position: relative;
   height: 35px;
   padding: 0;
   margin-top: 30px;
@@ -663,13 +666,14 @@ a.checkout {
   line-height: 35px;
   transition: background 150ms ease-out;
   cursor: pointer;
+  margin-bottom: 20px;
 }
 a.checkout:hover {
   background: #3c98da;
 }
 a.checkout.active {
-  animation-name: shake;
-  animation-duration: 800ms;
+  animation-duration: 10s;
+  display: none;
 }
 
 .error {
@@ -681,7 +685,6 @@ a.checkout.active {
   display: block;
   font-size: 0.9em;
   text-transform: none;
-  content: "Desculpe, o empregado nao se encontra disponivel!";
 }
 
 span.cart-quantity {
