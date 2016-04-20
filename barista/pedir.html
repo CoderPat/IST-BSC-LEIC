@@ -6,6 +6,7 @@
     	<link rel="stylesheet" href="css/style.css">
         <link href='fonts/open_sans.css' rel='stylesheet' type='text/css'>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+		<script src="js/jquery.balloon.js"></script>
 
 	<style>
 
@@ -137,7 +138,7 @@
         <figcaption class="footer_button_text"> Pagar </figcaption>
         </button>
 
-        <button class="button" id="bill_button" onclick="not_implemented_fn()">
+        <button class="button" id="bill_button" title="test">
         <img class="footer_icons" src="icons/bill.png" id="bill_icon">
         <figcaption class="footer_button_text"> Conta </figcaption>
         </button>
@@ -183,7 +184,19 @@
             </div>
         </div>
 
+        <!-- Not Implemeted Box -->
+        <div id="order_placed_box" class="modal">
+
+            <!-- Box content -->
+            <div class="modal_content">
+                <span class="close">x</span>
+                <p>Pedido efetuado com sucesso!</p>
+            </div>
+        </div>
+
     <script src="js/modals.js"></script>
+	<script src="js/cookie_utils.js"></script>
+    <script src="js/order.js"></script>
     <script src="js/ask_menu.js"></script>
 
 	</body>

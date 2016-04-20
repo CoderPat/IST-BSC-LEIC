@@ -131,12 +131,25 @@ $(document).ready(function() {
 	//checkout request
 
 	$('.checkout').on('click', function () {
-		$(this).addClass('active');
-		$('.error').css('display', 'block');
-		setTimeout(function () {
-			$('.checkout').removeClass('active');
-			$('.error').css('display', 'none');
-		}, 1000);
+		var raw_items = $cart.children().toArray();
+		var items = []
+
+		for(var i = 0; i < raw_items.length; i++)
+			items.push([$(raw_items[i]).find('h3').text(),
+					    $(raw_items[i]).data('price'), 
+					    $(raw_items[i]).find('.quantity').val(),
+					    $(raw_items[i]).find('.cart-product').css('background-image')]);
+
+
+		console.log(items[0][3]);
+
+		add_to_order(items);
+
+		$("#order_placed_box").css("display", "block");
+		$cart.empty();
+
+		updateCartQuantity();
+    	calculateAndUpdate();
 	});
 
 	// Calculates subtotal for an item
