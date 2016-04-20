@@ -2,6 +2,15 @@ body {
     background-image: url("../background.png");
 }
 
+.left
+{
+  float: left;
+}
+
+.right
+{
+  float: right;
+}
 
 .coverflow .cover {
   height: 400px;

@@ -132,9 +132,20 @@ $(document).ready(function() {
 
 	$('.checkout').on('click', function () {
 		var raw_items = $cart.children().toArray();
-		add_to_order(raw_items);
+		var items = []
 
-		$("#order_placed_box").css("display", "block")
+		for(var i = 0; i < raw_items.length; i++)
+			items.push([$(raw_items[i]).find('h3').text(),
+					    $(raw_items[i]).data('price'), 
+					    $(raw_items[i]).find('.quantity').val(),
+					    $(raw_items[i]).find('.cart-product').css('background-image')]);
+
+
+		console.log(items[0][3]);
+
+		add_to_order(items);
+
+		$("#order_placed_box").css("display", "block");
 		$cart.empty();
 
 		updateCartQuantity();
