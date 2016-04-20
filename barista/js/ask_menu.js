@@ -133,7 +133,12 @@ $(document).ready(function() {
 	$('.checkout').on('click', function () {
 		var raw_items = $cart.children().toArray();
 		add_to_order(raw_items);
-		console.log(get_order());
+
+		$("#order_placed_box").css("display", "block")
+		$cart.empty();
+
+		updateCartQuantity();
+    	calculateAndUpdate();
 	});
 
 	// Calculates subtotal for an item
