@@ -131,12 +131,9 @@ $(document).ready(function() {
 	//checkout request
 
 	$('.checkout').on('click', function () {
-		$(this).addClass('active');
-		$('.error').css('display', 'block');
-		setTimeout(function () {
-			$('.checkout').removeClass('active');
-			$('.error').css('display', 'none');
-		}, 1000);
+		var raw_items = $cart.children().toArray();
+		add_to_order(raw_items);
+		console.log(get_order());
 	});
 
 	// Calculates subtotal for an item
