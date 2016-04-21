@@ -91,6 +91,16 @@ $(document).ready(function() {
 		calculateAndUpdate();
 	});
 
+  $('body').on('click', '.cart-description', function() {
+  		var item = $(this).parents('li').children('.cart-product');
+  	 	var quant = item.find('.quantity').val() - 1;
+  	 	if(quant>0)
+  	 		item.find('.quantity').val(quant);
+  	 	else
+  	 		$(this).parents('li').remove();
+  	 	updateCartQuantity();
+    	calculateAndUpdate();
+  });
 
 	// Add item from the shop to the cart
   // If item is already in the cart, +1 to quantity
