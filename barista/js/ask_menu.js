@@ -15,11 +15,68 @@ $(document).ready(function() {
 
 	};
 
+	var comida ={
+		'Batatas' : ['Batatas', "Batata, oleo e sal", 3, 'http://www.multireceitas.com.br/wp-content/uploads/2015/06/batata-fritas.jpg', 8],
+		'HotDog' : ['HotDog', "Limao e açucar", 2, 'http://merchantsmarthouston.com/wp-content/uploads/2013/01/hot_dog.jpg', 9],
+		'Hamburger' : ['Hamburger', "Carne, alface", 25, 'http://www.lojasblackapron.com/model_hamb/model_hamb4.jpg', 10]
 
-	var $aperitivos = $('.aperitivos')
+	};
+	var ingredientes={
+		'Rum' : ['Rum',  3, 'http://liquor.s3.amazonaws.com/wp-content/uploads/2014/09/Blackheart-Rum.jpg', 11],
+		'Gin' : ['Gin',  2, 'http://i2.wp.com/apublicdefender.com/wp-content/uploads/2012/09/AbsolutVodka-750ml.gif', 12],
+		'Limão' : ['Limão',  2, 'http://khepristudio.com/raw/wp-content/uploads/2010/09/lime.jpg', 13],
+		'Vodka' : ['Vodka',  25, 'http://pernod-ricard.com/files/gamme/i1g1_small_13.png', 14]
+
+	};
+
+	var $comida = $('.comida')
 	var $shop1 = $('.shop1')
 	var $shop = $('.shop')
 	var $cart = $('.cart-items')
+	var $ingredientes = $('.ingredientes')
+
+
+	for(var item in ingredientes){
+		var itemName = ingredientes[item][0],
+		itemPrice = ingredientes[item][1],
+		itemImg = ingredientes[item][2],
+		itemId = ingredientes[item][3],
+		$template = $($('#productTemplateCriar').html());
+
+		$template.find('.merdascenas').text(itemName);
+		$template.find('.pricecenas').text('€' + itemPrice);
+		$template.css('background', 'url(' + itemImg + ')')
+
+		$template.data('id', itemId);
+		$template.data('name', itemName);
+		$template.data('price', itemPrice);
+		$template.data('image', itemImg);
+
+		$ingredientes.append($template);
+	}
+
+
+	for(var item in comida){
+		var itemName = comida[item][0],
+		itemDescription = comida[item][1],
+		itemPrice = comida[item][2],
+		itemImg = comida[item][3],
+		itemId = comida[item][4],
+		$template = $($('#productTemplate').html());
+
+		$template.find('.merdas').text(itemName);
+		$template.find('.p').text(itemDescription);
+		$template.find('.price').text('€' + itemPrice);
+		$template.css('background-image', 'url(' + itemImg + ')');
+
+		$template.data('id', itemId);
+		$template.data('name', itemName);
+		$template.data('price', itemPrice);
+		$template.data('image', itemImg);
+
+		$comida.append($template);
+	}
+
 
 	for(var item in bebidas_alcoolicas){
 		var itemName = bebidas_alcoolicas[item][0],
@@ -125,7 +182,7 @@ $(document).ready(function() {
     } else {
       $template.find('.cart-product').css('background-image', 'url(' + $item.data('image') + ')');
       $template.find('h3').text($item.data('name'));
-      $template.find('.subtotal').text('$' + $item.data('price'));
+      $template.find('.subtotal').text('€' + $item.data('price'));
 
       $template.data('id', $item.data('id'));
       $template.data('price', $item.data('price'));
@@ -146,7 +203,7 @@ $(document).ready(function() {
 
 		for(var i = 0; i < raw_items.length; i++)
 			items.push([$(raw_items[i]).find('h3').text(),
-					    $(raw_items[i]).data('price'), 
+					    $(raw_items[i]).data('price'),
 					    $(raw_items[i]).find('.quantity').val(),
 					    $(raw_items[i]).find('.cart-product').css('background-image')]);
 
@@ -168,7 +225,7 @@ $(document).ready(function() {
     var quantity = $item.find('.quantity').val(),
         price = $item.data('price'),
         subtotal = quantity * price;
-    $item.find('.subtotal').text('$' + subtotal);
+    $item.find('.subtotal').text('€' + subtotal);
     $item.data('subtotal', subtotal);
   }
 
@@ -234,6 +291,54 @@ $(document).ready(function() {
 	      $('.addtocart').removeClass('active');
 	    }, 1000);
 	  });
+
+		// Trigger animation on Add to Cart button click Criar
+
+		$('.addtocartcenas').on('click', function () {
+			$(this).addClass('active');
+			setTimeout(function () {
+				$('.addtocartcenas').removeClass('active');
+			}, 1000);
+		});
+
+
+
+
+/*    Add to card Criar Bebida*/
+		  $('body').on('click', '.productcenas .addcenas', function() {
+				$(this).addClass('active');
+		    var items = $cart.children(),
+		        $item = $(this).parents('.productcenas'),
+		        $template = $($('#cartItem').html()),
+		        $matched = null,
+		        quantity = 0;
+
+		    $matched = items.filter(function(index) {
+		      var $this = $(this);
+		      return $this.data('id') === $item.data('id');
+		    });
+
+		    if ($matched.length) {
+					quantity = +$matched.find('.quantity').val() + 1;
+					$matched.find('.quantity').val(quantity);
+					calculateSubtotal($matched);
+
+		    } else {
+		      $template.find('.cart-product').css('background-image', 'url(' + $item.data('image') + ')');
+		      $template.find('h3').text($item.data('name'));
+		      $template.find('.subtotal').text('€' + $item.data('price'));
+
+		      $template.data('id', $item.data('id'));
+		      $template.data('price', $item.data('price'));
+		      $template.data('subtotal', $item.data('price'));
+
+		      $cart.append($template);
+		    }
+
+		    updateCartQuantity();
+		    calculateAndUpdate();
+		  });
+
 
 
 });
