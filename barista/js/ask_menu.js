@@ -148,6 +148,16 @@ $(document).ready(function() {
 		calculateAndUpdate();
 	});
 
+  $('body').on('click', '.cart-description', function() {
+  		var item = $(this).parents('li').children('.cart-product');
+  	 	var quant = item.find('.quantity').val() - 1;
+  	 	if(quant>0)
+  	 		item.find('.quantity').val(quant);
+  	 	else
+  	 		$(this).parents('li').remove();
+  	 	updateCartQuantity();
+    	calculateAndUpdate();
+  });
 
 	// Add item from the shop to the cart
   // If item is already in the cart, +1 to quantity
@@ -189,8 +199,24 @@ $(document).ready(function() {
 
 	$('.checkout').on('click', function () {
 		var raw_items = $cart.children().toArray();
-		add_to_order(raw_items);
-		console.log(get_order());
+		var items = []
+
+		for(var i = 0; i < raw_items.length; i++)
+			items.push([$(raw_items[i]).find('h3').text(),
+					    $(raw_items[i]).data('price'), 
+					    $(raw_items[i]).find('.quantity').val(),
+					    $(raw_items[i]).find('.cart-product').css('background-image')]);
+
+
+		console.log(items[0][3]);
+
+		add_to_order(items);
+
+		$("#order_placed_box").css("display", "block");
+		$cart.empty();
+
+		updateCartQuantity();
+    	calculateAndUpdate();
 	});
 
 	// Calculates subtotal for an item
