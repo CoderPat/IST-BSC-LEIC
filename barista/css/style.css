@@ -418,20 +418,121 @@ ul#bebidas li {
 
 
 
-
-
-
-.product {
-  background-size: 300px 150px;
+.productcenas {
   position: relative;
   z-index: 1;
   float: left;
-  width: 1000px;
+  width: 250px;
   height: 250px;
   overflow: hidden;
   background-repeat: no-repeat;
   background-size: 250px 250px;
   content: "";
+  opacity: 1.0;
+
+}
+
+.productcenas.active{
+  opacity: 0.4;
+
+}
+
+.productcenas .merdascenas {
+  font-family: 'Open Sans', sans-serif;
+  padding: 15px 0;
+  bottom: 0;
+  font-size: 30px;
+  color: #1c2a33;
+}
+
+.productcenas:hover:before {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  display: inline-block;
+  width: 100%;
+  height: 300px;
+  background: rgba(0, 0, 0, 0.8);
+}
+.productcenas .buttoncenas {
+  position: relative;
+  display: block;
+  width: 150px;
+  height: 50px;
+  text-align: center;
+  perspective: 1000px;
+  /* Button magic */
+}
+.productcenas .buttoncenas .pricecenas {
+  position: relative;
+
+  z-index: 1;
+  left: 30px;
+  top: 47px; /*150px;*/
+  display: block;
+  width: 50px;
+  height: 46px;
+  border-right: 1px solid #9cdaf0;
+  border-radius: 2px 0 0 2px;
+  background: #fff;
+  line-height: 45px;
+  color: #515151;
+  transform: rotateY(0deg) translateZ(25px);
+}
+.productcenas .buttoncenas .addtocartcenas {
+  position: absolute;
+  background: #7cbae6;
+  color: #fff;
+  top: 50px;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: translateZ(-100px);
+  cursor: pointer;
+}
+.productcenas .buttoncenas .addtocartcenas > div {
+  position: absolute;
+  display: block;
+  width: 150px;
+  height: 50px;
+  border-radius: 0 2px 2px 0;
+  line-height: 50px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.product {
+  position: relative;
+  z-index: 1;
+  float: left;
+  width: 990px;
+  height: 250px;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  background-size: 250px 250px;
+  content: "";
+
 
 
   /* Hide product descriptions */
@@ -453,6 +554,7 @@ ul#bebidas li {
   height: 300px;
   background: rgba(0, 0, 0, 0.8);
 }
+
 
 
 .product .merdas {
@@ -704,6 +806,9 @@ span.cart-quantity {
 .cart-quantity.empty {
   display: none;
 }
+
+
+
 
 
 
