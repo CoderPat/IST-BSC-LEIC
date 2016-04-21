@@ -22,10 +22,10 @@ $(document).ready(function() {
 
 	};
 	var ingredientes={
-		'Cenas3' : ['Cenas3',  3, 'http://blogs-images.forbes.com/causeintegration/files/2014/02/key-ingredients.jpg', 11],
-		'Cenas1' : ['Cenas1',  2, 'http://tomtunguz.com/images/ingredients.jpg', 12],
-		'Cenas4' : ['Cenas4',  2, 'http://puu.sh/opTNx/870afb4665.png', 13],
-		'Cenas2' : ['Cenas2',  25, 'http://puu.sh/opTFR/a400f0d99e.png', 15]
+		'Rum' : ['Rum',  3, 'http://liquor.s3.amazonaws.com/wp-content/uploads/2014/09/Blackheart-Rum.jpg', 11],
+		'Gin' : ['Gin',  2, 'http://i2.wp.com/apublicdefender.com/wp-content/uploads/2012/09/AbsolutVodka-750ml.gif', 12],
+		'Limão' : ['Limão',  2, 'http://khepristudio.com/raw/wp-content/uploads/2010/09/lime.jpg', 13],
+		'Vodka' : ['Vodka',  25, 'http://pernod-ricard.com/files/gamme/i1g1_small_13.png', 14]
 
 	};
 
@@ -203,7 +203,7 @@ $(document).ready(function() {
 
 		for(var i = 0; i < raw_items.length; i++)
 			items.push([$(raw_items[i]).find('h3').text(),
-					    $(raw_items[i]).data('price'), 
+					    $(raw_items[i]).data('price'),
 					    $(raw_items[i]).find('.quantity').val(),
 					    $(raw_items[i]).find('.cart-product').css('background-image')]);
 
@@ -319,8 +319,10 @@ $(document).ready(function() {
 		    });
 
 		    if ($matched.length) {
-		      $matched.find('.quantity').val(quantity);
-		      calculateSubtotal($matched);
+					quantity = +$matched.find('.quantity').val() + 1;
+					$matched.find('.quantity').val(quantity);
+					calculateSubtotal($matched);
+
 		    } else {
 		      $template.find('.cart-product').css('background-image', 'url(' + $item.data('image') + ')');
 		      $template.find('h3').text($item.data('name'));
