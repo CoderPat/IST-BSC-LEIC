@@ -773,7 +773,7 @@ span.cart-quantity {
  }
  #Pay{
 	left: 1050px;
-	top: -1370px;
+	top: -1570px;
  }
  .paymentHeader{
 	position:relative;
@@ -855,6 +855,8 @@ span.cart-quantity {
 	top: -670px;
 	width: 200px;
 	height:700px;
+	padding-left:50px;
+	padding-top: 200px;
 	
 }
 .pay-description {
@@ -863,4 +865,50 @@ span.cart-quantity {
   margin-left: -3px;
   vertical-align: top;
   width: 467px;
+}
+
+div.quantity {
+  width: 75px;
+  height: 75px;
+  padding: 0;
+  border: 0;
+  border-right: 1px solid #333;
+  background: rgba(0, 0, 0, 0.5);
+  font-size: 2.5em;
+  line-height: 75px;
+  text-align: center;
+  color: #fff;
+}
+.p-description {
+  display: inline-block;
+  height: 75px;
+  width: 160px;
+  margin-left: 10px;
+  text-align: right;
+  vertical-align: top;
+}
+.p-description h3 {
+  margin: 8px;
+  font-size: 1em;
+  color: #fff;
+}
+.p-description .subtotal {
+  color: #fff;
+  position: relative;
+  display: inline-block;
+  margin: 8px;
+  font-size: 0.8em;
+}
+#payment_div{
+	display: none;
+}
+#multibanco_button{
+	position:relative;
+	left: 200px;
+	top: 10px;
+}
+#a{
+	font-family: 'Open Sans', sans-serif;
+    font-weight: 200;
+	color: #FFFFFF;
 }
