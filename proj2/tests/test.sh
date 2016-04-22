@@ -30,7 +30,7 @@ if [ "$1" == "-perf" ]; then
 		#prints .dat file with the V+E <-> Intructions correspondence
 		graph_info=$(head -n 1 $inputfile)
 		graph_info_array=($graph_info)
-		echo $((${graph_info_array// /+})) ${instr%,,*} >> $perf_file
+		echo " ${graph_info_array[2]}*${graph_info_array[1]} + ${graph_info_array[2]}*${graph_info_array[1]}*l(${graph_info_array[0]})/l(2)" ${instr%,,*} >> $perf_file
 	done
 
 	rm *.random.in
