@@ -422,8 +422,8 @@ ul#bebidas li {
 
 
 .productcenas {
-  width: 250px;
-  height: 250px;
+  width: 220px;
+  height: 220px;
   content: "";
   position: relative;
   display: inline-block;
@@ -488,24 +488,20 @@ ul#bebidas li {
 
 
 
+.closecart {
+    color: black;
+    float: right;
+	font-family: 'Open Sans', sans-serif;
+    font-size: 28px;
+    font-weight: bold;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.closecart:hover,
+.closecart:focus {
+    color: grey;
+    text-decoration: none;
+    cursor: pointer;
+}
 
 
 
@@ -545,6 +541,7 @@ ul#bebidas li {
 
 
 .product .merdas {
+	font-family: 'Open Sans', sans-serif;
   margin-left: 260px;
   padding: 15px 0;
   border-bottom: 1px dotted gray;
@@ -560,6 +557,7 @@ ul#bebidas li {
   font-family:'Open Sans', sans-serif;
 }
 .product .button {
+	font-family: 'Open Sans', sans-serif;
   position: relative;
   display: block;
   width: 150px;
@@ -648,6 +646,7 @@ ul#bebidas li {
 }
 
 #cart {
+  font-family: 'Open Sans', sans-serif;
   background: #FFFFF1;
   left: 0px;
   height: 875px;
