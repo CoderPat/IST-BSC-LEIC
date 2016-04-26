@@ -703,9 +703,9 @@ ul#bebidas li {
 .cart-description {
   display: inline-block;
   height: 75px;
-  width: 160px;
-  margin-left: 10px;
-  text-align: right;
+  width: 140px;
+  margin-left: 40px;
+  text-align: center;
   vertical-align: top;
 }
 .cart-description h3 {
@@ -714,6 +714,16 @@ ul#bebidas li {
   font-size: 1em;
   color: #fff;
 }
+
+.cart-description .subtract {
+  color: #fff;
+  display: inline-block;
+  position: absolute;
+  top: 40%;
+  right: 40%;
+  font-size: 1em;
+}
+
 .cart-description .subtotal {
   color: #fff;
   position: relative;
@@ -722,6 +732,22 @@ ul#bebidas li {
   font-family:'Open Sans', sans-serif;
   font-size: 0.8em;
 }
+
+.cart-minus{
+  display: inline-block;
+  height: 75px;
+  width: 50px;
+  vertical-align: top;
+  text-align: right;
+}
+
+.cart-minus h4{
+  margin: 8px;
+  font-family:'Open Sans', sans-serif;
+  font-size: 2em;
+  color: #fff;
+}
+
 
 /* Styling for Total Costs */
 .total {
@@ -943,7 +969,7 @@ ul#list_ingridientes li{
   padding:0;
   margin: 10px 10px 10px;
   list-style: none;
-  background:linear-gradient(#bfbfbf,#bfbfbf);
+  background: #3333ff;
 }
 
 /*#PayContent > li{
@@ -1003,6 +1029,7 @@ div.quantity {
   font-weight: 200;
   font-size: 130%;
 }
+
 .p-description .subtotal {
   color: #fff;
   position: relative;

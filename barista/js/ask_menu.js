@@ -148,7 +148,7 @@ $(document).ready(function() {
 		calculateAndUpdate();
 	});
 
-  $('body').on('click', '.cart-description', function() {
+  $('body').on('click', '.cart-minus', function() {
   		var item = $(this).parents('li').children('.cart-product');
   	 	var quant = item.find('.quantity').val() - 1;
   	 	if(quant>0)

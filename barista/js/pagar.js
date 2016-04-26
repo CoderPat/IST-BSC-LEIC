@@ -33,10 +33,10 @@ $(document).ready(function() {
 	}
 	$('body').on('click', '.pay-description', function() {
 		var item = $(this)
-		if(item.css('background-color') == 'rgb(68, 68, 68)')
+		if(item.css('background-color') == 'rgb(31, 31, 46)')
 			item.css('background-color',"");
 		else
-			item.css('background-color','rgb(68, 68, 68)');
+			item.css('background-color','rgb(31, 31, 46)');
 	});
 
 });
@@ -59,7 +59,7 @@ function move_selected(right){
 	for(var i=0;i<items1.length;i++){
 		$template = $($('#PayTemplate').html());
 		var not_matched = true;
-		if($($(items1[i]).children('.pay-description')).css('background-color') == 'rgb(68, 68, 68)'){
+		if($($(items1[i]).children('.pay-description')).css('background-color') == 'rgb(31, 31, 46)'){
 			for(var j=0;j<items2.length;j++) {
 				var item2 = $(items2[j]);
 				if(item2.data('name') == $(items1[i]).data('name')){
