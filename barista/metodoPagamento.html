@@ -7,9 +7,13 @@
         <link href='fonts/open_sans.css' rel='stylesheet' type='text/css'>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 
-	<style>
+       	<link rel="stylesheet" href='https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/ui-lightness/jquery-ui.css'>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.js"></script>
 
-	</style>
+		<script src="js/cookie_utils.js"></script>
+		<script src="js/jquery.balloon.js"></script>
+
 	</head>
 
 	<body>
@@ -18,55 +22,6 @@
 			Método de Pagamento
         </div>
 		
-		<div class="main_buttons_div">
-
-    	<button class="button" id="food_drink_button" onclick="location.href='pedir.html';">
-        <img class="main_icons" src="icons/money.png" id="food_drink_icon">
-        <figcaption class="main_button_text"> Dinheiro </figcaption>
-        </button>
-
-        <button class="button" id="multibanco_button" onclick="location.href='votacao.html';" >
-        <img class="main_icons" src="icons/multibanco.png" id="music_icon">
-        <figcaption class="main_button_text"> Multibanco </figcaption>
-        </button>
-		
-		</div>
-		
-		<!-- Footer Buttons-->
-		<div id="home_button_div">
-			<button class="button" id="home_button" onclick="location.href='barista.html';">
-			<img class="footer_icons" src="icons/home.png" id="rotate_icon">
-			<figcaption class="footer_button_text"> Início </figcaption>
-			</button>
-		</div>
-
-        <div class="rotate_button_div">
-
-        <button class="button" id="rotate_button" onclick="not_implemented_fn()">
-        <img class="footer_icons" src="icons/rotate.png" id="rotate_icon">
-        <figcaption class="footer_button_text"> Rodar </figcaption>
-        </button>
-
-        </div>
-
-        <div class="footer_buttons_div">
-
-        <!--<button class="button" id="money_button" onclick="not_implemented_fn()">
-        <img class="footer_icons" src="icons/money.png" id="money_icon">
-        <figcaption class="footer_button_text"> Pagar </figcaption>
-        </button>-->
-
-        <button class="button" id="bill_button" onclick="not_implemented_fn()">
-        <img class="footer_icons" src="icons/bill.png" id="bill_icon">
-        <figcaption class="footer_button_text"> Conta </figcaption>
-        </button>
-
-        <button class="button" id="help_button" onclick="not_implemented_fn()">
-        <img class="footer_icons" src="icons/help.png" id="help_icon">
-        <figcaption class="footer_button_text"> Ajuda </figcaption>
-        </button>
-
-        </div>
 
         <!-- Not Implemeted Box -->
         <div id="not_implemented_box" class="modal">
@@ -77,9 +32,41 @@
                 <p>Funcionalidade nao implementada</p>
             </div>
         </div>
+		
+		<!--- Botão Convidar --->
+		<div id="invite_button_div">
+			<button class="button" id="invite_button">
+			<img class="footer_icons" src="icons/invite.png" id="rotate_icon">
+			<figcaption class="footer_button_text"> Convidar Mesa </figcaption>
+			</button>
+		</div>
+		
+		
+		<!------ Div escolher mesa
+		<div id = "invite_options_div">
+			<div id="tables_title"> Escolha uma mesa: </div>
+			<div id = "tables_div">
+				<button class="button" id="table1_button" onclick="">
+				<img class="main_icons" src="icons/tables.png" id="rotate_icon">
+				<figcaption class="footer_button_text"> Mesa 1 </figcaption>
+				</button>
+			</div>
+		</div>----->
+		
+		<!-- Invite accepted Box -->
+        <div id="invite_accepted_box" class="modal">
+
+            <!-- Box content -->
+            <div class="modal_content">
+                <p>O seu convite foi aceite!</p>
+				<button id="inicialize_button"> Iniciar Jogo </button>
+				<button id="cancel_button"> Cancelar </button>	
+            </div>
+        </div>
 
     <script src="js/modals.js"></script>
     <script src="js/ask_menu.js"></script>
+	<script src="js/jogar.js"></script>
 
 	</body>
 </html>

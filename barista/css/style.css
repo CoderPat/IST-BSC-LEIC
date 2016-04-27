@@ -1054,3 +1054,82 @@ div.quantity {
 	font-size:300%;
 	color: #FFFFFF;
 }
+
+
+/*----- Jogar Css -----*/
+#invite_button{
+	position: relative;
+	left:1750px;
+	bottom:2.5%;
+}
+#tables_title{
+	font-family: 'Open Sans', sans-serif;
+	font-weight: 300;
+	font-size: 200%;
+	color: #FFFFFF;
+	background:linear-gradient(#25488e,#101f3d);
+	text-align:center;
+	padding-top:10px;
+	height:50px;
+	width:900px;
+}
+
+#invite_options_div{
+	width: 900px;
+	height: 700px;
+	background-color:#d2d2d2;
+}
+#tables_div{
+	margin:20px 70px 30px 70px;	
+}
+
+.table_button_div{
+	background-color:#ffffff;
+	border-radius:25px 25px 25px 25px;
+	padding: 10px 20px 10px 20px;
+}
+
+#table2_button{
+	position: relative;
+	left: 270px;
+}
+#table3_button{
+	position: relative;
+	left: -240px;
+	top: 170px;
+}
+#table4_button{
+	position:relative;
+	left: 10px;
+	top: 100px;
+}
+
+#table5_button{
+	position:relative;
+	left: 270px;
+	top:100px;
+}
+#you_are_here_img{
+	width:50px;
+	height:50px;
+	position:relative;
+	left:150px;
+	bottom: 100px;
+}
+#inicialize_button{
+	background-color:green;
+	font-family: 'Open Sans', sans-serif;
+	color: #000000;
+	font-weight: 200;
+	font-size: 120%;
+	border-radius: 5px 5px 5px 5px;
+}
+
+#cancel_button{
+	background-color:red;
+	font-family: 'Open Sans', sans-serif;
+	color: #000000;
+	font-weight: 200;
+	font-size: 120%;
+	border-radius: 5px 5px 5px 5px;
+}
