@@ -1111,7 +1111,7 @@ div.quantity {
   left:34%;
 }
 
-#already_button{
+#already_button_div{
   background-color: #63AD21;
   height: 38px;
   width: 130px;
@@ -1123,7 +1123,7 @@ div.quantity {
   left:54%;
 }
 
-#never_button{
+#never_button_div{
   background-color: #63AD21;
   height: 38px;
   width: 130px;
@@ -1135,7 +1135,7 @@ div.quantity {
   left:70%;
 }
 
-#next_button{
+#next_button_div{
   background-color: #63AD21;
   height: 38px;
   width: 130px;
