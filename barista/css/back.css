@@ -1026,79 +1026,6 @@ div.quantity {
 	color: #FFFFFF;
 }
 
-
-/*----- Jogar Css -----*/
-#invite_button{
-	position: relative;
-	left:1750px;
-	bottom:2.5%;
-}
-#tables_title{
-	font-family: 'Open Sans', sans-serif;
-	font-weight: 300;
-	font-size: 200%;
-	color: #FFFFFF;
-	background:linear-gradient(#25488e,#101f3d);
-	text-align:center;
-	padding-top:10px;
-	height:50px;
-	width:900px;
-}
-
-#invite_options_div{
-	width: 900px;
-	height: 700px;
-	background-color:#d2d2d2;
-}
-#tables_div{
-	margin:20px 70px 30px 70px;	
-}
-
-.table_button_div{
-	background-color:#ffffff;
-	border-radius:25px 25px 25px 25px;
-	padding: 10px 20px 10px 20px;
-}
-
-#table2_button{
-	position: relative;
-	left: 270px;
-}
-#table3_button{
-	position: relative;
-	left: -240px;
-	top: 170px;
-}
-#table4_button{
-	position:relative;
-	left: 10px;
-	top: 100px;
-}
-
-#table5_button{
-	position:relative;
-	left: 270px;
-	top:100px;
-}
-
-#inicialize_button{
-	background-color:green;
-	font-family: 'Open Sans', sans-serif;
-	color: #000000;
-	font-weight: 200;
-	font-size: 120%;
-	border-radius: 5px 5px 5px 5px;
-}
-
-#cancel_button{
-	background-color:red;
-	font-family: 'Open Sans', sans-serif;
-	color: #000000;
-	font-weight: 200;
-	font-size: 120%;
-	border-radius: 5px 5px 5px 5px;
-}
-
 .question{
   position: absolute;
   top:25%;
@@ -1148,12 +1075,11 @@ div.quantity {
   left:20%;
 }
 
-#already_button{
+#already_button_div{
   background-color: #63AD21;
   height: 70px;
   width: 200px;
   border-radius: 25px 25px 25px 25px;
-
   text-align:center;
   background: -moz-linear-gradient(top, #66CC66 0%, #336633 100%);
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#66CC66), color-stop(100%,#336633));
@@ -1174,7 +1100,7 @@ div.quantity {
   left:54%;
 }
 
-#never_button{
+#never_button_div{
   background-color: #63AD21;
   height: 70px;
   width: 200px;
@@ -1192,6 +1118,7 @@ div.quantity {
   background: -webkit-linear-gradient(top, #993d3d 0%,#7a001e 100%);
   background: linear-gradient(to bottom, #993d3d 0%,#7a001e 100%);
 }
+
 
 .single_p_div {
   height: 70px;
@@ -1214,13 +1141,8 @@ div.quantity {
   left:75%;
 }
 
-#next_button{
-  font-size: 14px;
-  height: 70px;
-  width: 70px;
-  text-align:center;
 
-  border-radius: 40px 40px 40px 40px;
+#next_button_div{
   background-color: #63AD21;
   background: -moz-linear-gradient(top, #0099CC 0%, #006699 100%);
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#0099CC), color-stop(100%,#006699));
