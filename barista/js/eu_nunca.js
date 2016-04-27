@@ -8,6 +8,7 @@ function get_random_question(){
 }
 
 $(document).ready(function() {
+	console.log("here");
 	$('.question h3').text(get_random_question()[0]);
 
     $('#next_button').click(function(){
@@ -33,7 +34,6 @@ $(document).ready(function() {
         questions.sort(function(question_info1, question_info2){
             var p_never_1 = question_info1[2] === 0 ? 0 : question_info1[2]/(question_info1[1] + question_info1[2]);
             var p_never_2 = question_info2[2] === 0 ? 0 : question_info2[2]/(question_info2[1] + question_info2[2]);
-            console.log('HELLO');
             return p_never_2 - p_never_1;
         });
 
@@ -42,7 +42,7 @@ $(document).ready(function() {
             if (questions[i][2] != 0)
                 $('.perguntas_div').append(questions[i][0]+'<br>' + questions[i][2] + '<br>');
         }
-    })
+    });
 });
 
 // When a user cliks on a item
