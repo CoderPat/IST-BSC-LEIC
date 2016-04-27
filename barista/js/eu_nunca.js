@@ -37,10 +37,21 @@ $(document).ready(function() {
             return p_never_2 - p_never_1;
         });
 
+
+
+/*var pergunta = questions[i][0];
+var cont = questions[i][2];
+$($('#productTemplateCriar').html())
+var single_pergunta_div = $("<div class='single_p_div>""</div>");
+$('.perguntas_div').append(single_pergunta_div);*/
+
         $('.perguntas_div').empty();
         for(var i = 0; i < questions.length; i++){
-            if (questions[i][2] != 0)
-                $('.perguntas_div').append(questions[i][0]+'<br>' + questions[i][2] + '<br>');
+            if (questions[i][2] != 0){
+							console.log('votado');
+							var single_pergunta_div = $("<div/>",{class:"single_p_div"}).html(questions[i][0] + '<br>' +'<h2> Quantidade de "Nuncas":  '+ questions[i][2] + '</h2><br>');
+							$('.perguntas_div').append(single_pergunta_div);
+						}
         }
     });
 });

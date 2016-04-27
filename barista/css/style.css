@@ -121,6 +121,10 @@ img.footer_icons {
 	height: 80px;
 	width: 80px;
 }
+.footer_icons{
+  font-size: 100px;
+  color: #fff;
+}
 
 
 figcaption.footer_button_text{
@@ -378,46 +382,6 @@ ul#menu li {
 
 }
 
-/* Modal Content/Box
-.list_content {
-  position:fixed;
-	background: #63A;
-	font-family: 'Open Sans', sans-serif;
-    font-weight: 300;
-  width: 1000px;
-	font-size: 300%;
-	color: #FFFFFF;
-	border-radius: 25px 0px 0px 0px;
-	padding-left: 50px;
-}
-
-.list_order {
-  margin-top: 180px;
-  display: none; /* Hidden by default
-
-}
-
-
-.impar {
-  background-color: #fff;
-
-}
-
-.close_s {
-    color: #aaa;
-    float: right;
-	font-family: 'Open Sans', sans-serif;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close_s:hover,
-.close_s:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
-*/
 ul#bebidas li {
   display: inline-block;
   color: white;
@@ -1108,13 +1072,27 @@ div.quantity {
 #already_section{
   position:absolute;
   top:70%;
-  left:34%;
+  left:20%;
 }
 
 #already_button{
   background-color: #63AD21;
-  height: 38px;
-  width: 130px;
+  height: 70px;
+  width: 200px;
+  border-radius: 25px 25px 25px 25px;
+
+  text-align:center;
+  background: -moz-linear-gradient(top, #66CC66 0%, #336633 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#66CC66), color-stop(100%,#336633));
+	background: -webkit-linear-gradient(top, #66CC66 0%,#336633 100%);
+	background: linear-gradient(to bottom, #66CC66 0%,#336633 100%);
+}
+
+#already_button:active{
+  background: -moz-linear-gradient(top, #3d7a3d 0%, #336633 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#66CC66), color-stop(100%,#336633));
+  background: -webkit-linear-gradient(top, #3d7a3d 0%,#336633 100%);
+  background: linear-gradient(to bottom, #3d7a3d 0%,#336633 100%);
 }
 
 #never_section{
@@ -1125,22 +1103,63 @@ div.quantity {
 
 #never_button{
   background-color: #63AD21;
-  height: 38px;
-  width: 130px;
+  height: 70px;
+  width: 200px;
+  border-radius: 25px 25px 25px 25px;
+  background: -moz-linear-gradient(top, #FF6666 0%, #CC0033 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#FF6666), color-stop(100%,#CC0033));
+  background: -webkit-linear-gradient(top, #FF6666 0%,#CC0033 100%);
+  background: linear-gradient(to bottom, #FF6666 0%,#CC0033 100%);
+
+}
+
+#never_button:active{
+  background: -moz-linear-gradient(top, #993d3d 0%, #7a001e 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#993d3d), color-stop(100%,#7a001e));
+  background: -webkit-linear-gradient(top, #993d3d 0%,#7a001e 100%);
+  background: linear-gradient(to bottom, #993d3d 0%,#7a001e 100%);
+}
+
+.single_p_div {
+  height: 70px;
+  padding-top: 0.9em;
+  text-align: center;
+  color: #fff;
+  margin: 30px 20px 30px;
+  background:linear-gradient(#25488e,#101f3d);
+  list-style: none;
+
+}
+
+.single_p_div h2{
+  font-size: 15px;
 }
 
 #next_section{
   position:absolute;
   top:40%;
-  left:70%;
+  left:75%;
 }
 
 #next_button{
-  background-color: #63AD21;
-  height: 38px;
-  width: 130px;
-}
+  font-size: 14px;
+  height: 70px;
+  width: 70px;
+  text-align:center;
 
+  border-radius: 40px 40px 40px 40px;
+  background-color: #63AD21;
+  background: -moz-linear-gradient(top, #0099CC 0%, #006699 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#0099CC), color-stop(100%,#006699));
+  background: -webkit-linear-gradient(top, #0099CC 0%,#006699 100%);
+  background: linear-gradient(to bottom, #0099CC 0%,#006699 100%);
+}
+#next_button:active{
+  background: -moz-linear-gradient(top, #002d3d 0%, #001e2d 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#002d3d), color-stop(100%,#001e2d));
+  background: -webkit-linear-gradient(top, #002d3d 0%,#001e2d 100%);
+  background: linear-gradient(to bottom, #002d3d 0%,#001e2d 100%);
+}
 
 /*    Rolling Dice    */
 

@@ -8,6 +8,22 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
         <script src="js/jquery.balloon.js"></script>
 
+				<style>
+
+				/* Iconfonts
+				 * ============================ */
+				@import "http://weloveiconfonts.com/api/?family=fontawesome";
+				@import "http://weloveiconfonts.com/api/?family=brandico";
+				[class*="fontawesome-"]:before {
+					font-family: "FontAwesome", sans-serif;
+				}
+
+				[class*="brandico-"]:before {
+					font-family: "brandico", sans-serif;
+				}
+
+				</style>
+
 	</head>
 	<body>
 
@@ -21,42 +37,47 @@
                     Perguntas <br> mais dificeis
                 </div>
             </button>
+
+
         </div>
 
-        <div id="already_section">
-            <button id="already_button" class="button">
-                <div id="already_button_div" class="buttons">
-                    Já
-                </div>
-            </button>
-        </div>
 
-        <div id="never_section">
-            <button id="never_button" class="button">
-                <div id="never_button_div" class="buttons">
-                    Nunca
-                </div>
-            </button>
-        </div>
 
         <div id="next_section">
             <button id="next_button" class="button">
-                <div id="next_button_div" class="buttons">
-                    Proxima
+                <div id="next_button_div " class="buttons fontawesome-arrow-right">
                 </div>
             </button>
         </div>
 
         <div class="question">
         <h3></h3>
+				<div id="already_section">
+						<button id="already_button" class="button">
+								<div id="already_button_div" class="buttons">
+										Já
+								</div>
+						</button>
+				</div>
+
+				<div id="never_section">
+						<button id="never_button" class="button">
+								<div id="never_button_div" class="buttons">
+										Nunca
+								</div>
+						</button>
+				</div>
         </div>
 
-        
+
         <div id="home_button_div">
             <button class="button" id="home_button" onclick="location.href='barista.html';">
             <img class="footer_icons" src="icons/home.png" id="rotate_icon">
             <figcaption class="footer_button_text"> Início </figcaption>
             </button>
+						<button class="button" id="home_button" onclick="location.href='jogar.html';">
+						<div class="footer_icons fontawesome-arrow-left" ></div>
+						</button>
         </div>
 
         <div class="rotate_button_div">
@@ -91,7 +112,7 @@
             <span class="closecart">x</span>
             <h2>Perguntas mais dificeis</h2>
             <div class='perguntas_div'>
-                sadajsfh
+
             </div>
         </div>
 
