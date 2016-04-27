@@ -12,24 +12,46 @@
 	<body>
 
         <div class="title">
-        Jogar
+        Eu nunca...
         </div>
 
-        <!--Main functionality buttons -->
-  		<div class="game_buttons_div">
+        <div id="highscore_section">
+            <button class="button">
+                <div id="highscore_button" class="buttons">
+                    Perguntas <br> mais dificeis
+                </div>
+            </button>
+        </div>
 
-        <button class="button" id="question_game_button" onclick="location.href='eu_nunca.html'" >
-        <img class="main_icons" src="icons/mark.png" id="music_icon">
-        <figcaption class="main_button_text"> Eu nunca... </figcaption>
-        </button>
+        <div id="already_section">
+            <button class="button">
+                <div id="already_button" class="buttons">
+                    Já
+                </div>
+            </button>
+        </div>
 
-        <button class="button" id="dice_game_button" onclick="not_implemented_fn()">
-        <img class="main_icons" src="icons/games.png" id="games_icon">
-        <figcaption class="main_button_text"> Rollar </figcaption>
-        </button>
+        <div id="never_section">
+            <button class="button">
+                <div id="never_button" class="buttons">
+                    Nunca
+                </div>
+            </button>
+        </div>
 
-		</div>
+        <div id="next_section">
+            <button class="button">
+                <div id="next_button" class="buttons">
+                    Proxima
+                </div>
+            </button>
+        </div>
 
+        <div class="question">
+        <h3></h3>
+        </div>
+
+        
         <div id="home_button_div">
             <button class="button" id="home_button" onclick="location.href='barista.html';">
             <img class="footer_icons" src="icons/home.png" id="rotate_icon">
@@ -79,5 +101,6 @@
     <script src="js/cookie_utils.js"></script>
     <script src="js/order.js"></script>
     <script src="js/modals.js"></script>
+    <script src="js/eu_nunca.js"></script>
 	</body>
 </html>

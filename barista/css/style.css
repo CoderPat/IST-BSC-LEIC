@@ -77,6 +77,12 @@ body {
     left:34%;
 }
 
+.game_buttons_div {
+    position: absolute;
+    top:35%;
+    left:39%;
+}
+
 img.main_icons {
 	height : 200px;
 	width : 200px;
@@ -286,6 +292,7 @@ figcaption.footer_button_text{
 	position:absolute;
 	top:40%;
 	padding-left:30px;
+
 }
 
 /*cenas menu*/
@@ -1053,4 +1060,80 @@ div.quantity {
     font-weight: 200;
 	font-size:300%;
 	color: #FFFFFF;
+}
+
+.question{
+  position: absolute;
+  height: 200px;
+  width: 500px;
+  top:35%;
+  left:38%;
+}
+
+.question h3{
+  text-align: center;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 200;
+  font-size: 3em;
+  color: #fff;
+}
+
+.buttons{
+  font-family: 'Open Sans', sans-serif;
+  color: #FFFFFF;
+  font-weight: 600;
+  font-size: 150%;
+  border-radius: 20px 20px 20px 20px;
+  text-align:center;
+  padding-top:20px;
+  padding-bottom:20px;
+  padding-left:20px;
+  padding-right:20px;
+  margin-bottom:20px;
+}
+
+#highscore_section{
+  position:absolute;
+  top:42%;
+  padding-left:30px;
+}
+
+#highscore_button{
+  background-color: #63AD21;
+}
+
+#already_section{
+  position:absolute;
+  top:60%;
+  left:40%;
+}
+
+#already_button{
+  background-color: #63AD21;
+  height: 60px;
+  width: 130px;
+}
+
+#never_section{
+  position:absolute;
+  top:60%;
+  left:60%;
+}
+
+#never_button{
+  background-color: #63AD21;
+  height: 60px;
+  width: 130px;
+}
+
+#next_section{
+  position:absolute;
+  top:50%;
+  left:70%;
+}
+
+#next_button{
+  background-color: #63AD21;
+  height: 60px;
+  width: 130px;
 }
