@@ -9,31 +9,31 @@ $(document).ready(function() {
 						"<div class ='table_button_div'>" +
 						"<img class='main_icons' src='icons/tables.png'>" +
 						"</div>"+
-						"<figcaption class='footer_button_text'> Mesa 1 </figcaption>" +
+						"<figcaption class='tables_text'> Mesa 1 </figcaption>" +
 						"</button>" +
 						"<button class='button tables' id='table2_button' onclick='invite()'>" +
 						"<div class = 'table_button_div'>"+
 						"<img class='main_icons' src='icons/tables.png'>" +
 						"</div>"+
-						"<figcaption class='footer_button_text'> Mesa 2 </figcaption>" +
+						"<figcaption class='tables_text'> Mesa 2 </figcaption>" +
 						"</button>"+
 						"<button class='button tables' id='table3_button' onclick='invite()'>" +
 						"<div class = 'table_button_div'>"+
 						"<img class='main_icons' src='icons/tables.png'>" +
 						"</div>"+
-						"<figcaption class='footer_button_text'> Mesa 3 </figcaption>" +
+						"<figcaption class='tables_text'> Mesa 3 </figcaption>" +
 						"</button>" +
 						"<button class='button tables' id='table4_button' onclick='invite()'>" +
 						"<div class = 'table_button_div'>"+
 						"<img class='main_icons' src='icons/tables.png'>" +
 						"</div>"+
-						"<figcaption class='footer_button_text'> Mesa 4 </figcaption>" +
+						"<figcaption class='tables_text'> Mesa 4 </figcaption>" +
 						"</button>"+
 						"<button class='button tables' id='table5_button' onclick='invite()'>" +
 						"<div class = 'table_button_div'>"+
 						"<img class='main_icons' src='icons/tables.png'>" +
 						"</div>"+
-						"<figcaption class='footer_button_text'> Mesa 5 </figcaption>" +
+						"<figcaption class='tables_text'> Mesa 5 </figcaption>" +
 						"</button>"
 						"</div> </div>";
 						
@@ -41,10 +41,13 @@ $(document).ready(function() {
 		$('#invite_button').on("click", function() {
 		shown ? $(this).hideBalloon() : $(this).showBalloon({contents: tables_string,
 															 showDuration: "slow",
-															 tipSize: 100,
 															 position: 'left',
 															 offsetX:-350,
-															 offsetY: -320 });
+															 offsetY: -320 ,
+															 css:{
+																opacity: 1,
+															 }
+															 });
 		shown = !shown;
 		});
 	});
