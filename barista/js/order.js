@@ -1,3 +1,6 @@
+var ballon_shit = '<div style="position: absolute; height: 0px; width: 0px; border-width: 30px 17px 0px; border-style: solid; border-color: rgb(91, 174, 192) transparent transparent; -moz-border-top-colors: none; -moz-border-right-colors: none; -moz-border-bottom-colors: none; -moz-border-left-colors: none; border-image: none; top: 97px; left: 115px;"></div>' +
+                   '<div style="position: absolute; height: 0px; width: 0px; border-width: 22px 13px 0px; border-style: solid; border-color: rgb(234, 248, 252) transparent transparent; -moz-border-top-colors: none; -moz-border-right-colors: none; -moz-border-bottom-colors: none; -moz-border-left-colors: none; border-image: none; top: 97px; left: 119px;"></div>'
+
 function add_to_order(items) {
 	var current = decookienize('order');
 	if(current === false)
@@ -25,11 +28,14 @@ $(function() {
    var shown = false;
    $('#bill_button').on("click", function() {
    		var order = get_order();
-   		var order_string = "";
+
+   		var order_string = "<div id='order_ballon_div'>"
    		for(var i = 0; i < order.length; i++)
    			order_string += "<span class='left'>" + order[i][2] + "x " + order[i][0] + "</span>" + 
-   							"<span class='right'> &nbsp&nbsp€" + parseInt(order[i][2])*parseInt(order[i][1]) + "</span>" + 
+   							"<span class='right'> &nbsp&nbsp€" + parseInt(order[i][2])*parseInt(order[i][1]) + 
+   							"<span class='shortcut_add' data-index=" + i + "> <b> &nbsp; &#x2795 &nbsp; </b> </span></span>" + 
    							"<br>";
+   		order_string += "</div>"
 
    		console.log(order_string);
 
@@ -49,5 +55,22 @@ $(function() {
 																}
 		});
 		shown = !shown;
+	});
+
+	$(document).on("click", "span .shortcut_add", function() {
+
+			var order = get_order();
+			order[$(this).data('index')][2]++;
+			cookienize(order, 'order');
+
+			var order_string = "";
+	   		for(var i = 0; i < order.length; i++)
+	   			order_string += "<span class='left'>" + order[i][2] + "x " + order[i][0] + "</span>" + 
+	   							"<span class='right'> &nbsp&nbsp€" + parseInt(order[i][2])*parseInt(order[i][1]) + 
+	   							"<span class='shortcut_add' data-index=" + i + "> <b> &nbsp; &#x2795 &nbsp; </b> </span></span>" + 
+	   							"<br>";
+
+	   		$('#order_ballon_div').html(order_string);
+
 	});
 }); 

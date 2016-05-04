@@ -1105,6 +1105,23 @@ div.quantity {
 	border-radius: 5px 5px 5px 5px;
 }
 
+#drink_shortcut_button{
+  font-family: 'Open Sans', sans-serif;
+  color: #000000;
+  font-weight: 200;
+  font-size: 120%;
+  border-radius: 5px 5px 5px 5px;
+}
+
+#homepage_shortcut_button{
+  font-family: 'Open Sans', sans-serif;
+  color: #000000;
+  font-weight: 200;
+  font-size: 120%;
+  border-radius: 5px 5px 5px 5px;
+}
+
+
 .question{
   position: absolute;
   top:25%;
