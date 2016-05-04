@@ -170,7 +170,7 @@
         <figcaption class="footer_button_text"> Conta </figcaption>
         </button>
 
-        <button class="button" id="help_button" onclick="not_implemented_fn()">
+        <button class="button" id="help_button" onclick="help_fn('#order_help_box')">
         <img class="footer_icons" src="icons/help.png" id="help_icon">
         <figcaption class="footer_button_text"> Ajuda </figcaption>
         </button>
@@ -220,9 +220,25 @@
                 <p>O seu pedido está a caminho!</p>
             </div>
         </div>
+		
+		<!-- help Box -->
+        <div id="order_help_box" class="modal">
 
+            <!-- Box content -->
+            <div class="modal_content">
+                <span class="close">x</span>
+                <p> Este é o menu para pedir. Aqui encontra 3 botões. O 1º mostra a lista de bebibas,onde pode
+				escolher uma bebida clicando no botão adicionar respetivo. Ao clicar é adicionado o item ao pedido.
+				O 2º botão mostra uma lista de ingredientes de onde pode escolher os ingredientes que quiser para criar 
+				a sua bebida,clicando no botão adicionar. Ao clicar o ingrediente é adicionado ao pedido.
+				O 3º mostra-lhe uma lista de snacks que funciona como a das bebidas.
+				Ao clicar no botão Consultar Pedido, pode ver todos os items adicionados, podendo removê-los, 
+				clicando no menos do respetivo item e caso pretenda terminar o pedido basta ciclar no botão Pedir.
+				</p>
+            </div>
+        </div>
 
-    <!-- Music Button -->
+		
     <script src="coverflow/jquery.coverflow.js"></script>
     <script src="keyboard/dist/js/jquery.keyboard.min.js"></script>
     <script src="js/coverflow.js"></script>

@@ -128,7 +128,7 @@
         <figcaption class="footer_button_text"> Conta </figcaption>
         </button>
 
-        <button class="button" id="help_button" onclick="not_implemented_fn()">
+        <button class="button" id="help_button" onclick="help_fn('#pay_help_box')">
         <img class="footer_icons" src="icons/help.png" id="help_icon">
         <figcaption class="footer_button_text"> Ajuda </figcaption>
         </button>
@@ -164,6 +164,22 @@
             <div class="modal_content">
                 <span class="close">x</span>
                 <p>Funcionalidade nao implementada</p>
+            </div>
+        </div>
+		
+		<!-- Help Box -->
+        <div id="pay_help_box" class="modal">
+
+            <!-- Box content -->
+            <div class="modal_content">
+                <span class="close">x</span>
+                <p>Esta é a secção para pagamento. No 1º rectângulo, encontra todos os itens pedidos que ainda nao foram
+				pagos. Pode escolher os itens que quer pagar, clicando neles. Ao carregar na seta que aponta para a direita,
+				os itens escolhidos passam para o 2ºrectângulo. No entanto, se houverem itens que afinal não pretende pagar,
+				clique em cada um e depois carregue na seta a apontar para a esquerda. Isto passa esses itens para 
+				o 1º rectângulo.
+				Ao clicar no botão pagar no 2ºrectângulo, é-lhe mostrado os diferentes tipos de pagamento podendo
+				escolher o que preferir, efetuando assim o pagamento dos itens selecionados anteriormente.</p>
             </div>
         </div>
 

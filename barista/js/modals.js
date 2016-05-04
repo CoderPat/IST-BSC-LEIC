@@ -4,6 +4,10 @@ function not_implemented_fn() {
     $("#not_implemented_box").css("display", "block");
 }
 
+function help_fn(id) {
+    $(id).css("display", "block");
+}
+
 $(document).ready(function() {
 
 // When the user clicks on <span> (x), close the modal
