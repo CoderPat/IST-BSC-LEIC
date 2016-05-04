@@ -36,22 +36,27 @@
         <div class="title">
         Rollar
         </div>
-		
+
 		<!--- Botão Convidar -->
 		<div id="invite_button_div">
+
+			<button class="button" id="invite_button_new" onclick="location.href='jogar.html';">
+				<div class="footer_icons fontawesome-arrow-left" ></div>
+			</button>
 			<button class="button" id="invite_button">
 			<img class="footer_icons" src="icons/invite.png" id="rotate_icon">
 			<figcaption class="footer_button_text"> Convidar Mesa </figcaption>
 			</button>
+
 		</div>
-		
-		
+
+
 
 				<div>
   <input id="secondroll" name="roll" type="checkbox">
   <input id="roll" name="roll" type="checkbox">
-  <div class="wrapper"><label for="roll">Roll it!</label>
-  <label for="secondroll"><span>Stop!</span></label></div>
+  <div class="wrapper"><label for="roll">Iniciar!</label>
+  <label for="secondroll"><span>Parar</span></label></div>
 
   <div id="platform">
     <div id="dice">
@@ -111,9 +116,7 @@
             <img class="footer_icons" src="icons/home.png" id="rotate_icon">
             <figcaption class="footer_button_text"> Início </figcaption>
             </button>
-						<button class="button" id="home_button" onclick="location.href='jogar.html';">
-						<div class="footer_icons fontawesome-arrow-left" ></div>
-						</button>
+
         </div>
 
         <div class="rotate_button_div">
@@ -156,10 +159,16 @@
             <!-- Box content -->
             <div class="modal_content">
                 <span class="close">x</span>
-                <p>Funcionalidade nao implementada</p>
+								<h2>Regras</h2>
+								<p><ol>
+									<li>Precionar no botão Iniciar para girar o dado.</li>
+									<li>Precionar no parar para visualizar o número em que o dado para.</li>
+									<li>O jogador que carregou no botão parar deve dar o número de golos, na bebida, equivalente àquele que saiu no dado.</li>
+									<li>Caso queria terminar o jogo, basta carregar no botão terminar.</li>
+								</ol></p>
             </div>
         </div>
-		
+
 		<!-- Invite accepted Box -->
         <div id="invite_accepted_box" class="modal">
 
@@ -167,10 +176,17 @@
             <div class="modal_content">
                 <p>O seu convite foi aceite!</p>
 				<button id="inicialize_button"> Iniciar Jogo </button>
-				<button id="cancel_button"> Cancelar </button>	
+				<button id="cancel_button"> Cancelar </button>
             </div>
         </div>
 
+				<div id="terminar_section_rol">
+						<button id="terminar_button_rol" class="button">
+								<div id="terminar_button_rol_div" class="buttons">
+										Terminar
+								</div>
+						</button>
+				</div>
         <!-- Music Button -->
     <script src="coverflow/jquery.coverflow.js"></script>
     <script src="keyboard/dist/js/jquery.keyboard.min.js"></script>

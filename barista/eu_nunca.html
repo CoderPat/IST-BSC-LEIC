@@ -35,6 +35,9 @@
 
 		<!--- Botão Convidar -->
 		<div id="invite_button_div">
+			<button class="button" id="invite_button_new" onclick="location.href='jogar.html';">
+				<div class="footer_icons fontawesome-arrow-left" ></div>
+			</button>
 			<button class="button" id="invite_button">
 			<img class="footer_icons" src="icons/invite.png" id="rotate_icon">
 			<figcaption class="footer_button_text"> Convidar Mesa </figcaption>
@@ -80,7 +83,7 @@
         </div>
 
 				<div id="terminar_section">
-						<button id="terminar_button" class="button">
+						<button id="terminar_button" class="button" onclick="location.href='jogar.html';">
 								<div id="terminar_button_div" class="buttons">
 										Terminar
 								</div>
@@ -93,9 +96,7 @@
             <img class="footer_icons" src="icons/home.png" id="rotate_icon">
             <figcaption class="footer_button_text"> Início </figcaption>
             </button>
-						<button class="button" id="home_button" onclick="location.href='jogar.html';">
-						<div class="footer_icons fontawesome-arrow-left" ></div>
-						</button>
+
         </div>
 
         <div class="rotate_button_div">
@@ -147,9 +148,17 @@
             <!-- Box content -->
             <div class="modal_content">
                 <span class="close">x</span>
-                <p>Funcionalidade nao implementada</p>
+								<h2>Regras</h2>
+                <p><ol>
+								  <li>O BarISTa sugere situações.</li>
+								  <li>Os jogadores tem de carregar em "Já" ou "Nunca" caso uma dada situação já lhe tenha acontecido ou não.</li>
+								  <li>Quando algum jogador preciona o botão "Já", deve dar um golo na babida.</li>
+									<li>Caso o jogador queria passar para a pergunta seguinte carregue na seta, que se encontra à direita das perguntas.</li>
+									<li>Caso queria terminar o jogo, basta carregar no botão terminar, que se encontra de baixo das perguntas.</li>
+								</ol></p>
             </div>
         </div>
+
 
 
 		<!-- Invite accepted Box -->

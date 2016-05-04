@@ -63,7 +63,7 @@
         <figcaption class="footer_button_text"> Conta </figcaption>
         </button>
 
-        <button class="button" id="help_button" onclick="not_implemented_fn()">
+        <button class="button" id="help_button" onclick="help_fn('#main_help_box')">
         <img class="footer_icons" src="icons/help.png" id="help_icon">
         <figcaption class="footer_button_text"> Ajuda </figcaption>
         </button>
@@ -80,8 +80,21 @@
                 <p>Funcionalidade nao implementada</p>
             </div>
         </div>
+		
+		<!-- Help Box -->
+        <div id="main_help_box" class="modal">
 
-    <!-- Music Button -->
+            <!-- Box content -->
+            <div class="modal_content">
+                <span class="close">x</span>
+                <p>Este é o menu inicial. Aqui encontra 3 botões principais: um que lhe permite pedir,
+				outro onde pode votar em diferentes músicas e, por fim, o terceiro que permite escolher jogos para jogar no bar.
+				No canto inferior direito,encontra outros botões. Um para verificar a música que está a dar no momento e 
+				a próxima a dar (A tocar), um para pagar a sua conta (Pagar) e outro para consultar a sua conta (Conta).
+				</p>
+            </div>
+        </div>
+
     <script src="coverflow/jquery.coverflow.js"></script>
     <script src="keyboard/dist/js/jquery.keyboard.min.js"></script>
     <script src="js/coverflow.js"></script>
