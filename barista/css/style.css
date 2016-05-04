@@ -96,6 +96,7 @@ figcaption.main_button_text{
 	font-size: 200%;
 }
 
+
 /*Footer buttons styling */
 #home_button_div{
 	position: absolute;
@@ -1030,9 +1031,16 @@ div.quantity {
 /*----- Jogar Css -----*/
 #invite_button{
 	position: relative;
-	left:1750px;
+	left:1650px;
 	bottom:2.5%;
 }
+
+#invite_button_new{
+	position: relative;
+	left:2%;
+	bottom:10%;
+}
+
 #tables_title{
 	font-family: 'Open Sans', sans-serif;
 	font-weight: 300;
@@ -1224,6 +1232,39 @@ div.quantity {
   background: -webkit-linear-gradient(top, #002d3d 0%,#001e2d 100%);
   background: linear-gradient(to bottom, #002d3d 0%,#001e2d 100%);
 }
+
+
+
+
+#terminar_section_rol{
+  position:absolute;
+  top:75%;
+  left:45%;
+}
+
+#terminar_button_rol{
+  background-color: #63AD21;
+  height: 70px;
+  width: 200px;
+  border-radius: 25px 25px 25px 25px;
+  background-color: #63AD21;
+  background: -moz-linear-gradient(top, #0099CC 0%, #006699 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#0099CC), color-stop(100%,#006699));
+  background: -webkit-linear-gradient(top, #0099CC 0%,#006699 100%);
+  background: linear-gradient(to bottom, #0099CC 0%,#006699 100%);
+
+}
+
+#terminar_button_rol:active{
+  background: -moz-linear-gradient(top, #002d3d 0%, #001e2d 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#002d3d), color-stop(100%,#001e2d));
+  background: -webkit-linear-gradient(top, #002d3d 0%,#001e2d 100%);
+  background: linear-gradient(to bottom, #002d3d 0%,#001e2d 100%);
+}
+
+
+
+
 
 .single_p_div {
   height: 70px;
@@ -1452,9 +1493,7 @@ input[type=checkbox] {
 label {
 	transition:all .3s ease;
 }
-label:hover {
-	box-shadow:0 0 18px rgba(255,255,255,.5);
-}
+
 label[for=roll] {
 	z-index:1;
 	text-shadow:0 -1px 0 #006699;
