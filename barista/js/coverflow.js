@@ -57,6 +57,12 @@ $(window).load(function(){
 	}
 
 
+	function get_most_voted(){
+		var top_musics = all_musics.slice();
+		top_musics.sort(function(music_info1, music_info2){return music_info2[4] - music_info1[4]});
+		return top_musics[0][0] + ' - ' + top_musics[0][1];
+	};
+
 
 	$('#top_music_button').click(function(){
 		$('.coverflow').empty();
@@ -135,23 +141,26 @@ $(window).load(function(){
 		}
 		cookienize(all_musics, "all_musics");
 	});
-	
-	
+
+	music_ballon_string = "<b>Current Music:</b> <br> Mumford & Sons - Believe <br> <b>Next Music:</b> <br>" + get_most_voted();
+	console.log(music_ballon_string)
 	// A tocar icon funcionality
-	$('#musicPlaying_button').balloon({ tipSize: 30,
-										showDuration: "slow",
-										showAnimation: function(d, c) { this.fadeIn(d, c);},
-										css: {
-											border: 'solid 4px #5baec0',
-											boxShadow: "2px 2px 2px #888",
-											padding: '10px',
-											fontFamily: 'Open Sans',
-											fontSize: '150%',
-											lineHeight: '2',
-											backgroundColor: '#eaf8fc',
-											color: '#5baec0'
-										}
-									});
+	$('#musicPlaying_button').balloon({ contents: music_ballon_string,
+										tipSize: 30,
+                                    	showDuration: "slow",
+                                    	showAnimation: function(d, c) { this.fadeIn(d, c);},
+                                    	css: {
+                                        	border: 'solid 4px #5baec0',
+                                        	boxShadow: "2px 2px 2px #888",
+                                       		padding: '10px',
+                                        	fontFamily: 'Open Sans',
+                                        	fontSize: '150%',
+                                        	lineHeight: '2',
+                                        	backgroundColor: '#eaf8fc',
+                                        	color: '#5baec0'
+                                    }
+                                });
+
 
 });
 
