@@ -75,3 +75,16 @@ $('#inicialize_button').click(function(){
 $('#cancel_button').click(function(){
 	$('#invite_accepted_box').css('display','none');
 });
+
+
+$('#terminar_button').click(function(){
+	$('#end_game_box').css('display','block');
+});
+
+$('#drink_shortcut_button').click(function(){
+	location.href='pedir.html';
+});
+
+$('#homepage_shortcut_button').click(function(){
+	location.href='barista.html';
+});
