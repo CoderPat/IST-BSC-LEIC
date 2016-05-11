@@ -157,7 +157,7 @@ figcaption.footer_button_text{
     padding: 20px;
     text-align: center;
     border: 1px solid #888;
-    width: 80%; /* Could be more or less, depending on screen size */
+    width: 50%; /* Could be more or less, depending on screen size */
 	font-family: 'Open Sans', sans-serif;
 	font-weight: 600;
 }
