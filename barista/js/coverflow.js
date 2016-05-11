@@ -157,7 +157,7 @@ $(window).load(function(){
                                         	fontSize: '150%',
                                         	lineHeight: '2',
                                         	backgroundColor: '#eaf8fc',
-                                        	color: '#5baec0'
+                                        	color: '#2b4d6e'
                                     }
                                 });
 

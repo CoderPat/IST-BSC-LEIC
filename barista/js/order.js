@@ -51,7 +51,7 @@ $(function() {
 																	fontSize: '120%',
 																	lineHeight: '2',
 																	backgroundColor: '#eaf8fc',
-																	color: '#5baec0'
+																	color: '#2b4d6e'
 																}
 		});
 		shown = !shown;
