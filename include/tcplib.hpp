@@ -88,7 +88,7 @@ public:
             if (nbytes == -1)   //TODO: Deal with this better (check errno)
                 throw TCPException("Read failed\n");
 
-            ret += buf;
+            ret.append(buf, nbytes);
             count -= nbytes;
         }
 
