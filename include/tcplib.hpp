@@ -128,6 +128,17 @@ public:
         return ret;
     }
 
+    ByteVector ReadLine() {
+        _CheckTalk();
+        ByteVector ret;
+        uint8_t c = 0;
+        while(*buf != '\n') {
+            c = ReadBytes(1)[0];
+            ret.push_back(c);
+        }
+        return ret;
+    }
+
     /*
         Desc: Writes a ByteVector to a socket, blocks until all bytes are written
         @sync
