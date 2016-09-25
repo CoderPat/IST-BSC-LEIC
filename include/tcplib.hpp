@@ -9,6 +9,7 @@
 
 #include <string>
 #include <exception>
+#include <vector>
 
 
 struct TCPException : public std::exception
@@ -69,18 +70,18 @@ public:
 
 
     /**
-     *  Reads bytes from the socket onto a string. 
+     *  Reads an amount of bytes. 
      *  Blocks until all the bytes are read, even if they are not yet on the file buffer.
      *   
      *  @param  count       
      *              the number of bytes to be read
      *  @throws TCPException
      */
-    std::string Read(size_t count) {
+    std::vector<uint8_t> Read(size_t count) {
 
         check_closed();
 
-        std::string ret;
+        std::vector<uint8_t> ret;
         char buf[std::min(count,(size_t)4096)];
 
         while (count) {
@@ -88,7 +89,9 @@ public:
             if (nbytes == -1)   //TODO: Deal with this better (check errno)
                 throw TCPException("Read failed\n");
 
-            ret.append(buf, nbytes);
+            for (size_t i=0; i<(size_t)nbytes; i++)
+                ret.push_back(buf[i]);
+
             count -= nbytes;
         }
 
@@ -96,20 +99,20 @@ public:
     }
 
     /**
-     *  Writes a string (of bytes) to a socket.
+     *  Writes a vector of bytes to a socket.
      *  Blocks until all bytes are written.
      *
-     *  @param  message
-     *              the message to be written
+     *  @param  byte_array
+     *              the bytes to be written
      *  @throws TCPException
      */
-    void Write(const std::string& message) {
+    void Write(const std::vector<uint8_t>& byte_array) {
 
         check_closed();
 
         int written = 0;
-        while ( (size_t)written != message.length()+1) {
-            int nbytes = write(fd_,message.c_str() + written, (message.length()+1-written));
+        while ( (size_t)written != byte_array.size()) {
+            int nbytes = write(fd_, byte_array.data() + written, (byte_array.size()-written));
             if (nbytes == -1)   //TODO: Deal with this better (check errno)
                 throw TCPException("Write failed\n");
 

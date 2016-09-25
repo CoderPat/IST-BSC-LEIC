@@ -8,7 +8,10 @@
 #include <string.h>
 
 #include <string>
+#include <vector>
 #include <exception>
+
+
 
 struct UDPException : public std::exception
 {
@@ -38,36 +41,42 @@ public:
 	}
 
     /**
-     *  Reads bytes from the socket onto a string.
-     *	Blocks until a package is received
+     *  Reads a UDP packet onto a byte container
+     *	Blocks until a packet is received
 	 *
      *  @throws TCPException
      */
-    std::string Read(){
+    std::vector<uint8_t> Read(){
     	check_closed();
 
+    	std::vector<uint8_t> ret;
 	    char buffer[4096];
-
+	    
 	    addrlen_ = sizeof(address_);
-	    if (recvfrom(fd_,buffer,sizeof(buffer),0,(struct sockaddr*)&address_,&addrlen_) == -1)
+
+	    int nbytes = recvfrom(fd_,buffer,sizeof(buffer),0,(struct sockaddr*)&address_,&addrlen_);
+	    if (nbytes == -1)
 	    	throw UDPException("Error receiving a message"); //TODO: Deal with this better (check errno)
 
-	    return std::string(buffer);
+	    for (size_t i=0; i<(size_t)nbytes; i++)
+            ret.push_back(buffer[i]);
+
+	    return ret;
     } 
 
      /**
-     *  Writes a string (of bytes) to a socket.
+     *  Writes a vector of bytes to a socket.
      *  Blocks until all bytes are written.
      *
-     *  @param  message
-     *              the message to be written
+     *  @param  byte_array
+     *              the bytes to be written
      *  @throws UDPException
      */
-    void Write(const std::string& message){ 
+    void Write(const std::vector<uint8_t>& byte_array){ 
     	check_closed();
 
-    	if( sendto(fd_, message.c_str(), message.length() + 1, 0, (struct sockaddr*)&address_,addrlen_) == -1)
-    		throw UDPException("Could not send message"); //TODO: Deal with this better (check errno)
+    	if( sendto(fd_, byte_array.data(), byte_array.size(), 0, (struct sockaddr*)&address_,addrlen_) == -1)
+    		throw UDPException("Could not send data"); //TODO: Deal with this better (check errno)
     }
 
     void Close() {
