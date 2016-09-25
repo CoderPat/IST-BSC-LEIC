@@ -27,7 +27,7 @@ protected:
 	struct sockaddr_in address_;
 	socklen_t addrlen_;
 
-	inline void check_closed(){ if(closed_) throw TCPException("Socket already closed"); }
+	inline void check_closed(){ if(closed_) throw UDPException("Socket already closed"); }
 
 public:
 	UPDConnection() : closed_(false){
@@ -43,14 +43,14 @@ public:
 	 *
      *  @throws TCPException
      */
-    std::string read_from(){
+    std::string Read(){
     	check_closed();
 
 	    char buffer[4096];
 
 	    addrlen_ = sizeof(address_);
 	    if (recvfrom(fd_,buffer,sizeof(buffer),0,(struct sockaddr*)&address_,&addrlen_) == -1)
-	    	throw UDPException("Error receiving a message");
+	    	throw UDPException("Error receiving a message"); //TODO: Deal with this better (check errno)
 
 	    return std::string(buffer);
     } 
@@ -61,20 +61,20 @@ public:
      *
      *  @param  message
      *              the message to be written
-     *  @throws TCPException
+     *  @throws UDPException
      */
-    void write_in(const std::string& message){ 
+    void Write(const std::string& message){ 
     	check_closed();
 
     	if( sendto(fd_, message.c_str(), message.length() + 1, 0, (struct sockaddr*)&address_,addrlen_) == -1)
-    		throw UDPException("Could not send message");
+    		throw UDPException("Could not send message"); //TODO: Deal with this better (check errno)
     }
 
-    void close_socket() {
+    void Close() {
         check_closed();
 
         if ( close(fd_) == -1 ) {
-            throw TCPException("Error closing socket");
+            throw UDPException("Error closing socket"); //TODO: Deal with this better (check errno)
         }
         closed_ = true; 
     }
@@ -86,9 +86,9 @@ UPDConnection::~UPDConnection(){
     if (closed_) return;
 
     try{
-        close_socket();
+        Close();
     } 
-    catch (TCPException e){}
+    catch (UDPException e){}
 }
 
 
@@ -99,7 +99,7 @@ public:
 
 		hostptr=gethostbyname(host.c_str());
 		if (hostptr==NULL) 
-            throw TCPException("Invalid Hostname");
+            throw UDPException("Invalid Hostname");
 
 		memset((void*)&address_, 0,sizeof(address_));
 		address_.sin_family=AF_INET;

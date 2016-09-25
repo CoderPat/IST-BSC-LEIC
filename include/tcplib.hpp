@@ -76,10 +76,11 @@ public:
      *              the number of bytes to be read
      *  @throws TCPException
      */
-    std::string read_from(size_t count) {
+    std::string Read(size_t count) {
 
         check_closed();
 
+        std::string ret;
         char buf[std::min(count,(size_t)4096)];
 
         while (count) {
@@ -87,10 +88,11 @@ public:
             if (nbytes == -1)   //TODO: Deal with this better (check errno)
                 throw TCPException("Read failed\n");
 
+            ret += buf;
             count -= nbytes;
         }
 
-        return std::string(buf);
+        return ret;
     }
 
     /**
@@ -101,7 +103,7 @@ public:
      *              the message to be written
      *  @throws TCPException
      */
-    void write_in(const std::string& message) {
+    void Write(const std::string& message) {
 
         check_closed();
 
@@ -115,7 +117,7 @@ public:
         }
     }
 
-    void close_socket() {
+    void Close() {
 
         check_closed();
 
@@ -130,7 +132,7 @@ public:
         if (closed_) return;
 
         try{
-            close_socket();
+            Close();
         } 
         catch (TCPException e){}
     }
@@ -167,7 +169,7 @@ public:
      *              a dedicated TCPChannel for communication with the client.
      *  @throws TCPException
      */
-    TCPChannel await_connection(int listen_queue) {
+    TCPChannel Listen(int listen_queue) {
         struct sockaddr_in clientaddr;
         int clientfd;
         socklen_t clientlen;
@@ -186,5 +188,5 @@ public:
     }
 
     //See TCPServer::Listen(inte backLog)
-    TCPChannel await_connection() {return await_connection(10);}
+    TCPChannel Listen() {return Listen(10);}
 };
