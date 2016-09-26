@@ -8,10 +8,9 @@
 #include <string.h>
 
 #include <string>
-#include <vector>
 #include <exception>
+#include <vector>
 
-typedef std::vector<uint8_t> ByteVector; //XXX: Should this be ByteVector or ByteArray?
 
 struct TCPException : public std::exception
 {
@@ -20,184 +19,177 @@ struct TCPException : public std::exception
    ~TCPException() throw () {}
    const char* what() const throw() { return s.c_str(); }
 };
-struct TCPServerException : public TCPException{
-   TCPServerException(std::string ss) : TCPException(ss) {}
-   ~TCPServerException() throw () {}
-};
-struct TCPChannelException : public TCPException{
-   TCPChannelException(std::string ss) : TCPException(ss) {}
-   ~TCPChannelException() throw () {}
-};
 
-/*
-    Class for a TCPChannel to soothe read/writes
-*/
+
+/**
+ *  Class for a TCPChannel to soothe read/writes
+ */
 class TCPChannel {
-    int fd;
-    bool invalidated;
-    bool opened;
+private:
+    int fd_;
+    bool closed_;
 
-    void _CheckTalk() {
-        if (invalidated) {
-            throw TCPChannelException("Channel is in invalid state\n");
-        }
-        if (!opened) {
-            throw TCPChannelException("Channel is closed\n");
-        }
-    }
-
-    /*
-        Desc: Closes the socket file
-        Return code: {
-            0 => ok,
-            1 => socket was already closed,
-            2 => EBADF,
-            3 => EIO,
-            4 => too many close retries on EINTR
-        }
-    */
-    int _Close() {
-        if (!opened) return 1;
-        int rc;
-        if ( (rc = close(fd)) ) {
-            //TODO: Deal with this better (check errno). We dont throw because of the desctructor
-            return 3;
-        }
-        return 0;
-    }
+    inline void check_closed(){ if(closed_) throw TCPException("Socket already closed"); }
 
 public:
 
-    //Creates a TCPChannel on an already open socket, no error checking is performed
-    TCPChannel(int fd) : fd(fd), invalidated(false), opened(true) {} 
+    /** Creates a TCPChannel on an already open socket, no error checking is performed */
+    TCPChannel(int fd) : fd_(fd), closed_(false) {} 
     
-    /*
-        Creates a TCPChannel on a new socket 
-        @throws TCPChannelException
-        XXX: gethostbyname is deprecated!!! We should ask the lecturer if we are required to use it
-    */
-    TCPChannel(const char * hostname, u_short port) : invalidated(true), opened(false) {
+    /**
+     *  Creates a TCPChannel on a new socket
+     *
+     *  @param  hostname     
+     *              the name of the server for dns retrieving
+     *  @param  port         
+     *              port open for communication on the server
+     *  @throws TCPException
+     */
+    TCPChannel(const std::string& hostname, u_short port) : closed_(false) {
         struct hostent* hostptr;
         struct sockaddr_in serveraddr;
-        fd=socket(AF_INET,SOCK_STREAM,0);
-        if (fd == -1) {
-            throw TCPServerException("Could not create socket");
-        }
-        opened = true;
 
-        hostptr=gethostbyname(hostname);
-        if (hostptr==NULL) {
-            throw TCPChannelException("Invalid Hostname");
-        }
+        fd_=socket(AF_INET,SOCK_STREAM,0);
+        if (fd_ == -1) 
+            throw TCPException("Could not create socket");
+
+        hostptr=gethostbyname(hostname.c_str());
+        if (hostptr==NULL)
+            throw TCPException("Invalid Hostname");
+
         memset((void*)&serveraddr, 0, sizeof(serveraddr));
         serveraddr.sin_family=AF_INET; 
         serveraddr.sin_addr.s_addr=((struct in_addr *)(hostptr->h_addr_list[0]))->s_addr;
         serveraddr.sin_port=htons(port);
-        if (connect(fd,(struct sockaddr*)&serveraddr, sizeof(serveraddr))) {
+
+        if (connect(fd_,(struct sockaddr*)&serveraddr, sizeof(serveraddr))) {
             //TODO: Deal with this better (check errno)
-            throw TCPChannelException("Connection failed");
+            throw TCPException("Connection failed");
         }
-        invalidated = false;
     }
 
-    ~TCPChannel() {
-        _Close();
-    }
 
-    /*
-        Desc: Reads count bytes from socket. Blocks until all the bytes are read, even if they are not yet on the file buffer.
-        @sync
-        @basic exception safety
-        @throws TCPChannelException, std::bad_alloc
-    */
-    ByteVector ReadBytes(size_t count) {
-        _CheckTalk();
-        ByteVector ret;
-        unsigned char buf[std::min(count,(size_t)4096)];
+    /**
+     *  Reads an amount of bytes. 
+     *  Blocks until all the bytes are read, even if they are not yet on the file buffer.
+     *   
+     *  @param  count       
+     *              the number of bytes to be read
+     *  @throws TCPException
+     */
+    std::vector<uint8_t> Read(size_t count) {
+
+        check_closed();
+
+        std::vector<uint8_t> ret;
+        char buf[std::min(count,(size_t)4096)];
+
         while (count) {
-            int nbytes = read(fd,buf,std::min(count,(size_t)4096));
-            if (nbytes == -1)  {
-                //TODO: Deal with this better (check errno)
-                throw TCPChannelException("Read failed\n");
-            } else {
-                for (size_t i=0; i<(size_t)nbytes; i++)
-                    ret.push_back(buf[i]); //@throws bad_alloc
-                count -= nbytes;
-            }
+            int nbytes = read(fd_,buf,std::min(count,(size_t)4096));
+            if (nbytes == -1)   //TODO: Deal with this better (check errno)
+                throw TCPException("Read failed\n");
+
+            for (size_t i=0; i<(size_t)nbytes; i++)
+                ret.push_back(buf[i]);
+
+            count -= nbytes;
         }
+
         return ret;
     }
 
-    /*
-        Desc: Writes a ByteVector to a socket, blocks until all bytes are written
-        @sync
-        @basic exception safety
-        @throws TCPChannelException
-    */
-    void WriteBytes(const ByteVector& buf) {
-        _CheckTalk();
+    /**
+     *  Writes a vector of bytes to a socket.
+     *  Blocks until all bytes are written.
+     *
+     *  @param  byte_array
+     *              the bytes to be written
+     *  @throws TCPException
+     */
+    void Write(const std::vector<uint8_t>& byte_array) {
+
+        check_closed();
+
         int written = 0;
-        while ((size_t)written != buf.size()) {
-            int nbytes = write(fd,buf.data() + written, (buf.size()-written));
-            if (nbytes == -1)  {
-                //TODO: Deal with this better (check errno)
-                throw TCPChannelException("Read failed\n");
-            } else {
-                written += nbytes;
-            }
+        while ( (size_t)written != byte_array.size()) {
+            int nbytes = write(fd_, byte_array.data() + written, (byte_array.size()-written));
+            if (nbytes == -1)   //TODO: Deal with this better (check errno)
+                throw TCPException("Write failed\n");
+
+            written += nbytes;
         }
     }
 
     void Close() {
-        if (_Close() > 1) {
-            throw TCPChannelException("Could not close socket");
+
+        check_closed();
+
+        if ( close(fd_) == -1 ) {
+            throw TCPException("Error closing socket");
         }
+        closed_ = true; 
     }
+
+
+    ~TCPChannel() {
+        if (closed_) return;
+
+        try{
+            Close();
+        } 
+        catch (TCPException e){}
+    }
+
 };
 
 
 class TCPServer {
-    int fd;
+    int fd_;
 
 public:
-    // @throws TCPServerException
+    // @throws TCPException
     TCPServer(u_short port) {
         struct sockaddr_in serveraddr;
-        fd=socket(AF_INET,SOCK_STREAM,0);
-        if (fd == -1) {
-            throw TCPServerException("Could not create socket");
-        }
+        fd_=socket(AF_INET,SOCK_STREAM,0);
+        if (fd_ == -1) 
+            throw TCPException("Could not create socket");
+
         memset((void*)&serveraddr,0, sizeof(serveraddr));
         serveraddr.sin_family=AF_INET;
         serveraddr.sin_addr.s_addr=htonl(INADDR_ANY); 
         serveraddr.sin_port=htons(port);
-        if (bind(fd,(struct sockaddr*)&serveraddr, sizeof(serveraddr))) {
-            throw TCPServerException("Could not bind to port");           
-        }
+
+        if (bind(fd_,(struct sockaddr*)&serveraddr, sizeof(serveraddr)) == -1) 
+            throw TCPException("Could not bind to port");                  
     }
 
-    /*
-        Desc: Listens for a connection and returns a TCPChannel in case of success
-        @sync
-        @basic exception safety
-        @throws TCPServerException
-    */
-    TCPChannel Listen(int backLog) {
+    /**
+     *  Listens for a connection and returns a TCPChannel for communication with the client
+     *
+     *  @param  listen_queue
+     *              the maximum number of of attempt of connections that can wait in the queue
+     *  @returns
+     *              a dedicated TCPChannel for communication with the client.
+     *  @throws TCPException
+     */
+    TCPChannel Listen(int listen_queue) {
         struct sockaddr_in clientaddr;
         int clientfd;
         socklen_t clientlen;
-        if (listen(fd,backLog)) {
+        if (listen(fd_, listen_queue)) {
             //TODO: Deal with this better (check errno)
-            throw TCPServerException("Listen Failed");
+            throw TCPException("Listen Failed");
         }
+
         clientlen=sizeof(clientaddr);
-        clientfd=accept(fd,(struct sockaddr*)&clientaddr, &clientlen);
+        clientfd=accept(fd_,(struct sockaddr*)&clientaddr, &clientlen);
         if (clientfd == -1) {
             //TODO: Deal with this better (check errno)
-            throw TCPServerException("Could not accept connection");
+            throw TCPException("Could not accept connection");
         }
         return TCPChannel(clientfd);
     }
+
     //See TCPServer::Listen(inte backLog)
     TCPChannel Listen() {return Listen(10);}
 };
