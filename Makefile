@@ -5,11 +5,11 @@ INCDIR1	= ./include
 INCLUDE = -I${INCDIR1}
 
 
-all: trs
+all: tcs
 
 
-trs: src/trs.cpp
-	${CC} ${INCLUDE} ${FLAGS} src/trs.cpp -o trs
+tcs: src/tcs.cpp
+	${CC} ${INCLUDE} ${FLAGS} src/tcs.cpp -o tcs
 
 clean:
-	rm trs
+	rm tcs

@@ -1,0 +1,29 @@
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
+#include <stdio.h>
+#include <string>
+#include <vector>
+#include <fstream>
+#include <cstring>
+#include <iostream>
+#include <stdlib.h>
+#include "../include/udplib.hpp"
+
+int main(int argc, char* args[] ){
+
+    if(argc != 3) {
+        std::cout << "Usage: TCS <port> <langs.txt>" << std::endl;
+        return 0;
+    }
+
+    UdpServer server(atoi(args[1]), args[2]);
+    server.parse_avaliable_languages();
+    server.get_avaliable_languages();
+
+    std::string msg = server.wait_message();
+
+    server.answer_last("fy niggah");
+}
