@@ -98,9 +98,10 @@ public:
         return ret;
     }
 
-    ByteVector ReadLine() {
-        _CheckTalk();
-        ByteVector ret;
+    std::vector<uint8_t> ReadLine() {
+        check_closed();
+
+        std::vector<uint8_t> ret;
         uint8_t c = 0;
         while(*buf != '\n') {
             c = ReadBytes(1)[0];
@@ -118,8 +119,8 @@ public:
      *  @throws TCPException
      */
     void Write(const std::vector<uint8_t>& byte_array) {
-
         check_closed();
+        
         int written = 0;
         while ( (size_t)written != byte_array.size()) {
             int nbytes = write(fd_, byte_array.data() + written, (byte_array.size()-written));
