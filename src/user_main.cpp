@@ -1,5 +1,8 @@
 #include "tcplib.hpp"
-//#include "udplib.hpp"
+#include "udplib.hpp"
+#include <iostream>
+#include <tuple>
+#include <sstream>
 #define GN 7
 #define LIM_nL_MAX 99
 #define LIM_nL_MIN 99
@@ -25,23 +28,23 @@ struct invalid_request : public TRCException{
 //Everything has strong exception safety guarantee
 class TRCClientInterface {
     string _hostname;
-    ushort_t _port;
-    UDPChannel _TCSChannel;
+    u_short _port;
+    UPDChannel _TCSChannel;
     vector<string> lang_names; 
 public:
-    TRCClientInterface(const string& hostname, ushort_t port) :  _TCSChannel(hostname, port), _hostname(hostname), _port(port) {}
+    TRCClientInterface(const string& hostname, u_short port) :  _TCSChannel(hostname, port), _hostname(hostname), _port(port) {}
 
-    tuple <string,ushort_t> UNQ(int lang_id) {
+    tuple <string,u_short> UNQ(int lang_id) {
         string lang = lang_names.at(lang_id); //throws out_of_range
         string request = string("UNQ ");
         request += lang;
         request += "\n";
-        _TCSChannel.Write(request);
-        response = _TCSChannel.receive(10); //timeout = 10
+        _TCSChannel.Write(vector<uint8_t>(request.begin(), request.end()));
+        vector<uint8_t> response = _TCSChannel.Read(); //TODO: timeout = 10
         
         vector<string> tokens;
         string aux;
-        stringstream ss(response);
+        stringstream ss(string(response.begin(), response.end()));
         while (ss >> aux)
             tokens.push_back(aux);
         
@@ -55,20 +58,20 @@ public:
         }
         string hostname = tokens.at(1);
         unsigned long i_port = stoul(tokens.at(2));
-        if (stoul >= (1<<16)) {
+        if (i_port >= (1<<16)) {
             throw out_of_range("Invalid port name");
         }
-        return make_tuple((string) hostname, (ushort_t) i_port);
+        return make_tuple((string) hostname, (u_short) i_port);
     }
 
     vector<string> TLQ() {
         string request = string("ULQ\n");
-        _TCSChannel.Write(request);
-        response = _TCSChannel.receive(10); //timeout = 10
+        _TCSChannel.Write(vector<uint8_t>(request.begin(), request.end()));
+        vector<uint8_t> response = _TCSChannel.Read(); //TODO: timeout = 10
         
         vector<string> tokens;
         string aux;
-        stringstream ss(response);
+        stringstream ss(string(response.begin(), response.end()));
         while (ss >> aux)
             tokens.push_back(aux);
         
@@ -77,25 +80,25 @@ public:
         if (tokens.at(1) == "EOF") {
             return vector<string>();
         }
-        unsigned long n = itoul(tokens.at(1));
+        unsigned long n = stoul(tokens.at(1));
         if (tokens.size() != n + 2)  {
             invalid_argument("Invalid number of parameters on the response");
         }
         return vector<string>(tokens.begin()+2, tokens.end());
     }
 
-    vector<string> TRQ(const TCPChannel& channel, const vector<string>& wordlist) {
-        channel.WriteBytes("TRQ ");
-        channel.WriteBytes(to_string(wordlist.size()));
+    vector<string> TRQ(TCPChannel& channel, const vector<string>& wordlist) {
+        channel.Write(string("TRQ "));
+        channel.Write(to_string(wordlist.size()));
         for (auto w : wordlist) {
-            channel.WriteBytes(" ");
-            channel.WriteBytes(w);
+            channel.Write(string(" "));
+            channel.Write(w);
         }
-        channel.WriteBytes("\n");
-        string response = channel.ReadLine();
+        channel.Write(string("\n"));
+        vector<uint8_t> response = channel.ReadLine();
         vector<string> tokens;
         string aux;
-        stringstream ss(response);
+        stringstream ss(string(response.begin(), response.end()));
         while (ss >> aux)
             tokens.push_back(aux);
         
@@ -107,17 +110,17 @@ public:
         if (tokens.at(1) != "t") throw invalid_argument("Invalid response type");
         int n = stoi(tokens.at(2));
         if (n != wordlist.size()) throw invalid_argument("Word count mismatch");
-        if (token.size() != n + 3) throw invalid_argument("Word count mismatch");
+        if (tokens.size() != n + 3) throw invalid_argument("Word count mismatch");
         return vector<string>(tokens.begin()+3, tokens.end());
     }
 
-    vector<string> TRQ(const TCPChannel& channel, /*TODO: template for file translation*/) {
+    vector<string> TRQ(const TCPChannel& channel/*TODO: template for file translation*/) {
         //TODO: Do stuff to send the file
     }
 
-    void RequestWords(int lang, int n, const vector<string>& wordlist) {
+    void RequestWords(int lang, const vector<string>& wordlist) {
         string hostname;
-        ushort_t port;
+        u_short port;
         try {
             tie(hostname, port) = UNQ(lang);
         } catch (...) {
@@ -137,8 +140,8 @@ public:
             vector<string> translation = TRQ(channel, wordlist);
             cout << "Translations: " << endl; 
             for (size_t i=0; i<wordlist.size(); i++) {
-                string& word  = wordlist.at(i);
-                string& trans = translation.at(i);
+                const string& word  = wordlist.at(i);
+                const string& trans = translation.at(i);
                 cout << "\t"  << word << " <-> \t" << trans << endl;
             }
         } catch(...) {
@@ -149,7 +152,7 @@ public:
 
     void RequestImage(int lang, const string& filename) {
         string hostname;
-        ushort_t port;
+        u_short port;
         try {
             tie(hostname, port) = UNQ(lang);
         } catch (...) {
@@ -180,12 +183,12 @@ public:
             try {
                 lang = stoi(tokens[1]);
                 n = stoi(tokens[3]);
-                if ((tokens.size() + 4 != (unsigned int) n)
+                if ((tokens.size() - 4 != (unsigned int) n)
                    || lang <= 0 
                    || n <= 0) {
                        throw invalid_argument("");
                    }
-            } catch (invalid_argument, out_of_range) {
+            } catch (...) {
                 cerr << "request: Invalid argument" << endl;
                 return;
             }
@@ -194,15 +197,15 @@ public:
             int lang=0;
             try {
                 lang = stoi(tokens[1]);
-                if ((tokens.size() + 4 != (unsigned int) n) 
+                if ((tokens.size() != 4) 
                    || lang <= 0) {
                        throw invalid_argument("");
                    }
-            } catch (invalid_argument, out_of_range) {
+            } catch (...) {
                 cerr << "request: Invalid argument" << endl;
                 return;
             }
-            RequestFile(lang, tokens[3]);
+            RequestImage(lang, tokens[3]);
         } else {
             cerr << "request: Unknow mode '" << tokens[2] << "'" << endl;
             return;
@@ -212,7 +215,7 @@ public:
 
     void List() {
         try {
-            vector<string>& ltmp = TQL();
+            const vector<string>& ltmp = TLQ();
             lang_names = ltmp;
             for (size_t i=0; i<lang_names.size(); i++) {
                 cout << i << "- " << lang_names[i] << endl; 
@@ -251,7 +254,7 @@ public:
 
 
 int main(int argc, char **argv) {
-    ushort_t port = 58000 + GN; 
+    u_short port = 58000 + GN; 
     string hostname = string("localhost");
     for (int i = 1; i+1<argc; i++) {
         if (!strcmp("-n", argv[i])) {
@@ -259,12 +262,19 @@ int main(int argc, char **argv) {
             hostname = string(argv[i]);
         } else if (!strcmp("-p", argv[i])) {
             i++;
-            hostname = string(argv[i]);
+            try {
+                unsigned long aux = stoul(string(argv[i]));
+                if (aux >= (1<<16)) throw out_of_range("Port name too high");
+                port = (u_short) aux;
+            } catch (...) {
+                cerr << "Invalid port..." << endl;
+            }
+        } else {
+            cerr << "Unknow option: " << argv[i] << endl;
         }
-        cerr << "Unknow option: " << argv[i] << endl;
     }
 
-    TRCClientInterface client = new TRCClientInterface(hostname, port);
+    TRCClientInterface client = TRCClientInterface(hostname, port);
     try {
         client.Loop();
     } catch (...) {

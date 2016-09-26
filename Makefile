@@ -6,7 +6,7 @@ INCDIR1	= ./include
 INCLUDE = -I${INCDIR1}
 
 
-all: trs user
+all: user trs
 
 trs: src/trs.cpp include/tcplib.hpp include/udplib.hpp
 	${CC} ${INCLUDE} ${FLAGS} src/trs.cpp -o trs
@@ -15,4 +15,4 @@ user: src/user_main.cpp include/tcplib.hpp include/udplib.hpp
 	${CC} ${INCLUDE} ${FLAGS} src/user_main.cpp -o user
 
 clean:
-	rm trs
+	rm trs user

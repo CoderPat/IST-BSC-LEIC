@@ -32,6 +32,8 @@ private:
     inline void check_closed(){ if(closed_) throw TCPException("Socket already closed"); }
 
 public:
+    /** Creates an empty TCPChannel*/
+    TCPChannel() : fd_(-1), closed_(true) {}
 
     /** Creates a TCPChannel on an already open socket, no error checking is performed */
     TCPChannel(int fd) : fd_(fd), closed_(false) {} 
@@ -103,8 +105,8 @@ public:
 
         std::vector<uint8_t> ret;
         uint8_t c = 0;
-        while(*buf != '\n') {
-            c = ReadBytes(1)[0];
+        while(c != '\n') {
+            c = Read(1)[0];
             ret.push_back(c);
         }
         return ret;
@@ -129,6 +131,10 @@ public:
 
             written += nbytes;
         }
+    }
+
+    void Write(const std::string& s) {
+        Write(std::vector<uint8_t>(s.begin(), s.end()));
     }
 
     void Close() {
