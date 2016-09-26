@@ -6,8 +6,7 @@
 using namespace std; 
 
 
-struct TRCException : public std::exception
-{
+struct TRCException : public std::exception {
    std::string s;
    TRCException(std::string ss) : s(ss) {}
    ~TRCException() throw () {}
@@ -23,26 +22,66 @@ struct invalid_request : public TRCException{
 };
 
 
+//Everything has strong exception safety guarantee
 class TRCClientInterface {
     string _hostname;
-    uint16_t _port;
+    ushort_t _port;
     UDPChannel _TCSChannel;
     vector<string> lang_names; 
 public:
-    TRCClientInterface(const string& hostname, uint16_t port) :  _TCSChannel(hostname, port), _hostname(hostname), _port(port) {}
+    TRCClientInterface(const string& hostname, ushort_t port) :  _TCSChannel(hostname, port), _hostname(hostname), _port(port) {}
 
-    tuple <string,uint16_t> UNQ(int lang_id) {
+    tuple <string,ushort_t> UNQ(int lang_id) {
         string lang = lang_names.at(lang_id); //throws out_of_range
         string request = string("UNQ ");
         request += lang;
         request += "\n";
-        response = _TCSChannel.send(request, 10); //timeout = 10
-
-        //TODO: check response and turn it into a tuple
+        _TCSChannel.Write(request);
+        response = _TCSChannel.receive(10); //timeout = 10
+        
+        vector<string> tokens;
+        string aux;
+        stringstream ss(response);
+        while (ss >> aux)
+            tokens.push_back(aux);
+        
+        if (tokens.at(0) != "UNR") throw invalid_argument("Unknown response");
+        if (tokens.at(1) == "ERR") throw invalid_request("Server got an invalid request");
+        if (tokens.at(1) == "EOF") {
+            throw translation_not_available("No translation could be provided for the requested language");
+        }
+        if (tokens.size() != 3)  {
+            invalid_argument("Invalid number of parameters on the response");
+        }
+        string hostname = tokens.at(1);
+        unsigned long i_port = stoul(tokens.at(2));
+        if (stoul >= (1<<16)) {
+            throw out_of_range("Invalid port name");
+        }
+        return make_tuple((string) hostname, (ushort_t) i_port);
     }
 
-    void TLQ() {
-        //TODO: This updates the lang_names
+    vector<string> TLQ() {
+        string request = string("ULQ\n");
+        _TCSChannel.Write(request);
+        response = _TCSChannel.receive(10); //timeout = 10
+        
+        vector<string> tokens;
+        string aux;
+        stringstream ss(response);
+        while (ss >> aux)
+            tokens.push_back(aux);
+        
+        if (tokens.at(0) != "ULR") throw invalid_argument("Unknown response");
+        if (tokens.at(1) == "ERR") throw invalid_request("Server got an invalid request");
+        if (tokens.at(1) == "EOF") {
+            return vector<string>();
+        }
+        unsigned long n = itoul(tokens.at(1));
+        if (tokens.size() != n + 2)  {
+            invalid_argument("Invalid number of parameters on the response");
+        }
+        return vector<string>(tokens.begin()+2, tokens.end());
     }
 
     vector<string> TRQ(const TCPChannel& channel, const vector<string>& wordlist) {
@@ -78,7 +117,7 @@ public:
 
     void RequestWords(int lang, int n, const vector<string>& wordlist) {
         string hostname;
-        uint16_t port;
+        ushort_t port;
         try {
             tie(hostname, port) = UNQ(lang);
         } catch (...) {
@@ -96,7 +135,12 @@ public:
         
         try {
             vector<string> translation = TRQ(channel, wordlist);
-            //TODO: Print out the translation in the required format...
+            cout << "Translations: " << endl; 
+            for (size_t i=0; i<wordlist.size(); i++) {
+                string& word  = wordlist.at(i);
+                string& trans = translation.at(i);
+                cout << "\t"  << word << " <-> \t" << trans << endl;
+            }
         } catch(...) {
             cerr << "request t: Translation failed";
             return;
@@ -105,7 +149,7 @@ public:
 
     void RequestImage(int lang, const string& filename) {
         string hostname;
-        uint16_t port;
+        ushort_t port;
         try {
             tie(hostname, port) = UNQ(lang);
         } catch (...) {
@@ -168,7 +212,11 @@ public:
 
     void List() {
         try {
-            TQL();
+            vector<string>& ltmp = TQL();
+            lang_names = ltmp;
+            for (size_t i=0; i<lang_names.size(); i++) {
+                cout << i << "- " << lang_names[i] << endl; 
+            }
         } catch(...) {
             return;
         }
@@ -203,7 +251,7 @@ public:
 
 
 int main(int argc, char **argv) {
-    uint16_t port = 58000 + GN; 
+    ushort_t port = 58000 + GN; 
     string hostname = string("localhost");
     for (int i = 1; i+1<argc; i++) {
         if (!strcmp("-n", argv[i])) {
