@@ -95,10 +95,10 @@ public:
             channel.Write(w);
         }
         channel.Write(string("\n"));
-        vector<uint8_t> response = channel.ReadLine();
+        string response = channel.ReadLine(string());
         vector<string> tokens;
         string aux;
-        stringstream ss(string(response.begin(), response.end()));
+        stringstream ss(response);
         while (ss >> aux)
             tokens.push_back(aux);
         

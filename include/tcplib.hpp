@@ -100,6 +100,11 @@ public:
         return ret;
     }
 
+    std::string Read(size_t count, const std::string& overrider) {
+        std::vector<uint8_t> aux = Read(count);
+        return std::string(aux.begin(), aux.end());
+    }
+
     std::vector<uint8_t> ReadLine() {
         check_closed();
 
@@ -110,6 +115,11 @@ public:
             ret.push_back(c);
         }
         return ret;
+    }
+    
+    std::string ReadLine(const std::string& overrider) {
+        std::vector<uint8_t> aux = ReadLine();
+        return std::string(aux.begin(), aux.end());
     }
 
     /**
