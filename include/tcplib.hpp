@@ -10,6 +10,7 @@
 #include <string>
 #include <exception>
 #include <vector>
+#include <fstream>
 
 
 struct TCPException : public std::exception
@@ -145,6 +146,21 @@ public:
 
     void Write(const std::string& s) {
         Write(std::vector<uint8_t>(s.begin(), s.end()));
+    }
+
+    void Write(std::ifstream& s) {
+        check_closed();
+        char buf[2];
+        while(s.get(buf[0])) {
+            uint8_t c = buf[0];
+            while (1) {
+                int nbytes = write(fd_, &c, 1);
+                if (nbytes == -1)   //TODO: Deal with this better (check errno)
+                    throw TCPException("Write failed\n");
+                if (nbytes == 1) 
+                    break;
+            }
+        }
     }
 
     void Close() {

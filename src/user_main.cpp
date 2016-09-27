@@ -3,6 +3,7 @@
 #include <iostream>
 #include <tuple>
 #include <sstream>
+#include <fstream>
 #define GN 7
 #define LIM_nL_MAX 99
 #define LIM_nL_MIN 99
@@ -88,7 +89,7 @@ public:
     }
 
     vector<string> TRQ(TCPChannel& channel, const vector<string>& wordlist) {
-        channel.Write(string("TRQ "));
+        channel.Write(string("TRQ t "));
         channel.Write(to_string(wordlist.size()));
         for (auto w : wordlist) {
             channel.Write(string(" "));
@@ -114,8 +115,34 @@ public:
         return vector<string>(tokens.begin()+3, tokens.end());
     }
 
-    vector<string> TRQ(const TCPChannel& channel/*TODO: template for file translation*/) {
-        //TODO: Do stuff to send the file
+    tuple<string, size_t> TRQ(TCPChannel& channel, string& filename, size_t sizeInBytes) {
+        channel.Write(string("TRQ f "));
+        channel.Write(to_string(sizeInBytes));
+        ifstream inFile;
+        inFile.open(filename, ios::in);
+        channel.Write(inFile);
+        channel.Write(string("\n"));
+        string response = channel.ReadUntil(' ', string());
+        if (response != "TRR") throw invalid_argument("Unknown response");
+
+        response = channel.ReadUntil(' ', string());
+        if (response == "ERR") throw invalid_request("Server got an invalid request");
+        if (response == "NTA") {
+            throw translation_not_available("No translation could be provided for the requested language");
+        }
+        if (response != "f") throw invalid_argument("Invalid response type");
+
+        string ofilename = channel.ReadUntil(' ', string());
+        response = channel.ReadUntil(' ', string());
+        int n = stoi(response);
+
+        ofstream ofile;
+        ofile.open(ofilename, ios::out);
+        vector<uint8_t> bytes = channel.Read(n);
+        ofile.write((char*)bytes.data(), bytes.size());
+        ofile.close();
+
+        return make_tuple(filename, n);
     }
 
     void RequestWords(int lang, const vector<string>& wordlist) {
@@ -150,13 +177,24 @@ public:
         }
     }
 
-    void RequestImage(int lang, const string& filename) {
+    void RequestImage(int lang, string& filename) {
         string hostname;
         u_short port;
         try {
             tie(hostname, port) = UNQ(lang);
         } catch (...) {
-            cerr << "request t: Could not get TRS server for language " << lang << "!" << endl;
+            cerr << "request f: Could not get TRS server for language " << lang << "!" << endl;
+            return;
+        }
+
+        size_t sizeInBytes;    
+        try {
+            std::ifstream inputFile;
+            inputFile.open(filename, ios::binary | ios::ate);
+            sizeInBytes = inputFile.tellg();
+            inputFile.close();
+        } catch (...) {
+            cerr << "request f: Could not open file " << filename << " for reading" << endl;
             return;
         }
 
@@ -164,14 +202,22 @@ public:
         try {
             conn = TCPChannel(hostname.c_str(),port);
         } catch (...) {
-            cerr << "request t: Could not conect to server " << hostname << " on port " << port << endl;
+            cerr << "request f: Could not conect to server " << hostname << " on port " << port << endl;
             return;
         }
 
         //TODO: stuff...
+        try {
+            string outfilename;
+            size_t outfilelen;
+            tie(outfilename,outfilelen) = TRQ(conn, filename, sizeInBytes);
+        } catch (...) {
+            cerr << "request f: TRQ failed :(" << endl;
+            return;
+        }
     }
 
-    void Request(const vector<string>& tokens) {
+    void Request(vector<string>& tokens) {
         if (tokens.size() < 4) {
             cerr << "request: Insuficient arguments" << endl;
             return;
