@@ -105,20 +105,20 @@ public:
         return std::string(aux.begin(), aux.end());
     }
 
-    std::vector<uint8_t> ReadLine() {
+    std::vector<uint8_t> ReadUntil(uint8_t term) {
         check_closed();
 
         std::vector<uint8_t> ret;
         uint8_t c = 0;
-        while(c != '\n') {
+        while(c != term) {
             c = Read(1)[0];
             ret.push_back(c);
         }
         return ret;
     }
     
-    std::string ReadLine(const std::string& overrider) {
-        std::vector<uint8_t> aux = ReadLine();
+    std::string ReadUntil(uint8_t term, const std::string& overrider) {
+        std::vector<uint8_t> aux = ReadUntil(term);
         return std::string(aux.begin(), aux.end());
     }
 

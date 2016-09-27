@@ -95,7 +95,7 @@ public:
             channel.Write(w);
         }
         channel.Write(string("\n"));
-        string response = channel.ReadLine(string());
+        string response = channel.ReadUntil('\n', string());
         vector<string> tokens;
         string aux;
         stringstream ss(response);
@@ -192,7 +192,7 @@ public:
                 cerr << "request: Invalid argument" << endl;
                 return;
             }
-            RequestWords(lang, vector<string>(tokens.begin()+4, tokens.end()));
+            RequestWords(lang-1, vector<string>(tokens.begin()+4, tokens.end()));
         } else if (tokens[2]=="f") {
             int lang=0;
             try {
@@ -205,7 +205,7 @@ public:
                 cerr << "request: Invalid argument" << endl;
                 return;
             }
-            RequestImage(lang, tokens[3]);
+            RequestImage(lang-1, tokens[3]);
         } else {
             cerr << "request: Unknow mode '" << tokens[2] << "'" << endl;
             return;
@@ -218,7 +218,7 @@ public:
             const vector<string>& ltmp = TLQ();
             lang_names = ltmp;
             for (size_t i=0; i<lang_names.size(); i++) {
-                cout << i << "- " << lang_names[i] << endl; 
+                cout << i+1 << "- " << lang_names[i] << endl; 
             }
         } catch(exception& e) {
 	    cout << "Caught exception" << e.what() << endl;
