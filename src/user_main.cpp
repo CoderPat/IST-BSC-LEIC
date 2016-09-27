@@ -220,7 +220,8 @@ public:
             for (size_t i=0; i<lang_names.size(); i++) {
                 cout << i << "- " << lang_names[i] << endl; 
             }
-        } catch(...) {
+        } catch(exception& e) {
+	    cout << "Caught exception" << e.what() << endl;
             return;
         }
     }
