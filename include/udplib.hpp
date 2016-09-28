@@ -114,6 +114,7 @@ public:
 		address_.sin_family=AF_INET;
 		address_.sin_addr.s_addr=((struct in_addr *)(hostptr->h_addr_list[0]))->s_addr;
 		address_.sin_port=htons(port);
+		addrlen_ = sizeof(address_); 
 	}
 };
 
