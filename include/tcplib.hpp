@@ -10,7 +10,6 @@
 #include <string>
 #include <exception>
 #include <vector>
-#include <fstream>
 
 
 struct TCPException : public std::exception
@@ -33,8 +32,6 @@ private:
     inline void check_closed(){ if(closed_) throw TCPException("Socket already closed"); }
 
 public:
-    /** Creates an empty TCPChannel*/
-    TCPChannel() : fd_(-1), closed_(true) {}
 
     /** Creates a TCPChannel on an already open socket, no error checking is performed */
     TCPChannel(int fd) : fd_(fd), closed_(false) {} 
@@ -101,28 +98,6 @@ public:
         return ret;
     }
 
-    std::string Read(size_t count, const std::string& overrider) {
-        std::vector<uint8_t> aux = Read(count);
-        return std::string(aux.begin(), aux.end());
-    }
-
-    std::vector<uint8_t> ReadUntil(uint8_t term) {
-        check_closed();
-
-        std::vector<uint8_t> ret;
-        uint8_t c = 0;
-        while(c != term) {
-            c = Read(1)[0];
-            ret.push_back(c);
-        }
-        return ret;
-    }
-    
-    std::string ReadUntil(uint8_t term, const std::string& overrider) {
-        std::vector<uint8_t> aux = ReadUntil(term);
-        return std::string(aux.begin(), aux.end());
-    }
-
     /**
      *  Writes a vector of bytes to a socket.
      *  Blocks until all bytes are written.
@@ -132,8 +107,9 @@ public:
      *  @throws TCPException
      */
     void Write(const std::vector<uint8_t>& byte_array) {
+
         check_closed();
-        
+
         int written = 0;
         while ( (size_t)written != byte_array.size()) {
             int nbytes = write(fd_, byte_array.data() + written, (byte_array.size()-written));
@@ -141,25 +117,6 @@ public:
                 throw TCPException("Write failed\n");
 
             written += nbytes;
-        }
-    }
-
-    void Write(const std::string& s) {
-        Write(std::vector<uint8_t>(s.begin(), s.end()));
-    }
-
-    void Write(std::ifstream& s) {
-        check_closed();
-        char buf[2];
-        while(s.get(buf[0])) {
-            uint8_t c = buf[0];
-            while (1) {
-                int nbytes = write(fd_, &c, 1);
-                if (nbytes == -1)   //TODO: Deal with this better (check errno)
-                    throw TCPException("Write failed\n");
-                if (nbytes == 1) 
-                    break;
-            }
         }
     }
 

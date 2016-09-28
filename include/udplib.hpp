@@ -101,9 +101,9 @@ UPDConnection::~UPDConnection(){
 }
 
 
-class UDPChannel : public UPDConnection{
+class UPDChannel : public UPDConnection{
 public:
-	UDPChannel(const std::string& host, u_short port){
+	UPDChannel(const std::string& host, u_short port){
 		struct hostent* hostptr;
 
 		hostptr=gethostbyname(host.c_str());
@@ -117,7 +117,7 @@ public:
 	}
 };
 
-class UDPServer : public UDPConnection{
+class UDPServer : public UPDConnection{
 public:
     UDPServer(u_short port){
     	struct sockaddr_in serveraddr;
