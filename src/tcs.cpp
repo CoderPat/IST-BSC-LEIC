@@ -37,12 +37,12 @@ public:
 	return out;
     }
 
-    void add_language(std::string lang, std::string ip, int port) {
-        _langs[lang][ip] = port;
+    void add_language(std::string lang, std::string ip, std::string port) {
+        _langs[lang][ip] = std::atoi(port.c_str());
     }
 
-    void remove_language(std::string lang, std::string ip, int port) {
-        if(_langs[lang][ip] == port) {
+    void remove_language(std::string lang, std::string ip, std:: string port) {
+        if(_langs[lang][ip] == std::atoi(port.c_str())) {
             _langs.erase(lang);
         }
     }
@@ -86,7 +86,7 @@ public:
         std::string buffer = "";
 
         for(int i = 0; i <= in.length(); i++) {
-            if(in[i] != ' ' && in[i] != '\n' && in[i] != '\0') {
+            if(in[i] != ' ' && in[i] != '\n' && in[i] != '\0' && in[i] != EOF) {
                 buffer += in[i];
             }
             else {
@@ -109,16 +109,13 @@ int main(int argc, char* args[]) {
     server.get_avaliable_languages();
 
     while(1) {
-	std::cout << "NIGGER" << std::endl;
         std::vector<uint8_t> msg = server.Read();
         std::string msgstr = server.uint8_tToString(msg);
-	std::cout << msgstr << std::endl;
-	std::cout << "NIGGER" << std::endl;
         std::vector<std::string> input = server.tokenizer(msgstr);
         std::vector<std::string> avlangs = server.get_avaliable_languages();
         std::string response = "";
 
-        bool secure = (input.size() == 1 || input.size() == 2) ? true : false;
+        bool secure = (input.size() == 1 || input.size() == 2 || input.size() != 3 || input.size() != 4) ? true : false;
         if(secure && !strcmp("ULQ", input[0].c_str())) {
             response = "ULR " + std::to_string(avlangs.size()) + " ";
             for(int i = 0; i < avlangs.size(); i++) {
@@ -130,13 +127,30 @@ int main(int argc, char* args[]) {
             response = "UNR ";
             if(std::find(avlangs.begin(), avlangs.end(), input[1]) != avlangs.end())
             {
-                response = server.get_lang(input[1])[0];
+                response = response + server.get_lang(input[1])[0];
+		response = response + " " + server.get_lang(input[1])[1];
             }
             else {
                 response = "Language not supported";
             }
         }
         else if (secure && !strcmp("SRG", input[0].c_str())) {
+		try {
+			server.add_language(input[1], input[2], input[3]);		
+			response = "SRR OK";
+		}
+		catch (int e) {
+			response = "SRR NOK";		
+		}		
+        }
+	else if (secure && !strcmp("SUN", input[0].c_str())) {
+		try {
+			server.remove_language(input[1], input[2], input[3]);		
+			response = "SUR OK";
+		}
+		catch (int e) {
+			response = "SUR NOK";		
+		}		
         }
         else {
             response = "Error";
