@@ -33,6 +33,7 @@ private:
     inline void check_closed(){ if(closed_) throw TCPException("Socket already closed"); }
 
 public:
+
     /** Creates an empty TCPChannel*/
     TCPChannel() : fd_(-1), closed_(true) {}
 
@@ -69,6 +70,18 @@ public:
             //TODO: Deal with this better (check errno)
             throw TCPException("Connection failed");
         }
+    }
+
+    /** Move constructor to avoid the original object closing the socket for the new one */
+    TCPChannel(TCPChannel&& c) : fd_(c.fd_), closed_(c.closed_) {
+        c.closed_ = true;
+    }
+
+    /** Move assignment operator to avoid the original object closing the socket for the new one */
+    TCPChannel& operator=(TCPChannel&& c){
+        fd_ = c.fd_;
+        closed_ = c.closed_;
+        c.closed_ = true;
     }
 
 
@@ -181,7 +194,6 @@ public:
         } 
         catch (TCPException e){}
     }
-
 };
 
 

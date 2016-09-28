@@ -12,6 +12,27 @@
 #include "udplib.hpp"
 #include "utils.hpp"
 
+struct TRSException : public std::exception {
+   std::string s;
+   TRSException(std::string ss) : s(ss) {}
+   ~TRSException() throw () {}
+   const char* what() const throw() { return s.c_str(); }
+};
+struct translation_not_available : public TRSException{
+   translation_not_available(std::string ss) : TRSException(ss) {}
+   ~translation_not_available() throw () {}
+};
+
+struct invalid_request : public TRSException{
+   invalid_request(std::string ss) : TRSException(ss) {}
+   ~invalid_request() throw () {}
+};
+
+struct invalid_response : public TRSException{
+   invalid_response(std::string ss) : TRSException(ss) {}
+   ~invalid_response() throw () {}
+};
+
 class TRSInterface{
 private:
     TCPServer server_;
@@ -36,9 +57,9 @@ private:
 
 		std::vector<std::string> tokens = tokenize(response);
 
-        if(tokens.at(0) != expected_response) throw std::exception();
-        if(tokens.at(1) == "NOK") throw std::exception();  //TODO: right exception
-        if(tokens.at(1) == "ERR") throw std::exception();  //TODO: right exception   
+        if(tokens.at(0) != expected_response) throw invalid_response("Not the expected response");
+        if(tokens.at(1) == "NOK") throw invalid_response("Request refused");  //TODO: right exception
+        if(tokens.at(1) == "ERR") throw invalid_response("Something went wrong on the server side");  //TODO: right exception   
     }
 
 
@@ -67,11 +88,13 @@ public:
     	translation_file.close();
     }
 
-	TRSInterface(std::string language,
+	TRSInterface(const std::string& language,
+                 const std::string& word_file_path,
+                 const std::string& img_file_path,
 			  	 u_short my_port, 
 			  	 const std::string& tcs_hostname, 
 			  	 u_short tcs_port) : port_(my_port), language_(language), server_(my_port), tcs_channel_(tcs_hostname, tcs_port) {
-		LoadTranslators("text_translation.txt", "file_translation.txt"); //TODO: Constant file names out of the class
+		LoadTranslators(word_file_path, img_file_path);
 	}
 
 	void SRG(){
@@ -83,11 +106,10 @@ public:
 	}
 
 	void TRR(){
-
         TCPChannel user_channel = server_.Listen();
 
         std::string request = string_cast(user_channel.ReadUntil(' '));
-        if(request != "TRQ") throw std::exception(); //TODO: right exception
+        if(request != "TRQ") throw invalid_request("Unkown request"); 
 
         request = string_cast(user_channel.ReadUntil(' '));
         if(request == "t"){
@@ -111,13 +133,16 @@ public:
          	std::string translated_filepath = TranslateFile(filename);
          	std::ifstream translated_file;
 
+            //Begining of the response and path
          	user_channel.Write("TRR f ");
          	user_channel.Write(translated_filepath + " ");
 
+            //Write the size
             translated_file.open(translated_filepath, std::ios::binary | std::ios::ate);
             user_channel.Write(std::to_string(translated_file.tellg()) + " ");
             translated_file.close();
 
+            //And the actual data
             translated_file.open(translated_filepath, std::ios::in);
             user_channel.Write(translated_file);
             translated_file.close();
@@ -125,15 +150,21 @@ public:
             user_channel.Write("\n");
         }
         
-        else throw std::exception(); //TODO: right exception
+        else throw invalid_request("Unkown TRQ request option"); 
 	}
 
     std::string TranslateWord(const std::string& word){
-        return word_translator.at(word);
+        try{
+            return word_translator.at(word);
+        }
+        catch(std::out_of_range& e){throw translation_not_available(word);} //Still need to find where to catch this;
     }
 
     std::string TranslateFile(const std::string& file){
-    	return file_translator.at(file);
+        try{
+    	   return file_translator.at(file);
+        }
+        catch(std::out_of_range& e){throw translation_not_available(file);} //Still need to fin where to catch this;
     }
 };
 
@@ -143,6 +174,8 @@ int main(int argc, char **argv) {
     u_short trs_port = 59000 + GN;
     u_short tcs_port = 58000 + GN; 
     std::string hostname = "localhost";
+    std::string text_translation_file = "auxiliary/text_translation.txt";
+    std::string file_translation_file = "auxiliary/file_translation.txt";
 
     if(argc < 2){
         std::cerr << "Usage <language> [-p <trs_port>] [-n <hostname>] [-e <tcs_port>]";
@@ -163,7 +196,17 @@ int main(int argc, char **argv) {
         std::cerr << "Unknow option: " << argv[i] << std::endl;
     }
 
-    TRSInterface lang_server(language, trs_port, hostname, tcs_port);
+    TRSInterface lang_server(language, text_translation_file, file_translation_file, trs_port, hostname, tcs_port);
     while(1)
-    	lang_server.TRR();
+        try{
+    	   lang_server.TRR();
+        }
+        catch(invalid_request& e){
+            std::cerr << "Something wrong with a request: " << e.what() << std::endl;
+        }
+        catch(invalid_response& e){
+            std::cerr << "Error in a TCS server response: " << e.what() << std::endl;
+            return -1;
+        }
+
 }
