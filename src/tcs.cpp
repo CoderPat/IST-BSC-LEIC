@@ -28,8 +28,13 @@ public:
         return _langs;
     }
 
-    std::map<std::string, int> get_lang(std::string lang) {
-        return _langs[lang];
+    std::vector<std::string> get_lang(std::string lang) {
+	std::vector<std::string> out;
+	for(std::map<std::string, int>::iterator it = _langs[lang].begin(); it != _langs[lang].end(); ++it) {
+            out.push_back(it->first);
+	    out.push_back(std::to_string(it->second));
+        }
+	return out;
     }
 
     void add_language(std::string lang, std::string ip, int port) {
@@ -52,7 +57,7 @@ public:
                 _langs[inputs[0]][inputs[1]] = atoi(inputs[2].c_str());
                 std::cout << inputs[0] << "  " << inputs[1] <<  " " << _langs[inputs[0]][inputs[1]] << std::endl;
             }
-        }
+        }	
     }
 
     std::vector<std::string>  get_avaliable_languages() {
@@ -79,16 +84,19 @@ public:
 
         std::vector<std::string> out;
         std::string buffer = "";
-        for(int i = 0; i < in.length(); i++) {
-            if(in[i] != ' ' && in[i] != '\n') {
+
+        for(int i = 0; i <= in.length(); i++) {
+            if(in[i] != ' ' && in[i] != '\n' && in[i] != '\0') {
                 buffer += in[i];
             }
             else {
                 out.push_back(buffer);
                 buffer = "";
+		if(in[i] == '\0' || in[i] == '\n') {
+			return out;		
+		}	
             }
         }
-        std::cout << out[0] << std::endl;
         return out;
     }
 };
@@ -96,21 +104,23 @@ public:
 int main(int argc, char* args[]) {
 
 
-    TCS server(8112);
+    TCS server(50001);
     server.parse_avaliable_languages();
     server.get_avaliable_languages();
 
     while(1) {
+	std::cout << "NIGGER" << std::endl;
         std::vector<uint8_t> msg = server.Read();
         std::string msgstr = server.uint8_tToString(msg);
+	std::cout << msgstr << std::endl;
+	std::cout << "NIGGER" << std::endl;
         std::vector<std::string> input = server.tokenizer(msgstr);
         std::vector<std::string> avlangs = server.get_avaliable_languages();
         std::string response = "";
 
         bool secure = (input.size() == 1 || input.size() == 2) ? true : false;
-
         if(secure && !strcmp("ULQ", input[0].c_str())) {
-            response = "ULR " + (avlangs.size()).c_str() + " ";
+            response = "ULR " + std::to_string(avlangs.size()) + " ";
             for(int i = 0; i < avlangs.size(); i++) {
                 response = response + avlangs[i] + " ";
             }
@@ -120,7 +130,7 @@ int main(int argc, char* args[]) {
             response = "UNR ";
             if(std::find(avlangs.begin(), avlangs.end(), input[1]) != avlangs.end())
             {
-                response = std::to_string(server.get_lang()[input[1]]);
+                response = server.get_lang(input[1])[0];
             }
             else {
                 response = "Language not supported";
