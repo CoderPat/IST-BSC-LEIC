@@ -110,9 +110,8 @@ public:
         check_closed();
 
         std::vector<uint8_t> ret;
-        uint8_t c = 0;
-        while(c != term) {
-            c = Read(1)[0];
+        uint8_t c;
+        while((c=Read(1)[0]) != term) {
             ret.push_back(c);
         }
         return ret;
