@@ -88,6 +88,8 @@ public:
     	translation_file.close();
     }
 
+    TRSInterface(){} //TODO: Only allow other functions after proper initialization
+
 	TRSInterface(const std::string& language,
                  const std::string& word_file_path,
                  const std::string& img_file_path,
@@ -196,7 +198,14 @@ int main(int argc, char **argv) {
         std::cerr << "Unknow option: " << argv[i] << std::endl;
     }
 
-    TRSInterface lang_server(language, text_translation_file, file_translation_file, trs_port, hostname, tcs_port);
+    TRSInterface lang_server;
+    try{
+        lang_server = std::move(TRSInterface(language, text_translation_file, file_translation_file, trs_port, hostname, tcs_port));
+    }
+    catch(std::exception& e){
+        std::cerr << "Error initializing the TRS: " << e.what() << std::endl;
+        return -1;
+    }
     while(1)
         try{
     	   lang_server.TRR();

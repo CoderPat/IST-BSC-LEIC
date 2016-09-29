@@ -40,6 +40,17 @@ public:
  
 	}
 
+    /** Move constructor to avoid the original object closing the socket for the new one */
+    UDPConnection(UDPConnection&& c) : fd_(c.fd_), closed_(c.closed_) {
+        c.closed_ = true;
+    }
+
+    UDPConnection& operator=(UDPConnection&& c){
+        fd_ = c.fd_;
+        closed_ = c.closed_;
+        c.closed_ = true;
+    }
+
     /**
      *  Reads a UDP packet onto a byte container
      *	Blocks until a packet is received
@@ -103,6 +114,9 @@ UDPConnection::~UDPConnection(){
 
 class UDPChannel : public UDPConnection{
 public:
+
+    UDPChannel() { closed_ = true; } 
+
 	UDPChannel(const std::string& host, u_short port){
 		struct hostent* hostptr;
 
