@@ -55,7 +55,7 @@ private:
     void _status_update(const std::string& request, const std::string& expected_response){
 
     	char myhostname[HOST_NAME_MAX+1];
-    	if(gethostname(myhostname, HOST_NAME_MAX)==-1)
+    	if(gethostname(myhostname, HOST_NAME_MAX+1)==-1)
             throw initialization_error("Couldn't get self name");
 
         std::string message = request + " " + language_ + " " + myhostname + " " + std::to_string(port_) + "\n";
