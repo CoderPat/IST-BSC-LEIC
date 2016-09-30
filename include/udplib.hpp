@@ -23,7 +23,7 @@ struct UDPException : public std::exception
 
 
 
-class UPDConnection{
+class UDPConnection{
 protected:
 	int fd_;
 	bool closed_;
@@ -33,12 +33,23 @@ protected:
 	inline void check_closed(){ if(closed_) throw UDPException("Socket already closed"); }
 
 public:
-	UPDConnection() : closed_(false){
+	UDPConnection() : closed_(false){
 		fd_ = socket(AF_INET,SOCK_DGRAM,0);
 		if (fd_ == -1) 
             throw UDPException("Could not create socket");
  
 	}
+
+    /** Move constructor to avoid the original object closing the socket for the new one */
+    UDPConnection(UDPConnection&& c) : fd_(c.fd_), closed_(c.closed_) {
+        c.closed_ = true;
+    }
+
+    UDPConnection& operator=(UDPConnection&& c){
+        fd_ = c.fd_;
+        closed_ = c.closed_;
+        c.closed_ = true;
+    }
 
     /**
      *  Reads a UDP packet onto a byte container
@@ -88,10 +99,10 @@ public:
         closed_ = true; 
     }
 
-    virtual ~UPDConnection() = 0;
+    virtual ~UDPConnection() = 0;
 };
 
-UPDConnection::~UPDConnection(){
+UDPConnection::~UDPConnection(){
     if (closed_) return;
 
     try{
@@ -101,9 +112,12 @@ UPDConnection::~UPDConnection(){
 }
 
 
-class UPDChannel : public UPDConnection{
+class UDPChannel : public UDPConnection{
 public:
-	UPDChannel(const std::string& host, u_short port){
+
+    UDPChannel() { closed_ = true; } 
+
+	UDPChannel(const std::string& host, u_short port){
 		struct hostent* hostptr;
 
 		hostptr=gethostbyname(host.c_str());
@@ -114,10 +128,11 @@ public:
 		address_.sin_family=AF_INET;
 		address_.sin_addr.s_addr=((struct in_addr *)(hostptr->h_addr_list[0]))->s_addr;
 		address_.sin_port=htons(port);
+		addrlen_ = sizeof(address_); 
 	}
 };
 
-class UDPServer : public UPDConnection{
+class UDPServer : public UDPConnection{
 public:
     UDPServer(u_short port){
     	struct sockaddr_in serveraddr;

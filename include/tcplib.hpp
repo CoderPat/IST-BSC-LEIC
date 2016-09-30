@@ -10,6 +10,7 @@
 #include <string>
 #include <exception>
 #include <vector>
+#include <fstream>
 
 
 struct TCPException : public std::exception
@@ -32,6 +33,9 @@ private:
     inline void check_closed(){ if(closed_) throw TCPException("Socket already closed"); }
 
 public:
+
+    /** Creates an empty TCPChannel*/
+    TCPChannel() : fd_(-1), closed_(true) {}
 
     /** Creates a TCPChannel on an already open socket, no error checking is performed */
     TCPChannel(int fd) : fd_(fd), closed_(false) {} 
@@ -68,6 +72,18 @@ public:
         }
     }
 
+    /** Move constructor to avoid the original object closing the socket for the new one */
+    TCPChannel(TCPChannel&& c) : fd_(c.fd_), closed_(c.closed_) {
+        c.closed_ = true;
+    }
+
+    /** Move assignment operator to avoid the original object closing the socket for the new one */
+    TCPChannel& operator=(TCPChannel&& c){
+        fd_ = c.fd_;
+        closed_ = c.closed_;
+        c.closed_ = true;
+    }
+
 
     /**
      *  Reads an amount of bytes. 
@@ -98,6 +114,27 @@ public:
         return ret;
     }
 
+    std::string Read(size_t count, const std::string& overrider) {
+        std::vector<uint8_t> aux = Read(count);
+        return std::string(aux.begin(), aux.end());
+    }
+
+    std::vector<uint8_t> ReadUntil(uint8_t term) {
+        check_closed();
+
+        std::vector<uint8_t> ret;
+        uint8_t c;
+        while((c=Read(1)[0]) != term) {
+            ret.push_back(c);
+        }
+        return ret;
+    }
+    
+    std::string ReadUntil(uint8_t term, const std::string& overrider) {
+        std::vector<uint8_t> aux = ReadUntil(term);
+        return std::string(aux.begin(), aux.end());
+    }
+
     /**
      *  Writes a vector of bytes to a socket.
      *  Blocks until all bytes are written.
@@ -107,9 +144,8 @@ public:
      *  @throws TCPException
      */
     void Write(const std::vector<uint8_t>& byte_array) {
-
         check_closed();
-
+        
         int written = 0;
         while ( (size_t)written != byte_array.size()) {
             int nbytes = write(fd_, byte_array.data() + written, (byte_array.size()-written));
@@ -117,6 +153,25 @@ public:
                 throw TCPException("Write failed\n");
 
             written += nbytes;
+        }
+    }
+
+    void Write(const std::string& s) {
+        Write(std::vector<uint8_t>(s.begin(), s.end()));
+    }
+
+    void Write(std::ifstream& s) {
+        check_closed();
+        char buf[2];
+        while(s.get(buf[0])) {
+            uint8_t c = buf[0];
+            while (1) {
+                int nbytes = write(fd_, &c, 1);
+                if (nbytes == -1)   //TODO: Deal with this better (check errno)
+                    throw TCPException("Write failed\n");
+                if (nbytes == 1) 
+                    break;
+            }
         }
     }
 
@@ -139,16 +194,20 @@ public:
         } 
         catch (TCPException e){}
     }
-
 };
 
 
 class TCPServer {
     int fd_;
+    bool closed_;
+
+    inline void check_closed(){ if(closed_) throw TCPException("Socket already closed"); }
 
 public:
+    TCPServer() : closed_(true) {} 
+
     // @throws TCPException
-    TCPServer(u_short port) {
+    TCPServer(u_short port) : closed_(false) {
         struct sockaddr_in serveraddr;
         fd_=socket(AF_INET,SOCK_STREAM,0);
         if (fd_ == -1) 
@@ -163,6 +222,17 @@ public:
             throw TCPException("Could not bind to port");                  
     }
 
+    /** Move constructor to avoid the original object closing the socket for the new one */
+    TCPServer(TCPServer&& c) : fd_(c.fd_), closed_(c.closed_) {
+        c.closed_ = true;
+    }
+
+    TCPServer& operator=(TCPServer&& c){
+        fd_ = c.fd_;
+        closed_ = c.closed_;
+        c.closed_ = true;
+    }
+
     /**
      *  Listens for a connection and returns a TCPChannel for communication with the client
      *
@@ -173,6 +243,8 @@ public:
      *  @throws TCPException
      */
     TCPChannel Listen(int listen_queue) {
+        check_closed();
+
         struct sockaddr_in clientaddr;
         int clientfd;
         socklen_t clientlen;
@@ -191,5 +263,24 @@ public:
     }
 
     //See TCPServer::Listen(inte backLog)
-    TCPChannel Listen() {return Listen(10);}
+    TCPChannel Listen() { return Listen(10); }
+
+    void Close() {
+        check_closed();
+
+        if ( close(fd_) == -1 ) {
+            throw TCPException("Error closing socket");
+        }
+        closed_ = true; 
+    }
+
+
+    ~TCPServer() {
+        if (closed_) return;
+
+        try{
+            Close();
+        } 
+        catch (TCPException e){}
+    }
 };

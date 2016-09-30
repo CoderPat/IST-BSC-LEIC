@@ -13,6 +13,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include "../include/udplib.hpp"
+#include "../include/utils.hpp"
 
 class TCS : public UDPServer{
 private:
@@ -30,7 +31,7 @@ public:
 
     std::vector<std::string> get_lang(std::string lang) {
 	std::vector<std::string> out;
-	for(std::map<std::string, int>::iterator it = _langs[lang].begin(); it != _langs[lang].end(); ++it) {
+	for(std::map<std::string, int>::iterator it = _langs.at(lang).begin(); it != _langs.at(lang).end(); ++it) {
             out.push_back(it->first);
 	    out.push_back(std::to_string(it->second));
         }
@@ -38,11 +39,11 @@ public:
     }
 
     void add_language(std::string lang, std::string ip, std::string port) {
-        _langs[lang][ip] = std::atoi(port.c_str());
+        _langs.at(lang).at(ip) = std::atoi(port.c_str());
     }
 
     void remove_language(std::string lang, std::string ip, std:: string port) {
-        if(_langs[lang][ip] == std::atoi(port.c_str())) {
+        if(_langs.at(lang).at(ip) == std::atoi(port.c_str())) {
             _langs.erase(lang);
         }
     }
@@ -53,9 +54,9 @@ public:
         filetoparse.open(_langsfile.c_str());
         if(filetoparse.is_open()) {
             while (std::getline(filetoparse, lang)) {
-                std::vector<std::string> inputs = tokenizer(lang);
-                _langs[inputs[0]][inputs[1]] = atoi(inputs[2].c_str());
-                std::cout << inputs[0] << "  " << inputs[1] <<  " " << _langs[inputs[0]][inputs[1]] << std::endl;
+                std::vector<std::string> inputs = tokenize(lang);
+                _langs.at(inputs.at(0)).at(inputs.at(1)) = atoi(inputs.at(2).c_str());
+                std::cout << inputs.at(0) << "  " << inputs.at(1) <<  " " << _langs.at(inputs.at(0)).at(inputs.at(1)) << std::endl;
             }
         }	
     }
@@ -68,36 +69,13 @@ public:
         return out;
     }
 
-    std::string uint8_tToString(std::vector<uint8_t> vec) {
-        std::string out = "";
-        for(int i = 0; i < vec.size(); i++) {
-            out += vec[i];
-        }
-        return out;
-    }
-
     ~TCS() {
-        //close(_fd);
-    }
+        if (closed_) return;
 
-    std::vector<std::string> tokenizer(std::string in) {
-
-        std::vector<std::string> out;
-        std::string buffer = "";
-
-        for(int i = 0; i <= in.length(); i++) {
-            if(in[i] != ' ' && in[i] != '\n' && in[i] != '\0' && in[i] != EOF) {
-                buffer += in[i];
-            }
-            else {
-                out.push_back(buffer);
-                buffer = "";
-		if(in[i] == '\0' || in[i] == '\n') {
-			return out;		
-		}	
-            }
-        }
-        return out;
+        try{
+            Close();
+        } 
+        catch (UDPException e){}
     }
 };
 
@@ -110,42 +88,42 @@ int main(int argc, char* args[]) {
 
     while(1) {
         std::vector<uint8_t> msg = server.Read();
-        std::string msgstr = server.uint8_tToString(msg);
-        std::vector<std::string> input = server.tokenizer(msgstr);
+        std::string msgstr = string_cast(msg);
+        std::vector<std::string> input = tokenize(msgstr);
         std::vector<std::string> avlangs = server.get_avaliable_languages();
         std::string response = "";
 
         bool secure = (input.size() == 1 || input.size() == 2 || input.size() != 3 || input.size() != 4) ? true : false;
-        if(secure && !strcmp("ULQ", input[0].c_str())) {
+        if(secure && !strcmp("ULQ", input.at(0).c_str())) {
             response = "ULR " + std::to_string(avlangs.size()) + " ";
             for(int i = 0; i < avlangs.size(); i++) {
-                response = response + avlangs[i] + " ";
+                response = response + avlangs.at(i) + " ";
             }
             std::cout << response << std::endl;
         }
-        else if (secure && !strcmp("UNQ", input[0].c_str())) {
+        else if (secure && !strcmp("UNQ", input.at(0).c_str())) {
             response = "UNR ";
-            if(std::find(avlangs.begin(), avlangs.end(), input[1]) != avlangs.end())
+            if(std::find(avlangs.begin(), avlangs.end(), input.at(1)) != avlangs.end())
             {
-                response = response + server.get_lang(input[1])[0];
-		response = response + " " + server.get_lang(input[1])[1];
+                response = response + server.get_lang(input.at(1)).at(0);
+		response = response + " " + server.get_lang(input.at(1)).at(1);
             }
             else {
                 response = "Language not supported";
             }
         }
-        else if (secure && !strcmp("SRG", input[0].c_str())) {
+        else if (secure && !strcmp("SRG", input.at(0).c_str())) {
 		try {
-			server.add_language(input[1], input[2], input[3]);		
+			server.add_language(input.at(1), input.at(2), input.at(3));		
 			response = "SRR OK";
 		}
 		catch (int e) {
 			response = "SRR NOK";		
 		}		
         }
-	else if (secure && !strcmp("SUN", input[0].c_str())) {
+	else if (secure && !strcmp("SUN", input.at(0).c_str())) {
 		try {
-			server.remove_language(input[1], input[2], input[3]);		
+			server.remove_language(input.at(1), input.at(2), input.at(3));		
 			response = "SUR OK";
 		}
 		catch (int e) {
@@ -161,3 +139,4 @@ int main(int argc, char* args[]) {
         }
     }
 }
+
