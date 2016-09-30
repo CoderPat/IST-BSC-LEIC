@@ -18,6 +18,12 @@ struct TRSException : public std::exception {
    ~TRSException() throw () {}
    const char* what() const throw() { return s.c_str(); }
 };
+
+struct initialization_error : public TRSException{
+   initialization_error(std::string ss) : TRSException(ss) {}
+   ~initialization_error() throw () {}
+};
+
 struct translation_not_available : public TRSException{
    translation_not_available(std::string ss) : TRSException(ss) {}
    ~translation_not_available() throw () {}
@@ -48,9 +54,11 @@ private:
      */
     void _status_update(const std::string& request, const std::string& expected_response){
 
-    	char myhostname[HOST_NAME_MAX];
-    	gethostname(myhostname, HOST_NAME_MAX); //TODO: Error Checking
-    	std::string message = request + " " + language_ + " " + myhostname + " " + std::to_string(port_) + "\n";
+    	char myhostname[HOST_NAME_MAX+1];
+    	if(gethostname(myhostname, HOST_NAME_MAX)==-1)
+            throw initialization_error("Couldn't get self name");
+
+        std::string message = request + " " + language_ + " " + myhostname + " " + std::to_string(port_) + "\n";
 
 		tcs_channel_.Write(byte_cast(message));
 		std::string response = string_cast(tcs_channel_.Read());
@@ -183,19 +191,39 @@ int main(int argc, char **argv) {
         std::cerr << "Usage <language> [-p <trs_port>] [-n <hostname>] [-e <tcs_port>]";
         exit(1);
     }
+
+
     std::string language = argv[1];
     for (int i = 2; i<argc-1; i++) {
-        if (!strcmp("-p", argv[i])){
-            i++;
-            trs_port = std::stoi(argv[i]);
-        } else if (!strcmp("-n", argv[i])) {
-            i++;
-            hostname = argv[i];
-        } else if (!strcmp("-e", argv[i])) {
-            i++;
-            tcs_port = std::stoi(argv[i]);
+        try{
+            if (!strcmp("-p", argv[i])){
+                i++;
+                long aux;
+                aux = std::stol(argv[i]);
+                if(aux > (1<<16) || aux <= 0) throw std::out_of_range("");
+                trs_port = aux;
+
+            } else if (!strcmp("-n", argv[i])) {
+                i++;
+                hostname = argv[i];
+            } else if (!strcmp("-e", argv[i])) {
+                i++;
+                long aux;
+                aux = std::stol(argv[i]);
+                if(aux > (1<<16) || aux <= 0) throw std::out_of_range("");
+                tcs_port = aux;
+            } else 
+                throw std::invalid_argument("Unknown option " + std::string(argv[i]));
         }
-        std::cerr << "Unknow option: " << argv[i] << std::endl;
+        catch(std::out_of_range& e){
+            std::cerr << "Port numbers must be in the range 1-65535" << std::endl;
+            exit(1); 
+        }
+        catch(std::invalid_argument& e){ 
+            std::string message = (!strcmp(e.what(),"stol") ? "Ports must be a number" : e.what());
+            std::cerr << message << std::endl;
+            exit(1);
+        }
     }
 
     TRSInterface lang_server;
