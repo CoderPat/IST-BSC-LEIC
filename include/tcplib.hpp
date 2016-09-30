@@ -33,6 +33,7 @@ private:
     inline void check_closed(){ if(closed_) throw TCPException("Socket already closed"); }
 
 public:
+
     /** Creates an empty TCPChannel*/
     TCPChannel() : fd_(-1), closed_(true) {}
 
@@ -69,6 +70,18 @@ public:
             //TODO: Deal with this better (check errno)
             throw TCPException("Connection failed");
         }
+    }
+
+    /** Move constructor to avoid the original object closing the socket for the new one */
+    TCPChannel(TCPChannel&& c) : fd_(c.fd_), closed_(c.closed_) {
+        c.closed_ = true;
+    }
+
+    /** Move assignment operator to avoid the original object closing the socket for the new one */
+    TCPChannel& operator=(TCPChannel&& c){
+        fd_ = c.fd_;
+        closed_ = c.closed_;
+        c.closed_ = true;
     }
 
 
@@ -181,16 +194,20 @@ public:
         } 
         catch (TCPException e){}
     }
-
 };
 
 
 class TCPServer {
     int fd_;
+    bool closed_;
+
+    inline void check_closed(){ if(closed_) throw TCPException("Socket already closed"); }
 
 public:
+    TCPServer() : closed_(true) {} 
+
     // @throws TCPException
-    TCPServer(u_short port) {
+    TCPServer(u_short port) : closed_(false) {
         struct sockaddr_in serveraddr;
         fd_=socket(AF_INET,SOCK_STREAM,0);
         if (fd_ == -1) 
@@ -205,6 +222,17 @@ public:
             throw TCPException("Could not bind to port");                  
     }
 
+    /** Move constructor to avoid the original object closing the socket for the new one */
+    TCPServer(TCPServer&& c) : fd_(c.fd_), closed_(c.closed_) {
+        c.closed_ = true;
+    }
+
+    TCPServer& operator=(TCPServer&& c){
+        fd_ = c.fd_;
+        closed_ = c.closed_;
+        c.closed_ = true;
+    }
+
     /**
      *  Listens for a connection and returns a TCPChannel for communication with the client
      *
@@ -215,6 +243,8 @@ public:
      *  @throws TCPException
      */
     TCPChannel Listen(int listen_queue) {
+        check_closed();
+
         struct sockaddr_in clientaddr;
         int clientfd;
         socklen_t clientlen;
@@ -233,5 +263,24 @@ public:
     }
 
     //See TCPServer::Listen(inte backLog)
-    TCPChannel Listen() {return Listen(10);}
+    TCPChannel Listen() { return Listen(10); }
+
+    void Close() {
+        check_closed();
+
+        if ( close(fd_) == -1 ) {
+            throw TCPException("Error closing socket");
+        }
+        closed_ = true; 
+    }
+
+
+    ~TCPServer() {
+        if (closed_) return;
+
+        try{
+            Close();
+        } 
+        catch (TCPException e){}
+    }
 };

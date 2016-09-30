@@ -30,7 +30,7 @@ struct invalid_request : public TRCException{
 class TRCClientInterface {
     string _hostname;
     u_short _port;
-    UPDChannel _TCSChannel;
+    UDPChannel _TCSChannel;
     vector<string> lang_names; 
 public:
     TRCClientInterface(const string& hostname, u_short port) :  _TCSChannel(hostname, port), _hostname(hostname), _port(port) {}
