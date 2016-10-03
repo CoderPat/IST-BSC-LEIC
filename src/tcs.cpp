@@ -39,11 +39,11 @@ public:
     }
 
     void add_language(std::string lang, std::string ip, std::string port) {
-        _langs.at(lang).at(ip) = std::atoi(port.c_str());
+        _langs.at(lang).at(ip) = std::stoi(port.c_str());
     }
 
     void remove_language(std::string lang, std::string ip, std:: string port) {
-        if(_langs.at(lang).at(ip) == std::atoi(port.c_str())) {
+        if(_langs.at(lang).at(ip) == std::stoi(port.c_str())) {
             _langs.erase(lang);
         }
     }
@@ -55,7 +55,7 @@ public:
         if(filetoparse.is_open()) {
             while (std::getline(filetoparse, lang)) {
                 std::vector<std::string> inputs = tokenize(lang);
-                _langs.at(inputs.at(0)).at(inputs.at(1)) = atoi(inputs.at(2).c_str());
+                _langs.at(inputs.at(0)).at(inputs.at(1)) = stoi(inputs.at(2).c_str());
                 std::cout << inputs.at(0) << "  " << inputs.at(1) <<  " " << _langs.at(inputs.at(0)).at(inputs.at(1)) << std::endl;
             }
         }	
@@ -93,15 +93,15 @@ int main(int argc, char* args[]) {
         std::vector<std::string> avlangs = server.get_avaliable_languages();
         std::string response = "";
 
-        bool secure = (input.size() == 1 || input.size() == 2 || input.size() != 3 || input.size() != 4) ? true : false;
-        if(secure && !strcmp("ULQ", input.at(0).c_str())) {
+        bool secure = (input.size() == 1 || input.size() == 2 || input.size() != 4);
+        if(input.size() && !strcmp("ULQ", input.at(0).c_str())) {
             response = "ULR " + std::to_string(avlangs.size()) + " ";
             for(int i = 0; i < avlangs.size(); i++) {
                 response = response + avlangs.at(i) + " ";
             }
             std::cout << response << std::endl;
         }
-        else if (secure && !strcmp("UNQ", input.at(0).c_str())) {
+        else if (input.size() == 2 && !strcmp("UNQ", input.at(0).c_str())) {
             response = "UNR ";
             if(std::find(avlangs.begin(), avlangs.end(), input.at(1)) != avlangs.end())
             {
@@ -112,7 +112,7 @@ int main(int argc, char* args[]) {
                 response = "Language not supported";
             }
         }
-        else if (secure && !strcmp("SRG", input.at(0).c_str())) {
+        else if (input.size() == 4 && !strcmp("SRG", input.at(0).c_str())) {
 		try {
 			server.add_language(input.at(1), input.at(2), input.at(3));		
 			response = "SRR OK";
@@ -121,7 +121,7 @@ int main(int argc, char* args[]) {
 			response = "SRR NOK";		
 		}		
         }
-	else if (secure && !strcmp("SUN", input.at(0).c_str())) {
+	else if (input.size() == 4 && !strcmp("SUN", input.at(0).c_str())) {
 		try {
 			server.remove_language(input.at(1), input.at(2), input.at(3));		
 			response = "SUR OK";
