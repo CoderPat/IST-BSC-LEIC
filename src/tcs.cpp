@@ -15,9 +15,11 @@
 #include "../include/udplib.hpp"
 #include "../include/utils.hpp"
 
+typedef std::pair<std::string, u_short> sinfo;
+
 class TCS : public UDPServer{
 private:
-    std::map<std::string, std::map<std::string, int>> _langs;
+    std::map<std::string, sinfo> _langs;
     std::string _langsfile = "langs.txt";
 public:
     
@@ -25,25 +27,23 @@ public:
         _langsfile = "langs.txt";
     }
 
-    std::map<std::string, std::map<std::string, int>> get_langs() {
+    std::map<std::string, sinfo> get_langs() {
         return _langs;
     }
 
     std::vector<std::string> get_lang(std::string lang) {
 	std::vector<std::string> out;
-	for(std::map<std::string, int>::iterator it = _langs.at(lang).begin(); it != _langs.at(lang).end(); ++it) {
-            out.push_back(it->first);
-	    out.push_back(std::to_string(it->second));
-        }
+	out.push_back(_langs.at(lang).first);
+	out.push_back(std::to_string(_langs.at(lang).second));
 	return out;
     }
 
     void add_language(std::string lang, std::string ip, std::string port) {
-        _langs.at(lang).at(ip) = std::stoi(port.c_str());
+        _langs.[lang] = sinfo(ip, std::stoi(port));
     }
 
     void remove_language(std::string lang, std::string ip, std:: string port) {
-        if(_langs.at(lang).at(ip) == std::stoi(port.c_str())) {
+        if(_langs.at(lang) == sinfo(ip, std::stoi(port));) {
             _langs.erase(lang);
         }
     }
@@ -55,15 +55,15 @@ public:
         if(filetoparse.is_open()) {
             while (std::getline(filetoparse, lang)) {
                 std::vector<std::string> inputs = tokenize(lang);
-                _langs.at(inputs.at(0)).at(inputs.at(1)) = stoi(inputs.at(2).c_str());
-                std::cout << inputs.at(0) << "  " << inputs.at(1) <<  " " << _langs.at(inputs.at(0)).at(inputs.at(1)) << std::endl;
+                _langs[inputs.at(0)] = sinfo(inputs.at(1), stoi(inputs.at(2).c_str()));
+                std::cout << inputs.at(0) << "  " << inputs.at(1) <<  " " << _langs[inputs.at(0)].first << " " << _langs[inputs.at(0)].second << std::endl;
             }
         }	
     }
 
     std::vector<std::string>  get_avaliable_languages() {
         std::vector<std::string> out;
-        for(std::map<std::string, std::map<std::string, int>>::iterator it = _langs.begin(); it != _langs.end(); ++it) {
+        for(std::map<std::string, sinfo>::iterator it = _langs.begin(); it != _langs.end(); ++it) {
             out.push_back(it->first);
         }
         return out;
@@ -93,45 +93,50 @@ int main(int argc, char* args[]) {
         std::vector<std::string> avlangs = server.get_avaliable_languages();
         std::string response = "";
 
-        bool secure = (input.size() == 1 || input.size() == 2 || input.size() != 4);
-        if(input.size() && !strcmp("ULQ", input.at(0).c_str())) {
+        bool secure = input.size();
+        if(secure &&  input.at(0) == "ULQ") {
             response = "ULR " + std::to_string(avlangs.size()) + " ";
             for(int i = 0; i < avlangs.size(); i++) {
                 response = response + avlangs.at(i) + " ";
             }
             std::cout << response << std::endl;
         }
-        else if (input.size() == 2 && !strcmp("UNQ", input.at(0).c_str())) {
-            response = "UNR ";
-            if(std::find(avlangs.begin(), avlangs.end(), input.at(1)) != avlangs.end())
-            {
-                response = response + server.get_lang(input.at(1)).at(0);
-		response = response + " " + server.get_lang(input.at(1)).at(1);
-            }
-            else {
-                response = "Language not supported";
-            }
+        else if (secure && inputs.at(0) == "UNQ") {
+			try {
+				response = "UNR ";
+				if(std::find(avlangs.begin(), avlangs.end(), input.at(1)) != avlangs.end())
+				{
+					response = response + server.get_lang(input.at(1)).at(0);
+			response = response + " " + server.get_lang(input.at(1)).at(1);
+				}
+				else {
+					response = "Language not supported";
+				}
+			} catch(...) {
+				response = "UNR ERR";
+			}
         }
-        else if (input.size() == 4 && !strcmp("SRG", input.at(0).c_str())) {
+        else if (secure && input.at(0) == "SRG") {
 		try {
 			server.add_language(input.at(1), input.at(2), input.at(3));		
 			response = "SRR OK";
 		}
-		catch (int e) {
+		catch (...) {
 			response = "SRR NOK";		
 		}		
         }
-	else if (input.size() == 4 && !strcmp("SUN", input.at(0).c_str())) {
+	else if (secure && input.at(0) == "SUN") {
 		try {
 			server.remove_language(input.at(1), input.at(2), input.at(3));		
 			response = "SUR OK";
 		}
-		catch (int e) {
+		catch (...) {
 			response = "SUR NOK";		
 		}		
         }
         else {
-            response = "Error";
+            response = "ERR Secure is false";
+			secure = false;
         }
         if(secure) {
             std::cout << response << std::endl;
