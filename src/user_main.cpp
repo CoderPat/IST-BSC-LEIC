@@ -209,11 +209,11 @@ public:
             return;
         }
 
-        //TODO: stuff...
         try {
             string outfilename;
             size_t outfilelen;
             tie(outfilename,outfilelen) = TRQ(conn, filename, sizeInBytes);
+            cout << "Downloaded tranlated file: " << outfilename << " (" << outfilelen << " bytes)" << endl;
         } catch (...) {
             cerr << "request f: TRQ failed :(" << endl;
             return;
@@ -324,12 +324,12 @@ int main(int argc, char **argv) {
         }
     }
 
-    TRCClientInterface client = TRCClientInterface(hostname, port);
     try {
+        TRCClientInterface client = TRCClientInterface(hostname, port);
         client.Loop();
     } catch (...) {
         cerr << "Something bad happened and we don't know how to take care of it. If you are using a bug-free version of libc and libstdc++ any good symbolic executor will tell you that this line is not reachable.'" << endl;
-    }
+    }   
 
     return 0;
 }
