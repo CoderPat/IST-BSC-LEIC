@@ -137,7 +137,7 @@ public:
             }
             else if (request == "f"){
                 std::string filename = string_cast(user_channel.ReadUntil(' '));
-                size_t byte_size = std::stol(string_cast(user_channel.ReadUntil(' '))); // TODO: do something with it
+                size_t byte_size = std::stol(string_cast(user_channel.ReadUntil(' ')));
                 std::vector<uint8_t> data = user_channel.Read(byte_size);
                 if(user_channel.Read(1)[0] != '\n') throw invalid_request("Error in protocol"); 
 
@@ -236,10 +236,11 @@ int main(int argc, char **argv) {
         }
     }
 
-    TRSInterface lang_server;
     try{
-        lang_server = std::move(TRSInterface(language, text_translation_file, file_translation_file, trs_port, hostname, tcs_port));
+        TRSInterface lang_server(TRSInterface(language, text_translation_file, file_translation_file, trs_port, hostname, tcs_port));
         lang_server.SRG();
+        while(1)
+    	   lang_server.TRR();
     }
     catch(invalid_response& e){
         std::cerr << "TCS denied request to connect." << std::endl;
@@ -249,8 +250,5 @@ int main(int argc, char **argv) {
         std::cerr << "Something went wrong when initializing the server :/" << std::endl;
         return -1;
      }
-
-    while(1)
-    	lang_server.TRR();
 
 }
