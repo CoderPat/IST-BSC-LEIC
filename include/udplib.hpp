@@ -12,7 +12,6 @@
 #include <exception>
 
 
-
 struct UDPException : public std::exception
 {
 	std::string s;
@@ -41,11 +40,13 @@ public:
 	}
 
     /** Move constructor to avoid the original object closing the socket for the new one */
-    UDPConnection(UDPConnection&& c) : fd_(c.fd_), closed_(c.closed_) {
+    UDPConnection(UDPConnection&& c) : fd_(c.fd_), address_(c.address_), addrlen_(addrlen_), closed_(c.closed_) {
         c.closed_ = true;
     }
 
     UDPConnection& operator=(UDPConnection&& c){
+        address_ = c.address_;
+        addrlen_ = c.addrlen_;
         fd_ = c.fd_;
         closed_ = c.closed_;
         c.closed_ = true;
@@ -84,10 +85,10 @@ public:
      *  @throws UDPException
      */
     void Write(const std::vector<uint8_t>& byte_array){ 
-    	check_closed();
+    	check_closed(); 
 
     	if( sendto(fd_, byte_array.data(), byte_array.size(), 0, (struct sockaddr*)&address_,addrlen_) == -1)
-    		throw UDPException("Could not send data"); //TODO: Deal with this better (check errno)
+    		throw UDPException("Could not send data"   + std::to_string(errno)); //TODO: Deal with this better (check errno)
     }
 
     void Close() {
@@ -104,7 +105,6 @@ public:
 
 UDPConnection::~UDPConnection(){
     if (closed_) return;
-
     try{
         Close();
     } 
