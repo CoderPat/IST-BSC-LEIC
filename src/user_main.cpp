@@ -117,7 +117,10 @@ public:
 
     tuple<string, size_t> TRQ(TCPChannel& channel, string& filename, size_t sizeInBytes) {
         channel.Write(string("TRQ f "));
+	channel.Write(filename);
+	channel.Write(string(" "));
         channel.Write(to_string(sizeInBytes));
+	channel.Write(string(" "));
         ifstream inFile;
         inFile.open(filename, ios::in);
         channel.Write(inFile);
