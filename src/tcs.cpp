@@ -39,11 +39,11 @@ public:
     }
 
     void add_language(std::string lang, std::string ip, std::string port) {
-        _langs.[lang] = sinfo(ip, std::stoi(port));
+        _langs[lang] = sinfo(ip, std::stoi(port));
     }
 
     void remove_language(std::string lang, std::string ip, std:: string port) {
-        if(_langs.at(lang) == sinfo(ip, std::stoi(port));) {
+        if(_langs.at(lang) == sinfo(ip, std::stoi(port))) {
             _langs.erase(lang);
         }
     }
@@ -51,11 +51,11 @@ public:
     void  parse_avaliable_languages() {
         std::ifstream filetoparse;
         std::string lang;
-        filetoparse.open(_langsfile.c_str());
+        filetoparse.open(_langsfile);
         if(filetoparse.is_open()) {
             while (std::getline(filetoparse, lang)) {
                 std::vector<std::string> inputs = tokenize(lang);
-                _langs[inputs.at(0)] = sinfo(inputs.at(1), stoi(inputs.at(2).c_str()));
+                _langs[inputs.at(0)] = sinfo(inputs.at(1), std::stoi(inputs.at(2)));
                 std::cout << inputs.at(0) << "  " << inputs.at(1) <<  " " << _langs[inputs.at(0)].first << " " << _langs[inputs.at(0)].second << std::endl;
             }
         }	
@@ -101,7 +101,7 @@ int main(int argc, char* args[]) {
             }
             std::cout << response << std::endl;
         }
-        else if (secure && inputs.at(0) == "UNQ") {
+        else if (secure && input.at(0) == "UNQ") {
 			try {
 				response = "UNR ";
 				if(std::find(avlangs.begin(), avlangs.end(), input.at(1)) != avlangs.end())
