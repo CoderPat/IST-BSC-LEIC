@@ -117,64 +117,74 @@ public:
 
 	void TRR(){
         TCPChannel user_channel = server_.Listen();
+        try{
+            std::string request = string_cast(user_channel.ReadUntil(' '));
+            if(request != "TRQ") throw invalid_request("Unkown request"); 
 
-        std::string request = string_cast(user_channel.ReadUntil(' '));
-        if(request != "TRQ") throw invalid_request("Unkown request"); 
+            request = string_cast(user_channel.ReadUntil(' '));
+            if(request == "t"){
+                int number_of_words = std::stoi(string_cast(user_channel.ReadUntil(' ')));
 
-        request = string_cast(user_channel.ReadUntil(' '));
-        if(request == "t"){
-            int number_of_words = std::stoi(string_cast(user_channel.ReadUntil(' ')));
+                std::vector<std::string> original_words = tokenize(string_cast(user_channel.ReadUntil('\n')));
+                std::vector<std::string> translated_words;
 
-            std::vector<std::string> original_words = tokenize(string_cast(user_channel.ReadUntil('\n')));
-            std::vector<std::string> translated_words;
+                for(int i=0; i < number_of_words; i++)
+                    translated_words.push_back(TranslateWord(original_words.at(i)));
 
-            for(int i=0; i < number_of_words; i++)
-                translated_words.push_back(TranslateWord(original_words.at(i)));
+                user_channel.Write("TRR t ");
+                user_channel.Write(std::to_string(translated_words.size()) + " " + detokenize(translated_words));
+                user_channel.Write("\n");
+            }
+            else if (request == "f"){
+                std::string filename = string_cast(user_channel.ReadUntil(' '));
+                size_t byte_size = std::stol(string_cast(user_channel.ReadUntil(' ')));
+                std::vector<uint8_t> data = user_channel.Read(byte_size);
+                if(user_channel.Read(1)[0] != '\n') throw invalid_request("Error in protocol"); 
 
-            user_channel.Write("TRR t ");
-            user_channel.Write(std::to_string(translated_words.size()) + " " + detokenize(translated_words));
+             	std::string translated_filepath = TranslateFile(filename);
+             	std::ifstream translated_file;
+
+                //Begining of the response and path
+             	user_channel.Write("TRR f ");
+             	user_channel.Write(translated_filepath + " ");
+
+                //Write the size
+                translated_file.open(translated_filepath, std::ios::binary | std::ios::ate);
+                user_channel.Write(std::to_string(translated_file.tellg()) + " ");
+                translated_file.close();
+
+                //And the actual data
+                translated_file.open(translated_filepath, std::ios::in);
+                user_channel.Write(translated_file);
+                translated_file.close();
+
+                user_channel.Write("\n");
+            }
+            else throw invalid_request("Unkown TRQ request option"); 
+        }
+        catch(invalid_request& e){
+            user_channel.Write("TRR ERR");
             user_channel.Write("\n");
         }
-        else if (request == "f"){
-            std::string filename = string_cast(user_channel.ReadUntil(' '));
-            size_t byte_size = std::stol(string_cast(user_channel.ReadUntil(' '))); // TODO: do something with it
-            std::vector<uint8_t> data = user_channel.ReadUntil('\n'); // TODO: dont know exactly what to do with it...
-
-         	std::string translated_filepath = TranslateFile(filename);
-         	std::ifstream translated_file;
-
-            //Begining of the response and path
-         	user_channel.Write("TRR f ");
-         	user_channel.Write(translated_filepath + " ");
-
-            //Write the size
-            translated_file.open(translated_filepath, std::ios::binary | std::ios::ate);
-            user_channel.Write(std::to_string(translated_file.tellg()) + " ");
-            translated_file.close();
-
-            //And the actual data
-            translated_file.open(translated_filepath, std::ios::in);
-            user_channel.Write(translated_file);
-            translated_file.close();
-
+        catch(translation_not_available& e){
+            user_channel.Write("TRR NTA");
             user_channel.Write("\n");
         }
-        
-        else throw invalid_request("Unkown TRQ request option"); 
+       
 	}
 
     std::string TranslateWord(const std::string& word){
         try{
             return word_translator.at(word);
         }
-        catch(std::out_of_range& e){throw translation_not_available(word);} //Still need to find where to catch this;
+        catch(std::out_of_range& e){throw translation_not_available(word);} 
     }
 
     std::string TranslateFile(const std::string& file){
         try{
     	   return file_translator.at(file);
         }
-        catch(std::out_of_range& e){throw translation_not_available(file);} //Still need to fin where to catch this;
+        catch(std::out_of_range& e){throw translation_not_available(file);}
     }
 };
 
@@ -226,24 +236,19 @@ int main(int argc, char **argv) {
         }
     }
 
-    TRSInterface lang_server;
     try{
-        lang_server = std::move(TRSInterface(language, text_translation_file, file_translation_file, trs_port, hostname, tcs_port));
+        TRSInterface lang_server(TRSInterface(language, text_translation_file, file_translation_file, trs_port, hostname, tcs_port));
+        lang_server.SRG();
+        while(1)
+    	   lang_server.TRR();
     }
-    catch(std::exception& e){
-        std::cerr << "Error initializing the TRS: " << e.what() << std::endl;
+    catch(invalid_response& e){
+        std::cerr << "TCS denied request to connect." << std::endl;
         return -1;
     }
-    while(1)
-        try{
-    	   lang_server.TRR();
-        }
-        catch(invalid_request& e){
-            std::cerr << "Something wrong with a request: " << e.what() << std::endl;
-        }
-        catch(invalid_response& e){
-            std::cerr << "Error in a TCS server response: " << e.what() << std::endl;
-            return -1;
-        }
+    catch(...){
+        std::cerr << "Something went wrong when initializing the server :/" << std::endl;
+        return -1;
+     }
 
 }
