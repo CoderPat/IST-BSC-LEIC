@@ -6,12 +6,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/select.h>
 
 #include <string>
 #include <exception>
 #include <vector>
 #include <fstream>
 
+#define DEFAULT_TCP_TIMEOUT_SEC 5  //TODO: Put as class parameters?
+#define DEFAULT_TCP_TIMEOUT_USEC 0 //TODO: Put as class parameters?
 
 struct TCPException : public std::exception
 {
@@ -19,6 +22,16 @@ struct TCPException : public std::exception
    TCPException(std::string ss) : s(ss) {}
    ~TCPException() throw () {}
    const char* what() const throw() { return s.c_str(); }
+};
+
+struct tcp_socket_timeout : public TCPException{
+    tcp_socket_timeout(std::string ss) : TCPException(ss){};
+    ~tcp_socket_timeout() throw(){}
+};
+
+struct other_inputs_available : public TCPException{
+    other_inputs_available(std::string ss) : TCPException(ss){};
+    ~other_inputs_available() throw(){}
 };
 
 
@@ -30,7 +43,18 @@ private:
     int fd_;
     bool closed_;
 
+    struct timeval timeout_;
+
     inline void check_closed(){ if(closed_) throw TCPException("Socket already closed"); }
+    inline int check_timout(){
+        fd_set set;
+        FD_ZERO(&set);
+        FD_SET(fd_, &set);
+        timeout_.tv_sec = DEFAULT_TCP_TIMEOUT_SEC;
+        timeout_.tv_usec = DEFAULT_TCP_TIMEOUT_USEC;
+        int ret = select(FD_SETSIZE, &set, NULL, NULL, &timeout_);
+        if(!ret) throw tcp_socket_timeout("");
+    }
 
 public:
 
@@ -85,6 +109,7 @@ public:
     }
 
 
+    
     /**
      *  Reads an amount of bytes. 
      *  Blocks until all the bytes are read, even if they are not yet on the file buffer.
@@ -101,6 +126,8 @@ public:
         char buf[std::min(count,(size_t)4096)];
 
         while (count) {
+            check_timout();
+
             int nbytes = read(fd_,buf,std::min(count,(size_t)4096));
             if (nbytes == -1)   //TODO: Deal with this better (check errno)
                 throw TCPException("Read failed\n");
@@ -242,28 +269,38 @@ public:
      *              a dedicated TCPChannel for communication with the client.
      *  @throws TCPException
      */
-    TCPChannel Listen(int listen_queue) {
+    TCPChannel Listen(int listen_queue, fd_set other_inputs) {
         check_closed();
 
         struct sockaddr_in clientaddr;
         int clientfd;
         socklen_t clientlen;
         if (listen(fd_, listen_queue)) {
-            //TODO: Deal with this better (check errno)
             throw TCPException("Listen Failed");
         }
 
         clientlen=sizeof(clientaddr);
+
+        //Check for other input availability
+        FD_SET(fd_, &other_inputs);
+        int ready_n = select(FD_SETSIZE, &other_inputs, NULL, NULL, NULL);
+        if(!FD_ISSET(fd_, &other_inputs) || ready_n > 1)
+            throw other_inputs_available("");
+
         clientfd=accept(fd_,(struct sockaddr*)&clientaddr, &clientlen);
         if (clientfd == -1) {
-            //TODO: Deal with this better (check errno)
             throw TCPException("Could not accept connection");
         }
         return TCPChannel(clientfd);
     }
 
+    TCPChannel Listen(fd_set set){return Listen(10, set);}
     //See TCPServer::Listen(inte backLog)
-    TCPChannel Listen() { return Listen(10); }
+    TCPChannel Listen() { 
+        fd_set set; 
+        FD_ZERO(&set);
+        return Listen(10, set); 
+    }
 
     void Close() {
         check_closed();

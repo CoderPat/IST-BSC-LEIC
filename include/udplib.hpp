@@ -6,11 +6,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/select.h>
 
 #include <string>
 #include <vector>
 #include <exception>
 
+#define DEFAULT_UDP_TIMEOUT_SEC 5  //TODO: Put as class parameters?
+#define DEFAULT_UDP_TIMEOUT_USEC 0 //TODO: Put as class parameters?
 
 struct UDPException : public std::exception
 {
@@ -20,6 +23,10 @@ struct UDPException : public std::exception
 	const char* what() const throw() { return s.c_str(); }
 };
 
+struct udp_socket_timeout : public UDPException{
+    udp_socket_timeout(std::string ss) : UDPException(ss){};
+    ~udp_socket_timeout() throw(){}
+};
 
 
 class UDPConnection{
@@ -29,7 +36,18 @@ protected:
 	struct sockaddr_in address_;
 	socklen_t addrlen_;
 
+    struct timeval timeout_;
+
 	inline void check_closed(){ if(closed_) throw UDPException("Socket already closed"); }
+    inline int check_timout(){
+        fd_set set;
+        FD_ZERO(&set);
+        FD_SET(fd_, &set);
+        timeout_.tv_sec = DEFAULT_UDP_TIMEOUT_SEC;
+        timeout_.tv_usec = DEFAULT_UDP_TIMEOUT_USEC;
+        int ret = select(FD_SETSIZE, &set, NULL, NULL, &timeout_);
+        if(!ret) throw udp_socket_timeout("");
+    }
 
 public:
 	UDPConnection() : closed_(false){
@@ -66,6 +84,7 @@ public:
 	    
 	    addrlen_ = sizeof(address_);
 
+        check_timout();
 	    int nbytes = recvfrom(fd_,buffer,sizeof(buffer),0,(struct sockaddr*)&address_,&addrlen_);
 	    if (nbytes == -1)
 	    	throw UDPException("Error receiving a message"); //TODO: Deal with this better (check errno)
