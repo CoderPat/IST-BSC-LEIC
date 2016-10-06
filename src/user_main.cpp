@@ -26,10 +26,12 @@ struct invalid_request : public TRCException{
 
 //Everything has strong exception safety guarantee
 class TRCClientInterface {
+private:
     std::string _hostname;
     u_short _port;
     UDPChannel _TCSChannel;
     std::vector<std::string> lang_names; 
+
 public:
     TRCClientInterface(const std::string& hostname, u_short port) :  _TCSChannel(hostname, port), _hostname(hostname), _port(port) {}
 
@@ -63,7 +65,7 @@ public:
     std::vector<std::string> TLQ() {
         std::string request = std::string("ULQ\n");
         _TCSChannel.Write(std::vector<uint8_t>(request.begin(), request.end()));
-        std::vector<uint8_t> response = _TCSChannel.Read(); //TODO: timeout = 10
+        std::vector<uint8_t> response = _TCSChannel.Read();
         
         std::vector<std::string> tokens;
         std::string aux;
@@ -77,9 +79,8 @@ public:
             return std::vector<std::string>();
         
         unsigned long n = std::stoul(tokens.at(1));
-        if (tokens.size() != n + 2)  {
-            std::invalid_argument("Invalid number of parameters on the response");
-        }
+        if (tokens.size() != n + 2) throw std::invalid_argument("Invalid number of parameters on the response");
+
         return std::vector<std::string>(tokens.begin()+2, tokens.end());
     }
 
@@ -100,9 +101,8 @@ public:
         
         if (tokens.at(0) != "TRR") throw std::invalid_argument("Unknown response");
         if (tokens.at(1) == "ERR") throw invalid_request("Server got an invalid request");
-        if (tokens.at(1) == "NTA") {
-            throw translation_not_available("No translation could be provided for the requested language");
-        }
+        if (tokens.at(1) == "NTA") throw translation_not_available("No translation could be provided for the requested language");
+
         if (tokens.at(1) != "t") throw std::invalid_argument("Invalid response type");
         int n = std::stoi(tokens.at(2));
         if (n != wordlist.size()) throw std::invalid_argument("Word count mismatch");
@@ -139,7 +139,7 @@ public:
         ofile.write((char*)bytes.data(), bytes.size());
         ofile.close();
 
-        return make_tuple(filename, n);
+        return std::make_tuple(filename, n);
     }
 
     void RequestWords(int lang, const std::vector<std::string>& wordlist) {
@@ -156,7 +156,7 @@ public:
         try {
             channel = TCPChannel(hostname.c_str(),port);
         } catch (...) {
-            std::cerr << "request t: Could not conect to server " << hostname << " on port " << port << std::endl;
+            std::cerr << "request t: Could not connect to server " << hostname << " on port " << port << std::endl;
             return;
         }
         
@@ -199,7 +199,7 @@ public:
         try {
             conn = TCPChannel(hostname.c_str(),port);
         } catch (...) {
-            std::cerr << "request f: Could not conect to server " << hostname << " on port " << port << std::endl;
+            std::cerr << "request f: Could not connect to server " << hostname << " on port " << port << std::endl;
             return;
         }
 
@@ -225,17 +225,11 @@ public:
             int lang=0;
             try {
                 lang = std::stoi(tokens[1]);
-                n = std::stoi(tokens[3]);
-                if ((tokens.size() - 4 != (unsigned int) n)
-                   || lang <= 0 
-                   || n <= 0) {
-                       throw std::invalid_argument("");
-                   }
             } catch (...) {
                 std::cerr << "request: Invalid argument" << std::endl;
                 return;
             }
-            RequestWords(lang-1, std::vector<std::string>(tokens.begin()+4, tokens.end()));
+            RequestWords(lang-1, std::vector<std::string>(tokens.begin()+3, tokens.end()));
         } else if (tokens[2]=="f") {
             int lang=0;
             try {
@@ -300,22 +294,35 @@ public:
 int main(int argc, char **argv) {
     u_short port = 58000 + GN; 
     std::string hostname = "localhost";
+
+    if(argc%2==0){
+        std::cerr << "Usage [-p <port>] [-n <hostname>]" << std::endl;
+        return 1;
+    }
+
     for (int i = 1; i+1<argc; i++) {
-        if (!strcmp("-n", argv[i])) {
-            i++;
-            hostname = argv[i];
-        } else if (!strcmp("-p", argv[i])) {
-            i++;
-            try {
+        try{
+            if (!strcmp("-n", argv[i])) {
+                i++;
+                hostname = argv[i];
+            } else if (!strcmp("-p", argv[i])) {
+                i++;
                 unsigned long aux = std::stoul(std::string(argv[i]));
-                if (aux >= (1<<16)) throw std::out_of_range("Port name too high");
+                if (aux >= (1<<16)) throw std::out_of_range("");
                 port = (u_short) aux;
-            } catch (...) {
-                std::cerr << "Invalid port..." << std::endl;
-            }
-        } else {
-            std::cerr << "Unknow option: " << argv[i] << std::endl;
+            } else 
+                throw std::invalid_argument("Unknown option " + std::string(argv[i]));
         }
+        catch(std::out_of_range& e){
+            std::cerr << "Port numbers must be in the range 1-65535" << std::endl;
+            exit(1); 
+        }
+        catch(std::invalid_argument& e){ 
+            std::string message = (!strcmp(e.what(),"stol") ? "Ports must be a number" : e.what());
+            std::cerr << message << std::endl;
+            exit(1);
+        }
+
     }
 
     try {

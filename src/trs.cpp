@@ -197,7 +197,7 @@ int main(int argc, char **argv) {
     std::string text_translation_file = "auxiliary/text_translation.txt";
     std::string file_translation_file = "auxiliary/file_translation.txt";
 
-    if(argc < 2){
+    if(argc < 2 || argc%2==1){
         std::cerr << "Usage <language> [-p <trs_port>] [-n <hostname>] [-e <tcs_port>]";
         exit(1);
     }
@@ -212,7 +212,6 @@ int main(int argc, char **argv) {
                 aux = std::stol(argv[i]);
                 if(aux > (1<<16) || aux <= 0) throw std::out_of_range("");
                 trs_port = aux;
-
             } else if (!strcmp("-n", argv[i])) {
                 i++;
                 hostname = argv[i];
@@ -267,16 +266,16 @@ int main(int argc, char **argv) {
     //Error connecting/disconnecting from the TCS
     catch(udp_socket_timeout& e){
         std::cerr << "TCS connection attempt timed out." << std::endl;
-        return -1;
+        exit(1);
     }
     //TCS refused to register our server
     catch(invalid_response& e){
         std::cerr << "TCS denied request to connect." << std::endl;
-        return -1;
+        exit(1);
     }
     catch(...){
         std::cerr << "Something went wrong with the server :/" << std::endl;
-        return -1;
+        exit(1);
      }
 
 
