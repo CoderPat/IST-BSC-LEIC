@@ -1,19 +1,21 @@
 #include <unistd.h>
-#include <map>
-#include <algorithm>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
 #include <stdio.h>
+
+#include <map>
+#include <algorithm>
 #include <string>
 #include <vector>
 #include <fstream>
 #include <cstring>
 #include <iostream>
-#include <stdlib.h>
-#include "../include/udplib.hpp"
-#include "../include/utils.hpp"
+
+#include "udplib.hpp"
+#include "utils.hpp"
 
 typedef std::pair<std::string, u_short> sinfo;
 
@@ -140,7 +142,8 @@ int main(int argc, char* args[]) {
         }
         if(secure) {
             std::cout << response << std::endl;
-            server.Write(std::vector<uint8_t>(response.begin(), response.end()));
+            server.Write(byte_cast(response));
+            server.Write(byte_cast("\n"));
         }
     }
 }
