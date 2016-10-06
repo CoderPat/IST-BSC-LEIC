@@ -12,7 +12,7 @@
 #include <vector>
 #include <exception>
 
-#define DEFAULT_UDP_TIMEOUT_SEC 5  //TODO: Put as class parameters?
+#define DEFAULT_UDP_TIMEOUT_SEC 3  //TODO: Put as class parameters?
 #define DEFAULT_UDP_TIMEOUT_USEC 0 //TODO: Put as class parameters?
 
 struct UDPException : public std::exception
@@ -39,14 +39,14 @@ protected:
     struct timeval timeout_;
 
 	inline void check_closed(){ if(closed_) throw UDPException("Socket already closed"); }
-    inline int check_timout(){
+    inline void check_timout(){
         fd_set set;
         FD_ZERO(&set);
         FD_SET(fd_, &set);
         timeout_.tv_sec = DEFAULT_UDP_TIMEOUT_SEC;
         timeout_.tv_usec = DEFAULT_UDP_TIMEOUT_USEC;
-        int ret = select(FD_SETSIZE, &set, NULL, NULL, &timeout_);
-        if(!ret) throw udp_socket_timeout("");
+
+        if(!select(FD_SETSIZE, &set, NULL, NULL, &timeout_)) throw udp_socket_timeout("");
     }
 
 public:
@@ -58,11 +58,13 @@ public:
 	}
 
     /** Move constructor to avoid the original object closing the socket for the new one */
-    UDPConnection(UDPConnection&& c) : fd_(c.fd_), address_(c.address_), addrlen_(addrlen_), closed_(c.closed_) {
+    UDPConnection(UDPConnection&& c) : fd_(c.fd_), address_(c.address_), addrlen_(addrlen_), 
+                                       closed_(c.closed_), timeout_(c.timeout_){
         c.closed_ = true;
     }
 
     UDPConnection& operator=(UDPConnection&& c){
+        timeout_ = c.timeout_;
         address_ = c.address_;
         addrlen_ = c.addrlen_;
         fd_ = c.fd_;

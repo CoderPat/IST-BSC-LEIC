@@ -59,8 +59,8 @@ private:
             throw initialization_error("Couldn't get self name");
 
         std::string message = request + " " + language_ + " " + myhostname + " " + std::to_string(port_) + "\n";
-
         tcs_channel_.Write(byte_cast(message));
+
         std::string response = string_cast(tcs_channel_.Read());
 
         std::vector<std::string> tokens = tokenize(response);
@@ -238,7 +238,9 @@ int main(int argc, char **argv) {
 
     try{
         TRSInterface lang_server(TRSInterface(language, text_translation_file, file_translation_file, trs_port, hostname, tcs_port));
+        
         lang_server.SRG();
+
         fd_set input;
         FD_ZERO(&input);
         FD_SET(STDIN_FILENO, &input);
@@ -255,8 +257,19 @@ int main(int argc, char **argv) {
                     exit(0);
                 }
             }
+            //One user connection timed out (doesn kill the server)
+            catch(tcp_socket_timeout& e){
+                std::cerr << "One user connection timed out" << std::endl;
+            }
+
         }
     }
+    //Error connecting/disconnecting from the TCS
+    catch(udp_socket_timeout& e){
+        std::cerr << "TCS connection attempt timed out." << std::endl;
+        return -1;
+    }
+    //TCS refused to register our server
     catch(invalid_response& e){
         std::cerr << "TCS denied request to connect." << std::endl;
         return -1;

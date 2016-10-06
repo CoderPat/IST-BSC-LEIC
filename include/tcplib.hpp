@@ -13,7 +13,7 @@
 #include <vector>
 #include <fstream>
 
-#define DEFAULT_TCP_TIMEOUT_SEC 5  //TODO: Put as class parameters?
+#define DEFAULT_TCP_TIMEOUT_SEC 3  //TODO: Put as class parameters?
 #define DEFAULT_TCP_TIMEOUT_USEC 0 //TODO: Put as class parameters?
 
 struct TCPException : public std::exception
@@ -97,12 +97,13 @@ public:
     }
 
     /** Move constructor to avoid the original object closing the socket for the new one */
-    TCPChannel(TCPChannel&& c) : fd_(c.fd_), closed_(c.closed_) {
+    TCPChannel(TCPChannel&& c) : fd_(c.fd_), closed_(c.closed_), timeout_(c.timeout_) {
         c.closed_ = true;
     }
 
     /** Move assignment operator to avoid the original object closing the socket for the new one */
     TCPChannel& operator=(TCPChannel&& c){
+        timeout_ = c.timeout_;
         fd_ = c.fd_;
         closed_ = c.closed_;
         c.closed_ = true;
