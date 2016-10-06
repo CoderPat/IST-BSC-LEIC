@@ -142,8 +142,7 @@ int main(int argc, char* args[]) {
         }
         if(secure) {
             std::cout << response << std::endl;
-            server.Write(byte_cast(response));
-            server.Write(byte_cast("\n"));
+            server.Write(byte_cast(response + "\n"));
         }
     }
 }
