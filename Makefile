@@ -1,6 +1,6 @@
 CC		= g++ -std=c++11
 #Nota a -fdiagnostics-color=auto so foi introduzida no gcc 4.9. O ubuntu so tem nos repos oficiais o gcc 4.8
-FLAGS	= #-fdiagnostics-color=auto 
+FLAGS	= 
 
 INCDIR1	= ./include
 INCLUDE = -I${INCDIR1}
