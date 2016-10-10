@@ -34,10 +34,10 @@ public:
     }
 
     std::vector<std::string> get_lang(std::string lang) {
-	std::vector<std::string> out;
-	out.push_back(_langs.at(lang).first);
-	out.push_back(std::to_string(_langs.at(lang).second));
-	return out;
+        std::vector<std::string> out;
+        out.push_back(_langs.at(lang).first);
+        out.push_back(std::to_string(_langs.at(lang).second));
+        return out;
     }
 
     void add_language(std::string lang, std::string ip, std::string port) {

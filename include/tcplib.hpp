@@ -12,6 +12,7 @@
 #include <exception>
 #include <vector>
 #include <fstream>
+#include "utils.hpp"
 
 #define DEFAULT_TCP_TIMEOUT_SEC 3  //TODO: Put as class parameters?
 #define DEFAULT_TCP_TIMEOUT_USEC 0 //TODO: Put as class parameters?
@@ -76,7 +77,7 @@ public:
     TCPChannel(const std::string& hostname, u_short port) : closed_(false) {
         struct hostent* hostptr;
         struct sockaddr_in serveraddr;
-
+        signal(SIGPIPE, sigpipe_handler);
         fd_=socket(AF_INET,SOCK_STREAM,0);
         if (fd_ == -1) 
             throw TCPException("Could not create socket");
@@ -237,6 +238,7 @@ public:
     // @throws TCPException
     TCPServer(u_short port) : closed_(false) {
         struct sockaddr_in serveraddr;
+        signal(SIGPIPE, sigpipe_handler);
         fd_=socket(AF_INET,SOCK_STREAM,0);
         if (fd_ == -1) 
             throw TCPException("Could not create socket");

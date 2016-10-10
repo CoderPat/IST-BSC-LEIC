@@ -8,14 +8,17 @@ INCLUDE = -I${INCDIR1}
 
 all: user trs tcs
 
-tcs: src/tcs.cpp include/udplib.hpp
-	${CC} ${INCLUDE} ${FLAGS} src/tcs.cpp -o tcs
+utils.o: include/utils.hpp src/utils.cpp
+	${CC} ${INCLUDE} ${FLAGS} src/utils.cpp -c -o utils.o
 
-trs: src/trs.cpp include/tcplib.hpp include/udplib.hpp
-	${CC} ${INCLUDE} ${FLAGS} src/trs.cpp -o trs
+tcs: src/tcs.cpp include/udplib.hpp utils.o
+	${CC} ${INCLUDE} ${FLAGS} src/tcs.cpp utils.o -o tcs
 
-user: src/user_main.cpp include/tcplib.hpp include/udplib.hpp
-	${CC} ${INCLUDE} ${FLAGS} src/user_main.cpp -o user
+trs: src/trs.cpp include/tcplib.hpp include/udplib.hpp utils.o
+	${CC} ${INCLUDE} ${FLAGS} src/trs.cpp utils.o -o trs
+
+user: src/user_main.cpp include/tcplib.hpp include/udplib.hpp utils.o
+	${CC} ${INCLUDE} ${FLAGS} src/user_main.cpp utils.o -o user
 
 clean:
-	rm trs user tcs
+	rm trs user tcs utils.o

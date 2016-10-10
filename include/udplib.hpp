@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 #include <exception>
+#include "utils.hpp"
 
 #define DEFAULT_UDP_TIMEOUT_SEC 3  //TODO: Put as class parameters?
 #define DEFAULT_UDP_TIMEOUT_USEC 0 //TODO: Put as class parameters?
@@ -51,6 +52,7 @@ protected:
 
 public:
 	UDPConnection() : closed_(false){
+        signal(SIGPIPE, sigpipe_handler);
 		fd_ = socket(AF_INET,SOCK_DGRAM,0);
 		if (fd_ == -1) 
             throw UDPException("Could not create socket");
