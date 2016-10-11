@@ -47,15 +47,17 @@ public:
     }
 
     void add_language(std::string lang, std::string ip, std::string port) {
-	if ( _langs.find(lang) == _langs.end() ) {
+	if ( _langs.find(lang) != _langs.end() ) {
 		throw new DupicatedLanguageException();	
 	}
         _langs[lang] = sinfo(ip, std::stoi(port));
+        std::cout << "+" + lang + " " + ip + " " + port << std::endl; 
     }
 
     void remove_language(std::string lang, std::string ip, std:: string port) {
         if(_langs.at(lang) == sinfo(ip, std::stoi(port))) {
             _langs.erase(lang);
+            std::cout << "-" + lang + " " + ip + " " + port << std::endl; 
         }
     }
 
@@ -138,7 +140,9 @@ int main(int argc, char* argv[]) {
             for(int i = 0; i < avlangs.size(); i++) {
                 response = response + avlangs.at(i) + " ";
             }
-            std::cout << response << std::endl;
+            std::string tmp = response;
+            //std::cout << "List request: " << server.address_.sin_port << std::endl;
+            std::cout << "\t" << tmp.erase(0, 6) << std::endl;
         }
         else if (secure && input.at(0) == "UNQ") {
 			try {
@@ -146,7 +150,9 @@ int main(int argc, char* argv[]) {
 				if(std::find(avlangs.begin(), avlangs.end(), input.at(1)) != avlangs.end())
 				{
 					response = response + server.get_lang(input.at(1)).at(0);
-			response = response + " " + server.get_lang(input.at(1)).at(1);
+			        response = response + " " + server.get_lang(input.at(1)).at(1);
+                    std::string tmp = response;
+                    std::cout << "\t" << tmp.erase(0, 4) << std::endl;
 				}
 				else {
 					response = "Language not supported";
@@ -178,7 +184,6 @@ int main(int argc, char* argv[]) {
 			secure = false;
         }
         if(secure) {
-            std::cout << response << std::endl;
             server.Write(byte_cast(response + "\n"));
         }
     }
