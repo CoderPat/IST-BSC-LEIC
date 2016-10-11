@@ -19,6 +19,12 @@
 
 typedef std::pair<std::string, u_short> sinfo;
 
+struct DupicatedLanguageException : public std::exception
+{
+	~DupicatedLanguageException() throw () {}
+	const char* what() const throw() { return "Duplicated Language Exception"; }
+};
+
 class TCS : public UDPServer{
 private:
     std::map<std::string, sinfo> _langs;
@@ -41,6 +47,9 @@ public:
     }
 
     void add_language(std::string lang, std::string ip, std::string port) {
+	if ( _langs.find(lang) == _langs.end() ) {
+		throw new DupicatedLanguageException();	
+	}
         _langs[lang] = sinfo(ip, std::stoi(port));
     }
 
@@ -81,15 +90,43 @@ public:
     }
 };
 
-int main(int argc, char* args[]) {
+int main(int argc, char* argv[]) {
 
+    if(argc > 3){
+        std::cerr << "Usage [-p <tcs_port>]";
+        exit(1);
+    }
+    u_short tcs_port = 58000 + GN;
+    
+    if(argc == 3) {
+        try {
+            if (!strcmp("-p", argv[1])) {
+                long aux;
+                aux = std::stol(argv[2]);
+                if(aux > (1<<16) || aux <= 0) throw std::out_of_range("");
+                tcs_port = aux;
+            } 
+            else { 
+                    throw std::invalid_argument("Unknown option " + std::string(argv[1]));
+            }
+        }
+        catch(std::out_of_range& e) {
+            std::cerr << "Port numbers must be in the range 1-65535" << std::endl;
+            exit(1); 
+        }
+        catch(std::invalid_argument& e) { 
+            std::string message = (!strcmp(e.what(),"stol") ? "Ports must be a number" : e.what());
+            std::cerr << message << std::endl;
+            exit(1);
+        }
+    }
 
-    TCS server(50001);
+    TCS server(tcs_port);
     server.parse_avaliable_languages();
     server.get_avaliable_languages();
 
     while(1) {
-        std::vector<uint8_t> msg = server.Read();
+        std::vector<uint8_t> msg = server.Read(false);
         std::string msgstr = string_cast(msg);
         std::vector<std::string> input = tokenize(msgstr);
         std::vector<std::string> avlangs = server.get_avaliable_languages();
