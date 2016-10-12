@@ -115,10 +115,11 @@ public:
         _status_update("SUN", "SUR");
     }
 
-    void TRR(fd_set set){
+    std::string TRR(fd_set set){
         TCPChannel user_channel = server_.Listen(set);
+        std::string request;
         try{
-            std::string request = string_cast(user_channel.ReadUntil(' '));
+            request = string_cast(user_channel.ReadUntil(' '));
             if(request != "TRQ") throw invalid_request("Unkown request"); 
 
             request = string_cast(user_channel.ReadUntil(' '));
@@ -137,7 +138,13 @@ public:
             }
             else if (request == "f"){
                 std::string filename = string_cast(user_channel.ReadUntil(' '));
-                size_t byte_size = std::stol(string_cast(user_channel.ReadUntil(' ')));
+                size_t byte_size;
+                try{
+                    byte_size = std::stol(string_cast(user_channel.ReadUntil(' ')));
+                }
+                catch(...){
+                    throw invalid_request("");
+                }
                 std::vector<uint8_t> data = user_channel.Read(byte_size);
                 if(user_channel.Read(1)[0] != '\n') throw invalid_request("Error in protocol"); 
 
@@ -159,17 +166,21 @@ public:
                 translated_file.close();
 
                 user_channel.Write("\n");
+
             }
             else throw invalid_request("Unkown TRQ request option"); 
         }
         catch(invalid_request& e){
             user_channel.Write("TRR ERR");
             user_channel.Write("\n");
+            request = "invalid request made";
         }
         catch(translation_not_available& e){
             user_channel.Write("TRR NTA");
             user_channel.Write("\n");
+            request = "no translation available for request";
         }
+        return request;
        
     }
 
@@ -194,8 +205,8 @@ int main(int argc, char **argv) {
     u_short trs_port = 59000 + GN;
     u_short tcs_port = 58000 + GN; 
     std::string hostname = "localhost";
-    std::string text_translation_file = "auxiliary/text_translation.txt";
-    std::string file_translation_file = "auxiliary/file_translation.txt";
+    std::string text_translation_file = "text_translation.txt";
+    std::string file_translation_file = "file_translation.txt";
 
     if(argc < 2 || argc%2==1){
         std::cerr << "Usage <language> [-p <trs_port>] [-n <hostname>] [-e <tcs_port>]";
@@ -245,7 +256,7 @@ int main(int argc, char **argv) {
         FD_SET(STDIN_FILENO, &input);
         while(1){
             try{
-                lang_server.TRR(input);
+                std::cout << "request made: " << lang_server.TRR(input) << std::endl;
             }
             //Check for exit command
             catch(other_inputs_available& e){
@@ -273,8 +284,8 @@ int main(int argc, char **argv) {
         std::cerr << "TCS denied request to connect." << std::endl;
         exit(1);
     }
-    catch(...){
-        std::cerr << "Something went wrong with the server :/" << std::endl;
+    catch(std::exception& e){
+        std::cerr << "Something went wrong with the server :/" << e.what() << std::endl;
         exit(1);
      }
 
