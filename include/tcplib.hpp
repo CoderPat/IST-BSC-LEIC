@@ -148,9 +148,8 @@ public:
         return std::string(aux.begin(), aux.end());
     }
 
-    std::vector<uint8_t> ReadUntil(uint8_t term) {
-        check_closed();
 
+    std::vector<uint8_t> ReadUntil(uint8_t term) {
         std::vector<uint8_t> ret;
         uint8_t c;
         while((c=Read(1)[0]) != term) {
@@ -158,9 +157,32 @@ public:
         }
         return ret;
     }
+
+
+    std::vector<uint8_t> ReadUntil(const std::string& terms){
+        std::vector<uint8_t> ret;
+        uint8_t c;
+        bool stop = false;
+        while(true){
+            c = Read(1)[0];
+            for(auto& term : terms)
+                if(c==term){
+                    stop=true; 
+                    break;
+                }
+            if(stop) break;
+            ret.push_back(c);
+        }
+        return ret;
+    }
     
     std::string ReadUntil(uint8_t term, const std::string& overrider) {
         std::vector<uint8_t> aux = ReadUntil(term);
+        return std::string(aux.begin(), aux.end());
+    }
+
+    std::string ReadUntil(const std::string& terms, const std::string& overrider) {
+        std::vector<uint8_t> aux = ReadUntil(terms);
         return std::string(aux.begin(), aux.end());
     }
 

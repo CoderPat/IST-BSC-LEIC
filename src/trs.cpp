@@ -96,7 +96,7 @@ public:
         translation_file.close();
     }
 
-    TRSInterface(){} //TODO: Only allow other functions after proper initialization
+    TRSInterface(){} 
 
     TRSInterface(const std::string& language,
                  const std::string& word_file_path,
@@ -117,7 +117,7 @@ public:
 
     std::string TRR(fd_set set){
         TCPChannel user_channel = server_.Listen(set);
-        std::string request;
+        std::string request, request_info;
         try{
             request = string_cast(user_channel.ReadUntil(' '));
             if(request != "TRQ") throw invalid_request("Unkown request"); 
@@ -135,6 +135,8 @@ public:
                 user_channel.Write("TRR t ");
                 user_channel.Write(std::to_string(translated_words.size()) + " " + detokenize(translated_words));
                 user_channel.Write("\n");
+
+                request_info = "request for text transaltion of " + std::to_string(number_of_words) + " words";
             }
             else if (request == "f"){
                 std::string filename = string_cast(user_channel.ReadUntil(' '));
@@ -154,7 +156,10 @@ public:
 
                 std::ofstream ofile;
                 ofile.open(std::string(tmpname), std::ios::out);
-                std::cout << "Downloading  '" << filename << "' (" << byte_size << " bytes) to temporary file '" << tmpname << "''" << std::endl;
+
+                //TODO:Maybe this logging should be extrenalized like the others?...
+                std::string download_info = "downloaded  '" + filename + "' (" + std::to_string(byte_size) 
+                                                                       + " bytes) to temporary file '" + tmpname + "'";
 
                 std::vector<uint8_t> data = user_channel.Read(byte_size);
                 ofile.write((char*)data.data(), data.size());
@@ -179,21 +184,27 @@ public:
                 translated_file.close();
 
                 user_channel.Write("\n");
+                request_info = "request for image translation with name " + filename + "\n\t" + download_info;
 
             }
             else throw invalid_request("Unkown TRQ request option"); 
         }
-        catch(invalid_request& e){
-            user_channel.Write("TRR ERR");
-            user_channel.Write("\n");
-            request = "invalid request made";
-        }
         catch(translation_not_available& e){
             user_channel.Write("TRR NTA");
             user_channel.Write("\n");
-            request = "no translation available for request";
+            request_info = "no translation available for request";
         }
-        return request;
+        catch(invalid_request& e){
+            user_channel.Write("TRR ERR");
+            user_channel.Write("\n");
+            request_info = "invalid request made";
+        }
+        catch(...){
+            user_channel.Write("TRR ERR");
+            user_channel.Write("\n");
+            request_info = "error during the reading (possibly a protocol error in the message)";
+        }
+        return request_info;
        
     }
 
@@ -269,7 +280,7 @@ int main(int argc, char **argv) {
         FD_SET(STDIN_FILENO, &input);
         while(1){
             try{
-                std::cout << "request made: " << lang_server.TRR(input) << std::endl;
+                std::cout << lang_server.TRR(input) << std::endl;
             }
             //Check for exit command
             catch(other_inputs_available& e){
