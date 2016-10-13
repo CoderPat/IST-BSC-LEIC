@@ -177,21 +177,23 @@ public:
     void RequestImage(int lang, std::string& filename) {
         std::string hostname;
         u_short port;
-        try {
-            tie(hostname, port) = UNQ(lang);
-        } catch (...) {
-            std::cerr << "request f: Could not get TRS server for language " << lang << "!" << std::endl;
-            return;
-        }
 
         size_t sizeInBytes;    
         try {
             std::ifstream inputFile;
             inputFile.open(filename, std::ios::binary | std::ios::ate);
             sizeInBytes = inputFile.tellg();
+            if(sizeInBytes==-1) throw std::exception();
             inputFile.close();
         } catch (...) {
             std::cerr << "request f: Could not open file " << filename << " for reading" << std::endl;
+            return;
+        }
+
+        try {
+            tie(hostname, port) = UNQ(lang);
+        } catch (...) {
+            std::cerr << "request f: Could not get TRS server for language " << lang << "!" << std::endl;
             return;
         }
 
