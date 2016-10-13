@@ -77,10 +77,15 @@ public:
     /**
      *  Reads a UDP packet onto a byte container
      *	Blocks until a packet is received
-	 *
+     *
      *  @throws TCPException
      */
+
     std::vector<uint8_t> Read(){
+        return Read(true);
+    }
+
+    std::vector<uint8_t> Read(bool timeout){
     	check_closed();
 
     	std::vector<uint8_t> ret;
@@ -88,7 +93,9 @@ public:
 	    
 	    addrlen_ = sizeof(address_);
 
-        check_timout();
+        if(timeout)
+            check_timout();
+
 	    int nbytes = recvfrom(fd_,buffer,sizeof(buffer),0,(struct sockaddr*)&address_,&addrlen_);
 	    if (nbytes == -1)
 	    	throw UDPException("Error receiving a message"); //TODO: Deal with this better (check errno)
@@ -97,7 +104,9 @@ public:
             ret.push_back(buffer[i]);
 
 	    return ret;
-    } 
+    }
+    
+    
 
      /**
      *  Writes a vector of bytes to a socket.
