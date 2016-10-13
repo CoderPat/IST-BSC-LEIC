@@ -138,7 +138,18 @@ public:
             else if (request == "f"){
                 std::string filename = string_cast(user_channel.ReadUntil(' '));
                 size_t byte_size = std::stol(string_cast(user_channel.ReadUntil(' ')));
+                char tmpname[] = "/tmp/RCdown.XXXXXX";
+                if (mkstemp(tmpname)==-1) {
+                    throw std::ios_base::failure("Could not create temporary file name...");
+                }
+
+                std::ofstream ofile;
+                ofile.open(std::string(tmpname), std::ios::out);
+                std::cout << "Downloading  '" << filename << "' (" << byte_size << " bytes) to temporary file '" << tmpname << "''" << std::endl;
                 std::vector<uint8_t> data = user_channel.Read(byte_size);
+                ofile.write((char*)data.data(), data.size());
+                ofile.close();
+                std::cout << "Download complete!" << std::endl;
                 if(user_channel.Read(1)[0] != '\n') throw invalid_request("Error in protocol"); 
 
                 std::string translated_filepath = TranslateFile(filename);
