@@ -16,6 +16,7 @@
 
 #define DEFAULT_TCP_TIMEOUT_SEC 3  //TODO: Put as class parameters?
 #define DEFAULT_TCP_TIMEOUT_USEC 0 //TODO: Put as class parameters?
+#define LISTEN_QUEUE 10
 
 struct TCPException : public std::exception
 {
@@ -259,6 +260,7 @@ public:
 
     // @throws TCPException
     TCPServer(u_short port) : closed_(false) {
+
         struct sockaddr_in serveraddr;
         signal(SIGPIPE, sigpipe_handler);
         fd_=socket(AF_INET,SOCK_STREAM,0);
@@ -271,7 +273,10 @@ public:
         serveraddr.sin_port=htons(port);
 
         if (bind(fd_,(struct sockaddr*)&serveraddr, sizeof(serveraddr)) == -1) 
-            throw TCPException("Could not bind to port");                  
+            throw TCPException("Could not bind to port");
+
+        if (listen(fd_, LISTEN_QUEUE))
+            throw TCPException("Listen Failed");     
     }
 
     /** Move constructor to avoid the original object closing the socket for the new one */
@@ -294,17 +299,12 @@ public:
      *              a dedicated TCPChannel for communication with the client.
      *  @throws TCPException
      */
-    TCPChannel Listen(int listen_queue, fd_set other_inputs) {
+    TCPChannel Listen(fd_set other_inputs) {
         check_closed();
 
         struct sockaddr_in clientaddr;
         int clientfd;
         socklen_t clientlen;
-        if (listen(fd_, listen_queue)) {
-            throw TCPException("Listen Failed");
-        }
-
-        clientlen=sizeof(clientaddr);
 
         //Check for other input availability
         FD_SET(fd_, &other_inputs);
@@ -319,12 +319,11 @@ public:
         return TCPChannel(clientfd);
     }
 
-    TCPChannel Listen(fd_set set){return Listen(10, set);}
     //See TCPServer::Listen(inte backLog)
     TCPChannel Listen() { 
         fd_set set; 
         FD_ZERO(&set);
-        return Listen(10, set); 
+        return Listen(set); 
     }
 
     void Close() {
