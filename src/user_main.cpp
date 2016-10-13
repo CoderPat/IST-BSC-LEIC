@@ -139,7 +139,7 @@ public:
         ofile.write((char*)bytes.data(), bytes.size());
         ofile.close();
 
-        return std::make_tuple(filename, n);
+        return std::make_tuple(ofilename, n);
     }
 
     void RequestWords(int lang, const std::vector<std::string>& wordlist) {
@@ -169,7 +169,7 @@ public:
                 std::cout << "\t"  << word << " <-> \t" << trans << std::endl;
             }
         } catch(...) {
-            std::cerr << "request t: Translation failed";
+            std::cerr << "request t: Translation failed" << std::endl;
             return;
         }
     }
@@ -207,7 +207,7 @@ public:
             std::string outfilename;
             size_t outfilelen;
             tie(outfilename,outfilelen) = TRQ(conn, filename, sizeInBytes);
-            std::cout << "Downloaded tranlated file: " << outfilename << " (" << outfilelen << " bytes)" << std::endl;
+            std::cout << "Downloaded translated file: " << outfilename << " (" << outfilelen << " bytes)" << std::endl;
         } catch (...) {
             std::cerr << "request f: TRQ failed :(" << std::endl;
             return;
