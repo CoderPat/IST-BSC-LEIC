@@ -277,8 +277,8 @@ public:
             for (size_t i=0; i<lang_names.size(); i++) 
                 std::cout << i+1 << "- " << lang_names[i] << std::endl; 
             
-        } catch(std::exception& e) {
-            std::cout << "Caught exception" << e.what() << std::endl;
+        } catch(...) {
+            std::cout << "couldn't connect to server" << std::endl;
             return;
         }
     }
