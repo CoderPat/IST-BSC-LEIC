@@ -24,7 +24,9 @@ struct invalid_request : public TRCException{
 };
 
 
-//Everything has strong exception safety guarantee
+/** 
+ * Client interface that issues requests for words and images transaltions
+ */
 class TRCClientInterface {
 private:
     std::string _hostname;
@@ -35,25 +37,34 @@ private:
 public:
     TRCClientInterface(const std::string& hostname, u_short port) :  _TCSChannel(hostname, port), _hostname(hostname), _port(port) {}
 
+
+    /** 
+     * Requests the IP and port of a Translation Server to the TCS 
+     */
     std::tuple<std::string,u_short> UNQ(int lang_id) {
+
+        //Write protocol request for the transsalation server IP
         std::string lang = lang_names.at(lang_id); //throws out_of_range
         std::string request = std::string("UNQ ");
         request += lang;
         request += "\n";
         _TCSChannel.Write(std::vector<uint8_t>(request.begin(), request.end()));
-        std::vector<uint8_t> response = _TCSChannel.Read(); //TODO: timeout = 10
+        std::vector<uint8_t> response = _TCSChannel.Read(); 
         
+        //Get the tokens in the response
         std::vector<std::string> tokens;
         std::string aux;
         std::stringstream ss(std::string(response.begin(), response.end()));
         while (ss >> aux)
             tokens.push_back(aux);
         
+        //Check for bad protocol responses
         if (tokens.at(0) != "UNR") throw std::invalid_argument("Unknown response");
         if (tokens.at(1) == "ERR") throw invalid_request("Server got an invalid request");
         if (tokens.at(1) == "EOF") throw translation_not_available("No translation could be provided for the requested language");
         if (tokens.size() != 3) throw std::invalid_argument("Invalid number of parameters on the response");
 
+        //Check port and hostname integrity and return them
         std::string hostname = tokens.at(1);
         unsigned long i_port = std::stoul(tokens.at(2));
         if (i_port >= (1<<16)) 
@@ -62,17 +73,22 @@ public:
         return std::make_tuple((std::string) hostname, (u_short) i_port);
     }
 
+    /** 
+     * Requests the list of languages available and connected to the TCS
+     */
     std::vector<std::string> TLQ() {
-        std::string request = std::string("ULQ\n");
+        std::string request = "ULQ\n";
         _TCSChannel.Write(std::vector<uint8_t>(request.begin(), request.end()));
         std::vector<uint8_t> response = _TCSChannel.Read();
         
+        //Get the tokens in the message
         std::vector<std::string> tokens;
         std::string aux;
         std::stringstream ss(std::string(response.begin(), response.end()));
         while (ss >> aux)
             tokens.push_back(aux);
         
+        //Check for bad protocol responses
         if (tokens.at(0) != "ULR") throw std::invalid_argument("Unknown response");
         if (tokens.at(1) == "ERR") throw invalid_request("Server got an invalid request");
         if (tokens.at(1) == "EOF") 
@@ -84,7 +100,12 @@ public:
         return std::vector<std::string>(tokens.begin()+2, tokens.end());
     }
 
+    /** 
+     * Requests the translation of words to the TRS in the other side of the channel
+     */
     std::vector<std::string> TRQ(TCPChannel& channel, const std::vector<std::string>& wordlist) {
+        
+        //Write protocol request for word transaltion
         channel.Write("TRQ t ");
         channel.Write(std::to_string(wordlist.size()));
         for (auto w : wordlist) {
@@ -92,6 +113,8 @@ public:
             channel.Write(w);
         }
         channel.Write("\n");
+
+        //Wait for response and get the translated words
         std::string response = channel.ReadUntil('\n', std::string());
         std::vector<std::string> tokens;
         std::string aux;
@@ -99,6 +122,7 @@ public:
         while (ss >> aux)
             tokens.push_back(aux);
         
+        //Check for bad protocol responses
         if (tokens.at(0) != "TRR") throw std::invalid_argument("Unknown response");
         if (tokens.at(1) == "ERR") throw invalid_request("Server got an invalid request");
         if (tokens.at(1) == "NTA") throw translation_not_available("No translation could be provided for the requested language");
@@ -110,7 +134,12 @@ public:
         return std::vector<std::string>(tokens.begin()+3, tokens.end());
     }
 
+    /** 
+     * Requests the translation of an image to the TRS in the other side of the channel
+     */
     std::tuple<std::string, size_t> TRQ(TCPChannel& channel, std::string& filename, size_t sizeInBytes) {
+
+        //Write protocol request for file transaltion
         channel.Write("TRQ f ");
         channel.Write(filename);
         channel.Write(" ");
@@ -124,15 +153,18 @@ public:
         std::string response = channel.ReadUntil(' ', std::string());
         if (response != "TRR") throw std::invalid_argument("Unknown response");
 
+        //Check for bad protocol responses
         response = channel.ReadUntil(" \n", std::string());
         if (response == "ERR") throw invalid_request("Server got an invalid request");
         if (response == "NTA") throw translation_not_available("No translation could be provided for the requested language");
         if (response != "f") throw std::invalid_argument("Invalid response type");
 
+        //Read file name and size
         std::string ofilename = channel.ReadUntil(' ', std::string());
         response = channel.ReadUntil(' ', std::string());
         int n = std::stoi(response);
 
+        //Read file data
         std::ofstream ofile;
         ofile.open(ofilename, std::ios::out);
         std::vector<uint8_t> bytes = channel.Read(n);
@@ -145,6 +177,8 @@ public:
     void RequestWords(int lang, const std::vector<std::string>& wordlist) {
         std::string hostname;
         u_short port;
+
+        //Get translation server ip and port
         try {
             tie(hostname, port) = UNQ(lang);
         }
@@ -165,6 +199,7 @@ public:
             return;
         }
         
+        //Translate the words and print them
         try {
             std::vector<std::string> translation = TRQ(channel, wordlist);
             std::cout << "Translations: " << std::endl; 
@@ -188,6 +223,7 @@ public:
         std::string hostname;
         u_short port;
 
+        //Get the file size and check if it existes
         size_t sizeInBytes;    
         try {
             std::ifstream inputFile;
@@ -201,6 +237,7 @@ public:
             return;
         }
 
+        //Get translation server ip and port
         try {
             tie(hostname, port) = UNQ(lang);
         } 
@@ -218,6 +255,7 @@ public:
             return;
         }
 
+        //Translate the file and saves it in a temp location
         try {
             std::string outfilename;
             size_t outfilelen;
@@ -239,7 +277,7 @@ public:
             std::cerr << "request: insuficient arguments" << std::endl;
             return;
         }
-
+        // Request for words
         if (tokens[2]=="t") {
             int n=0;
             int lang=0;
@@ -250,6 +288,7 @@ public:
                 return;
             }
             RequestWords(lang-1, std::vector<std::string>(tokens.begin()+3, tokens.end()));
+        //Request for images
         } else if (tokens[2]=="f") {
             int lang=0;
             try {
@@ -271,6 +310,7 @@ public:
 
 
     void List() {
+        //Get the list and print them
         try {
             const std::vector<std::string>& ltmp = TLQ();
             lang_names = ltmp;
@@ -283,6 +323,9 @@ public:
         }
     }
 
+    /** 
+    * User execution loop, reads commands and issues requests
+    */
     void Loop() {
         std::string line;
         //Connect to server
@@ -319,7 +362,7 @@ int main(int argc, char **argv) {
         std::cerr << "Usage [-p <port>] [-n <hostname>]" << std::endl;
         return 1;
     }
-
+    //Parse the arguments
     for (int i = 1; i+1<argc; i++) {
         try{
             if (!strcmp("-n", argv[i])) {
@@ -344,7 +387,7 @@ int main(int argc, char **argv) {
         }
 
     }
-
+    //Start server loop
     try {
         TRCClientInterface client = TRCClientInterface(hostname, port);
         client.Loop();

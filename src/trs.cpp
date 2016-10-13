@@ -39,6 +39,9 @@ struct invalid_response : public TRSException{
    ~invalid_response() throw () {}
 };
 
+/** 
+ * The translation server that responds to clients requests
+ */
 class TRSInterface{
 private:
     TCPServer server_;
@@ -65,6 +68,7 @@ private:
 
         std::vector<std::string> tokens = tokenize(response);
 
+        //Check for bad protocol responses
         if(tokens.at(0) != expected_response) throw invalid_response("Not the expected response");
         if(tokens.at(1) == "NOK") throw invalid_response("Request refused");  //TODO: right exception
         if(tokens.at(1) == "ERR") throw invalid_response("Something went wrong on the server side");  //TODO: right exception   
@@ -73,6 +77,9 @@ private:
 
 public:
 
+    /** 
+    * Loads the translators into memory
+    */
     void LoadTranslators(const std::string& word_file_path, const std::string& img_file_path){
         word_translator = std::map<std::string, std::string>();
         file_translator = std::map<std::string, std::string>();
@@ -115,6 +122,11 @@ public:
         _status_update("SUN", "SUR");
     }
 
+    /**
+     *  Main function of the Translation server, waits for request and deeals with them acordingly.
+     *  Unlocks on the event of one of the inputs in the set arguments has data to be read
+     *  Returns a brief description of the reques
+     */
     std::string TRR(fd_set set){
         TCPChannel user_channel = server_.Listen(set);
         std::string request, request_info;
@@ -189,6 +201,7 @@ public:
             }
             else throw invalid_request("Unkown TRQ request option"); 
         }
+        //Deal with bad requests and miss
         catch(translation_not_available& e){
             user_channel.Write("TRR NTA");
             user_channel.Write("\n");
@@ -208,6 +221,9 @@ public:
        
     }
 
+    /**
+     * Translates a word
+     */
     std::string TranslateWord(const std::string& word){
         try{
             return word_translator.at(word);
@@ -215,6 +231,9 @@ public:
         catch(std::out_of_range& e){throw translation_not_available(word);} 
     }
 
+    /**
+     * Translates a file
+     */
     std::string TranslateFile(const std::string& file){
         try{
            return file_translator.at(file);
@@ -237,7 +256,7 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-
+    //Deals with arguments
     std::string language = argv[1];
     for (int i = 2; i<argc-1; i++) {
         try{
