@@ -5,6 +5,7 @@ FLAGS	=
 INCDIR1	= ./include
 INCLUDE = -I${INCDIR1}
 
+.phony: all clean sandbox sandbox_user sandbox_english sandbox_french
 
 all: user trs tcs
 
@@ -19,6 +20,30 @@ trs: src/trs.cpp include/tcplib.hpp include/udplib.hpp utils.o
 
 user: src/user_main.cpp include/tcplib.hpp include/udplib.hpp utils.o
 	${CC} ${INCLUDE} ${FLAGS} src/user_main.cpp utils.o -o user
+	
+sandbox: sandbox_user sandbox_english sandbox_french
+
+sandbox_user: user
+	rm -rf ./sandbox/user
+	mkdir -p ./sandbox/user
+	cp ./auxiliary/english/*.jpg ./sandbox/user/
+	cp ./auxiliary/french/*.jpg ./sandbox/user/
+	cp ./user ./sandbox/user/user
+
+sandbox_english: trs
+	rm -rf ./sandbox/english
+	mkdir -p ./sandbox/english
+	cp ./auxiliary/english/*.txt ./sandbox/english/
+	cp ./auxiliary/*.jpg ./sandbox/english/
+	cp ./trs ./sandbox/english/trs
+
+sandbox_french: trs
+	rm -rf ./sandbox/french
+	mkdir -p ./sandbox/french
+	cp ./auxiliary/french/*.txt ./sandbox/french/
+	cp ./auxiliary/*.jpg ./sandbox/french/
+	cp ./trs ./sandbox/french/trs
 
 clean:
-	rm trs user tcs utils.o
+	rm -rf ./sandbox/user ./sandbox/english ./sandbox/french
+	rm -r trs user tcs utils.o
