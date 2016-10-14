@@ -19,6 +19,12 @@
 
 typedef std::pair<std::string, u_short> sinfo;
 
+struct DuplicatedLanguageException : public std::exception
+{
+	~DuplicatedLanguageException() throw () {}
+	const char* what() const throw() { return "Duplicated Language Exception"; }
+};
+
 class TCS : public UDPServer{
 private:
     std::map<std::string, sinfo> _langs;
@@ -41,6 +47,9 @@ public:
     }
 
     void add_language(std::string lang, std::string ip, std::string port) {
+	if ( _langs.find(lang) != _langs.end() ) {
+		throw new DuplicatedLanguageException();	
+	}
         _langs[lang] = sinfo(ip, std::stoi(port));
     }
 
@@ -81,15 +90,43 @@ public:
     }
 };
 
-int main(int argc, char* args[]) {
+int main(int argc, char* argv[]) {
 
+    if(argc > 3){
+        std::cerr << "Usage [-p <tcs_port>]";
+        exit(1);
+    }
+    u_short tcs_port = 58000 + GN;
+    
+    if(argc == 3) {
+        try {
+            if (!strcmp("-p", argv[1])) {
+                long aux;
+                aux = std::stol(argv[2]);
+                if(aux > (1<<16) || aux <= 0) throw std::out_of_range("");
+                tcs_port = aux;
+            } 
+            else { 
+                    throw std::invalid_argument("Unknown option " + std::string(argv[1]));
+            }
+        }
+        catch(std::out_of_range& e) {
+            std::cerr << "Port numbers must be in the range 1-65535" << std::endl;
+            exit(1); 
+        }
+        catch(std::invalid_argument& e) { 
+            std::string message = (!strcmp(e.what(),"stol") ? "Ports must be a number" : e.what());
+            std::cerr << message << std::endl;
+            exit(1);
+        }
+    }
 
-    TCS server(50001);
+    TCS server(tcs_port);
     server.parse_avaliable_languages();
     server.get_avaliable_languages();
 
     while(1) {
-        std::vector<uint8_t> msg = server.Read();
+        std::vector<uint8_t> msg = server.Read(false);
         std::string msgstr = string_cast(msg);
         std::vector<std::string> input = tokenize(msgstr);
         std::vector<std::string> avlangs = server.get_avaliable_languages();
@@ -97,51 +134,55 @@ int main(int argc, char* args[]) {
 
         bool secure = input.size();
         if(secure &&  input.at(0) == "ULQ") {
-            response = "ULR " + std::to_string(avlangs.size()) + " ";
+            response = avlangs.size() != 0 ? "ULR " + std::to_string(avlangs.size()) : "ULR EOF";
             for(int i = 0; i < avlangs.size(); i++) {
-                response = response + avlangs.at(i) + " ";
+                response = response + " " + avlangs.at(i);
             }
-            std::cout << response << std::endl;
+            std::cout << "request for languange list" << std::endl;
         }
         else if (secure && input.at(0) == "UNQ") {
 			try {
-				response = "UNR ";
+				response = "UNR";
 				if(std::find(avlangs.begin(), avlangs.end(), input.at(1)) != avlangs.end())
 				{
-					response = response + server.get_lang(input.at(1)).at(0);
-			response = response + " " + server.get_lang(input.at(1)).at(1);
+					response = response + " " + server.get_lang(input.at(1)).at(0);
+			        response = response + " " + server.get_lang(input.at(1)).at(1);
+                    std::cout << "request for languange server of " << input.at(1) << std::endl;
 				}
-				else {
-					response = "Language not supported";
-				}
+				else{
+                    std::cerr << "request for unknown languange server of " << input.at(1) << std::endl;
+					response = "UNR EOF";
+                }
 			} catch(...) {
 				response = "UNR ERR";
 			}
         }
         else if (secure && input.at(0) == "SRG") {
-		try {
-			server.add_language(input.at(1), input.at(2), input.at(3));		
-			response = "SRR OK";
-		}
-		catch (...) {
-			response = "SRR NOK";		
-		}		
+    		try {
+    			server.add_language(input.at(1), input.at(2), input.at(3));	
+                std::cout << "+" + input.at(1) + " " + input.at(2) + " " + input.at(3) << std::endl; 	
+    			response = "SRR OK";
+    		}
+    		catch (...) {
+    			response = "SRR NOK";		
+    		}		
         }
-	else if (secure && input.at(0) == "SUN") {
-		try {
-			server.remove_language(input.at(1), input.at(2), input.at(3));		
-			response = "SUR OK";
-		}
-		catch (...) {
-			response = "SUR NOK";		
-		}		
+    	else if (secure && input.at(0) == "SUN") {
+    		try {
+    			server.remove_language(input.at(1), input.at(2), input.at(3));
+                std::cout << "-" + input.at(1) + " " + input.at(2) + " " + input.at(3) << std::endl;
+    			response = "SUR OK";
+    		}
+    		catch (...) {
+    			response = "SUR NOK";		
+    		}		
         }
         else {
             response = "ERR Secure is false";
 			secure = false;
         }
+
         if(secure) {
-            std::cout << response << std::endl;
             server.Write(byte_cast(response + "\n"));
         }
     }

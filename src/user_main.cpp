@@ -124,7 +124,7 @@ public:
         std::string response = channel.ReadUntil(' ', std::string());
         if (response != "TRR") throw std::invalid_argument("Unknown response");
 
-        response = channel.ReadUntil(' ', std::string());
+        response = channel.ReadUntil(" \n", std::string());
         if (response == "ERR") throw invalid_request("Server got an invalid request");
         if (response == "NTA") throw translation_not_available("No translation could be provided for the requested language");
         if (response != "f") throw std::invalid_argument("Invalid response type");
@@ -139,7 +139,7 @@ public:
         ofile.write((char*)bytes.data(), bytes.size());
         ofile.close();
 
-        return std::make_tuple(filename, n);
+        return std::make_tuple(ofilename, n);
     }
 
     void RequestWords(int lang, const std::vector<std::string>& wordlist) {
@@ -147,8 +147,13 @@ public:
         u_short port;
         try {
             tie(hostname, port) = UNQ(lang);
-        } catch (...) {
-            std::cerr << "request t: Could not get TRS server for language " << lang << "!" << std::endl;
+        }
+        catch (translation_not_available& e) {
+            std::cerr << "request t: TCS server didn't have have a translation server for laguange " << lang << std::endl;
+            return;
+        }
+        catch (...) {
+            std::cerr << "request t: something went wrong when getting the TRS server for language " << lang << "!" << std::endl;
             return;
         }
 
@@ -156,7 +161,7 @@ public:
         try {
             channel = TCPChannel(hostname.c_str(),port);
         } catch (...) {
-            std::cerr << "request t: Could not connect to server " << hostname << " on port " << port << std::endl;
+            std::cerr << "request t: could not connect to server " << hostname << " on port " << port << std::endl;
             return;
         }
         
@@ -168,8 +173,13 @@ public:
                 const std::string& trans = translation.at(i);
                 std::cout << "\t"  << word << " <-> \t" << trans << std::endl;
             }
-        } catch(...) {
-            std::cerr << "request t: Translation failed";
+        } 
+        catch(translation_not_available& e) {
+            std::cerr << "request t: no translation for one of the words" << std::endl;
+            return;
+        } 
+        catch(...){
+            std::cerr << "request t: something wrong reading the request (possibly a protocol error)" << std::endl;
             return;
         }
     }
@@ -177,29 +187,34 @@ public:
     void RequestImage(int lang, std::string& filename) {
         std::string hostname;
         u_short port;
-        try {
-            tie(hostname, port) = UNQ(lang);
-        } catch (...) {
-            std::cerr << "request f: Could not get TRS server for language " << lang << "!" << std::endl;
-            return;
-        }
 
         size_t sizeInBytes;    
         try {
             std::ifstream inputFile;
             inputFile.open(filename, std::ios::binary | std::ios::ate);
             sizeInBytes = inputFile.tellg();
+            if(sizeInBytes==-1) throw std::exception();
             inputFile.close();
-        } catch (...) {
-            std::cerr << "request f: Could not open file " << filename << " for reading" << std::endl;
+        } 
+        catch (...) {
+            std::cerr << "request f: could not open file " << filename << " for reading" << std::endl;
+            return;
+        }
+
+        try {
+            tie(hostname, port) = UNQ(lang);
+        } 
+        catch (...) {
+            std::cerr << "request f: could not get TRS server for language " << lang << "!" << std::endl;
             return;
         }
 
         TCPChannel conn;
         try {
             conn = TCPChannel(hostname.c_str(),port);
-        } catch (...) {
-            std::cerr << "request f: Could not connect to server " << hostname << " on port " << port << std::endl;
+        } 
+        catch (...) {
+            std::cerr << "request f: could not connect to server " << hostname << " on port " << port << std::endl;
             return;
         }
 
@@ -207,16 +222,21 @@ public:
             std::string outfilename;
             size_t outfilelen;
             tie(outfilename,outfilelen) = TRQ(conn, filename, sizeInBytes);
-            std::cout << "Downloaded tranlated file: " << outfilename << " (" << outfilelen << " bytes)" << std::endl;
-        } catch (...) {
-            std::cerr << "request f: TRQ failed :(" << std::endl;
+            std::cout << "\tdownloaded translated file: " << outfilename << " (" << outfilelen << " bytes)" << std::endl;
+        } 
+        catch(translation_not_available& e) {
+            std::cerr << "request t: no translation for the image" << std::endl;
+            return;
+        }
+        catch(...){
+            std::cerr << "request t: something wrong reading the request (possibly a protocol error in the message)" << std::endl;
             return;
         }
     }
 
     void Request(std::vector<std::string>& tokens) {
         if (tokens.size() < 4) {
-            std::cerr << "request: Insuficient arguments" << std::endl;
+            std::cerr << "request: insuficient arguments" << std::endl;
             return;
         }
 
@@ -226,7 +246,7 @@ public:
             try {
                 lang = std::stoi(tokens[1]);
             } catch (...) {
-                std::cerr << "request: Invalid argument" << std::endl;
+                std::cerr << "request: invalid transaltion server number" << std::endl;
                 return;
             }
             RequestWords(lang-1, std::vector<std::string>(tokens.begin()+3, tokens.end()));
@@ -239,12 +259,12 @@ public:
                        throw std::invalid_argument("");
                    }
             } catch (...) {
-                std::cerr << "request: Invalid argument" << std::endl;
+                std::cerr << "request: invalid argument" << std::endl;
                 return;
             }
             RequestImage(lang-1, tokens[3]);
         } else {
-            std::cerr << "request: Unknow mode '" << tokens[2] << "'" << std::endl;
+            std::cerr << "request: unknow mode '" << tokens[2] << "'" << std::endl;
             return;
         }
     }
@@ -257,8 +277,8 @@ public:
             for (size_t i=0; i<lang_names.size(); i++) 
                 std::cout << i+1 << "- " << lang_names[i] << std::endl; 
             
-        } catch(std::exception& e) {
-            std::cout << "Caught exception" << e.what() << std::endl;
+        } catch(...) {
+            std::cout << "couldn't connect to server" << std::endl;
             return;
         }
     }
