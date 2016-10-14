@@ -5,6 +5,7 @@ FLAGS	=
 INCDIR1	= ./include
 INCLUDE = -I${INCDIR1}
 
+.phony: all clean sandbox_user sandbox_english engfrench
 
 all: user trs tcs
 
@@ -19,6 +20,8 @@ trs: src/trs.cpp include/tcplib.hpp include/udplib.hpp utils.o
 
 user: src/user_main.cpp include/tcplib.hpp include/udplib.hpp utils.o
 	${CC} ${INCLUDE} ${FLAGS} src/user_main.cpp utils.o -o user
+	
+
 
 clean:
 	rm trs user tcs utils.o
