@@ -295,6 +295,9 @@ int main(int argc, char **argv) {
             catch(tcp_socket_timeout& e){
                 std::cerr << "One user connection timed out" << std::endl;
             }
+            catch(TCPException& e){
+                std::cerr << "Couldn't answer request due to " << e.what() << std::endl;
+            }
 
         }
     }
