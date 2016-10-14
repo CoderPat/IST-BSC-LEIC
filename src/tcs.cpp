@@ -25,6 +25,11 @@ struct DuplicatedLanguageException : public std::exception
 	const char* what() const throw() { return "Duplicated Language Exception"; }
 };
 
+/********************************
+* Translation Contact Server
+* The Best Server
+********************************/
+
 class TCS : public UDPServer{
 private:
     std::map<std::string, sinfo> _langs;
@@ -35,10 +40,16 @@ public:
         _langsfile = "langs.txt";
     }
 
+    /*
+    * Gets all the langs registered as a map
+    */
     std::map<std::string, sinfo> get_langs() {
         return _langs;
     }
 
+    /*
+    * Gets the information of a specific language
+    */
     std::vector<std::string> get_lang(std::string lang) {
         std::vector<std::string> out;
         out.push_back(_langs.at(lang).first);
@@ -46,6 +57,10 @@ public:
         return out;
     }
 
+
+    /*
+    * Adds a language. If duplicated throws an exception
+    */
     void add_language(std::string lang, std::string ip, std::string port) {
 	if ( _langs.find(lang) != _langs.end() ) {
 		throw new DuplicatedLanguageException();	
@@ -53,12 +68,18 @@ public:
         _langs[lang] = sinfo(ip, std::stoi(port));
     }
 
+    /*
+    * Removes a language. If it doesnt exist throws an exception
+    */
     void remove_language(std::string lang, std::string ip, std:: string port) {
         if(_langs.at(lang) == sinfo(ip, std::stoi(port))) {
             _langs.erase(lang);
         }
     }
 
+    /*
+    * Parses the langs.txt file. Works as advertised!
+    */
     void  parse_avaliable_languages() {
         std::ifstream filetoparse;
         std::string lang;
@@ -72,6 +93,9 @@ public:
         }	
     }
 
+    /*
+    * Gets all the language's name.
+    */
     std::vector<std::string>  get_avaliable_languages() {
         std::vector<std::string> out;
         for(std::map<std::string, sinfo>::iterator it = _langs.begin(); it != _langs.end(); ++it) {
@@ -80,6 +104,9 @@ public:
         return out;
     }
 
+    /*
+    * Destroyes the TCS & frees memory. I like memory.
+    */
     ~TCS() {
         if (closed_) return;
 
@@ -90,6 +117,15 @@ public:
     }
 };
 
+
+/*
+* Main function of our Server. Begins by checking if the parameters are valid, then starts the server
+* Once initialized the server will wait for an incoming UDP message on an infinite loop.
+* The server will then process the message by matching it's content with the defined protocol.
+* If the message contains any invalid parameter it will be throwing an exception and dealt accordingly
+*/
+
+
 int main(int argc, char* argv[]) {
 
     if(argc > 3){
@@ -98,6 +134,7 @@ int main(int argc, char* argv[]) {
     }
     u_short tcs_port = 58000 + GN;
     
+    //Checks if the parameters are correct & valid
     if(argc == 3) {
         try {
             if (!strcmp("-p", argv[1])) {
@@ -146,14 +183,16 @@ int main(int argc, char* argv[]) {
 				if(std::find(avlangs.begin(), avlangs.end(), input.at(1)) != avlangs.end())
 				{
 					response = response + " " + server.get_lang(input.at(1)).at(0);
-			        response = response + " " + server.get_lang(input.at(1)).at(1);
-                    std::cout << "request for languange server of " << input.at(1) << std::endl;
+			        	response = response + " " + server.get_lang(input.at(1)).at(1);
+                    			std::cout << "request for languange server of " << input.at(1) << std::endl;
 				}
 				else{
-                    std::cerr << "request for unknown languange server of " << input.at(1) << std::endl;
+                    			std::cerr << "request for unknown languange server of " << input.at(1) << std::endl;
 					response = "UNR EOF";
-                }
-			} catch(...) {
+                		}
+			} 
+			//Some parameter was wrong, the language was duplicated or an unknown error occured
+			catch(...) {
 				response = "UNR ERR";
 			}
         }
@@ -163,6 +202,7 @@ int main(int argc, char* argv[]) {
                 std::cout << "+" + input.at(1) + " " + input.at(2) + " " + input.at(3) << std::endl; 	
     			response = "SRR OK";
     		}
+		//Some parameter was wrong or an unknown error as occured
     		catch (...) {
     			response = "SRR NOK";		
     		}		
@@ -173,6 +213,7 @@ int main(int argc, char* argv[]) {
                 std::cout << "-" + input.at(1) + " " + input.at(2) + " " + input.at(3) << std::endl;
     			response = "SUR OK";
     		}
+		//Some parameter was wrong or an unknown error as occured
     		catch (...) {
     			response = "SUR NOK";		
     		}		
@@ -181,7 +222,8 @@ int main(int argc, char* argv[]) {
             response = "ERR Secure is false";
 			secure = false;
         }
-
+	
+	//We don't mind answering upcoming messages that don't follow our protocol
         if(secure) {
             server.Write(byte_cast(response + "\n"));
         }
