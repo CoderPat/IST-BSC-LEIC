@@ -15,7 +15,7 @@ DROP TABLE Reserva;
 CREATE TABLE User (
     `nif` int(9) unsigned NOT NULL,
     `nome` varchar(100) NOT NULL,
-    `telefone` varchar(15) NOT NULL
+    `telefone` varchar(15) NOT NULL,
     PRIMARY KEY (`nif`)
 );
 
@@ -43,7 +43,7 @@ CREATE TABLE Arrenda(
     `codigo` varchar(32) NOT NULL,
     `nif` int(9) unsigned NOT NULL,
     PRIMARY KEY (`morada`, `codigo`),
-    FOREIGN KEY (`morada`, `codigo`) Alugavel(`morada`, `codigo`)
+    FOREIGN KEY (`morada`, `codigo`) Alugavel(`morada`, `codigo`),
     FOREIGN KEY (`nif`) User(`nif`)
 );
 
@@ -68,7 +68,7 @@ CREATE TABLE Posto(
     `codigo` varchar(32) NOT NULL, 
     `codigo_espaco` varchar(32) NOT NULL,
     PRIMARY KEY(`Morada`, `codigo`),
-    FOREIGN KEY (`Morada`, `codigo`) Alugavel(`morada`, `codigo`)
+    FOREIGN KEY (`Morada`, `codigo`) Alugavel(`morada`, `codigo`),
     FOREIGN KEY (`Morada`, `codigo_espaco`) Espaco(`morada`, `codigo`)
 );
 
@@ -90,7 +90,7 @@ CREATE TABLE Aluga(
     `numero` int unsigned NOT NULL,
     PRIMARY KEY(`morada`, `codigo`,`data_inicio`,`nif`,`numero`),
     FOREIGN KEY(`morada`, `codigo`, `data_inicio`) Oferta(`morada`, `codigo`, `data_inicio`),
-    FOREIGN KEY(`nif`) User(`nif`)
+    FOREIGN KEY(`nif`) User(`nif`),
     FOREIGN KEY(`numero`) Reserva(`numero`)
 );
 
