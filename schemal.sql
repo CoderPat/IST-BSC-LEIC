@@ -13,20 +13,20 @@ DROP TABLE Estado;
 DROP TABLE Reserva;
 
 CREATE TABLE User (
-    `nif` int(9) unsigned NOT NULL UNIQUE,
+    `nif` int(9) unsigned NOT NULL,
     `nome` varchar(100) NOT NULL,
     `telefone` varchar(15) NOT NULL
     PRIMARY KEY (`nif`)
 );
 
 CREATE TABLE Fiscal (
-    `id` int unsigned NOT NULL UNIQUE AUTO_INCREMENT,
+    `id` int unsigned NOT NULL AUTO_INCREMENT,
     `empresa` varchar(100) NOT NULL,
     PRIMARY KEY (`id`)
 );
 
 CREATE TABLE Edificio (
-    `morada` varchar(100) NOT NULL UNIQUE,
+    `morada` varchar(100) NOT NULL,
     PRIMARY KEY (`morada`)
 );
 
@@ -41,7 +41,7 @@ CREATE TABLE Alugavel(
 CREATE TABLE Arrenda(
     `morada` varchar(100) NOT NULL, 
     `codigo` varchar(32) NOT NULL,
-    `nif` int(9) unsigned NOT NULL UNIQUES,
+    `nif` int(9) unsigned NOT NULL,
     PRIMARY KEY (`morada`, `codigo`),
     FOREIGN KEY (`morada`, `codigo`) Alugavel(`morada`, `codigo`)
     FOREIGN KEY (`nif`) User(`nif`)
@@ -111,6 +111,6 @@ CREATE TABLE Estado(
 );
 
 CREATE TABLE Reserva (
-    `numero` int unsigned NOT NULL UNIQUE AUTO_INCREMENT,
+    `numero` int unsigned NOT NULL AUTO_INCREMENT,
     PRIMARY KEY(`numero`)
 );
