@@ -1,8 +1,9 @@
 <?php 
-  require_once "func/init.php";
+  $root = ""
+  require_once $root + "func/init.php";
   $title = "Página principal";
-  include "template/head.php"; 
-  include "template/navbar.php";
+  include $root + "template/head.php"; 
+  include $root + "template/navbar.php";
 ?>
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
@@ -12,4 +13,4 @@
         <p><a class="btn btn-primary btn-lg" href="admin.php" role="button">Go to admin panel &raquo;</a></p>
       </div>
     </div>
-<?php include "template/foot.php"; ?>
+<?php include $root + "template/foot.php"; ?>

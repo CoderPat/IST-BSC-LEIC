@@ -1,8 +1,9 @@
 <?php
-require_once "func/init.php";
+$root = "../../"
+require_once $root + "func/init.php";
 $title = "Ver edifício";
-include "template/head.php"; 
-include "template/navbar.php";
+include $root + "template/head.php"; 
+include $root + "template/navbar.php";
 
 if (isset($_GET['edificio_id']) && !empty($_GET['edificio_id'])) {
     $edificio_id = int($_GET['edificio_id']);
@@ -15,5 +16,5 @@ view_edificio($edificio);
 $alugaveis = alugavel_getall_by_edificioid($edificio_id);
 view_table($alugaveis);
 
-include "template/foot.php";
+include $root + "template/foot.php";
 ?>

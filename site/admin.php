@@ -1,8 +1,9 @@
 <?php 
-  require_once "func/init.php";
-  $title = "Page Title";
-  include "template/head.php"; 
-  include "template/navbar.php";
+  $root = ""
+  require_once $root + "func/init.php";
+  $title = "";
+  include $root + "template/head.php"; 
+  include $root + "template/navbar.php";
 ?>
 
 <?php 
@@ -31,4 +32,4 @@
       view_table($table);
 ?>
 
-<?php include "template/foot.php"; ?>
+<?php include $root + "template/foot.php"; ?>

@@ -1,5 +1,6 @@
 <?php
-require_once "func/init.php";
+$root = "../../"
+require_once $root + "func/init.php";
 $title = "Listar Edifícios";
 
 if(isset($_GET['edificio_id']) && !empty($_GET['edificio_id'])) {
@@ -7,8 +8,8 @@ if(isset($_GET['edificio_id']) && !empty($_GET['edificio_id'])) {
     //Redirect to view.php
 }
 
-include "template/head.php"; 
-include "template/navbar.php";
+include $root + "template/head.php"; 
+include $root + "template/navbar.php";
 ?>
 
 Por aqui redirect para a pagina para criar um edificio
@@ -17,5 +18,5 @@ Por aqui redirect para a pagina para criar um edificio
 <?php
 $table = edificio_getall();
 view_table($table);
-include "template/foot.php";
+include $root + "template/foot.php";
 ?>
