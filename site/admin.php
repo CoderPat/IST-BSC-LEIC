@@ -1,5 +1,6 @@
 <?php 
   require_once "func/init.php";
+  $title = "Page Title";
   include "template/head.php"; 
   include "template/navbar.php";
 ?>
@@ -10,10 +11,13 @@
       include "model/posto.php";
       include "model/oferta.php";
       include "model/reserva.php";
-      include "view/table.php"
+      include "view/table.php";
+      
       $table = edificio_getall();
       view_table($table);
       
+      echo "<p><a class='btn btn-primary btn-lg' href='pages/edificio' role='button'>Ver edifícios &raquo;</a></p>";
+
       $table = espaco_getall();
       view_table($table);
       

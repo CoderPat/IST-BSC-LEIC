@@ -1,5 +1,6 @@
 <?php 
   require_once "func/init.php";
+  $title = "Página principal";
   include "template/head.php"; 
   include "template/navbar.php";
 ?>
