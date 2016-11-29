@@ -6,12 +6,12 @@
 ?>
 
 <?php 
-      include "model/edificio.php";
-      include "model/espaco.php";
-      include "model/posto.php";
-      include "model/oferta.php";
-      include "model/reserva.php";
-      include "view/table.php";
+      include $root . "model/edificio.php";
+      include $root . "model/espaco.php";
+      include $root . "model/posto.php";
+      include $root . "model/oferta.php";
+      include $root . "model/reserva.php";
+      include $root . "view/table.php";
       
       $table = edificio_getall();
       view_table($table);
