@@ -5,7 +5,7 @@
   include $root . "template/navbar.php";
 ?>
 
-<?php 
+<?php
       include $root . "model/edificio.php";
       include $root . "model/espaco.php";
       include $root . "model/posto.php";
