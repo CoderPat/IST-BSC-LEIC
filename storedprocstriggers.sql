@@ -17,10 +17,10 @@ CREATE TRIGGER pagar_reserva BEFORE INSERT
 ON paga
 FOR EACH ROW
 BEGIN
-	IF ( SELECT MAX(date(timestamp)) FROM estado WHERE numero=NEW.numero ) > NEW.data
+	IF ( SELECT MAX(time_stamp) FROM estado WHERE numero=NEW.numero ) > NEW.data
 	THEN
 		CALL DANK_ERROR_FUNCTION();
 	END IF;
 END$$
 
-DELIMITER;
+DELIMITER ;
