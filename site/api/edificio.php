@@ -2,7 +2,7 @@
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
      //TODO: criar um edificio
      echo "ok";
-} else if ($_SERVER['REQUEST_METHOD'] === 'UPDATE') {
+} else if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
      //TODO: atualizar um edificio
      echo "ok";     
 } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {

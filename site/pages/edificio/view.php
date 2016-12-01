@@ -10,6 +10,7 @@ if (isset($_GET['edificio_id']) && !empty($_GET['edificio_id'])) {
     $edificio_id = 0;
 }
 
+
 $edificio = edificio_get($edificio_id);
 view_edificio($edificio);
 $alugaveis = alugavel_getall_by_edificioid($edificio_id);
