@@ -3,7 +3,8 @@
 // e transforma em dados usados pelo resto do programa
 //por uma questao de simplicidade, acho que faz mais sentido lidarmos com
 //atualizacoes a db dentro do proprio endpoint na api (porque fica mais facil de ler o codigo)
-function edificio_getall() {
-    return array();
+function edificio_getall($db) {
+	$QUERY = "SELECT * FROM edificio";
+    return $db->query($sql);
 }
 ?>
