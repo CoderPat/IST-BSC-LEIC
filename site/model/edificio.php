@@ -20,12 +20,11 @@ function edificio_get_alugaveis_total($db, $morada){
  				FROM posto NATURAL JOIN oferta NATURAL JOIN aluga NATURAL JOIN paga
  				WHERE YEAR(data) = '2016'
 			) as all_custos
-			WHERE morada=\"Catolica\"
+			WHERE morada=:morada
 			GROUP BY morada, codigo;";
-	return $db->query($query_model);
-	//$prepared_query = $db->prepare($query_model);
-	//$prepared_query->bindParam(":morada", $morada);
-	//$prepared_query->execute();
-	//return $prepared_query;
+	$prepared_query = $db->prepare($query_model);
+	$prepared_query->bindParam(":morada", $morada);
+	$prepared_query->execute();
+	return $prepared_query;
 }
 ?>
