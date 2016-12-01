@@ -1,1 +1,0 @@
-Pagina intermedia para escolher o metodo de pagamento para uma determinada reserva 

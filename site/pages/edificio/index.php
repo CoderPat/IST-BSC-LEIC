@@ -20,7 +20,7 @@ $table = edificio_getall($db);
  <div class="jumbotron">
     <div class="container">  
         <h3>
-            Criar edifício
+            Criar Edifício
         </h3>
         <form action=<?= $webroot . "/api/edificio.php" . "?redirect=" . $webroot . "pages/edificio/"?> method="post">
             <p>Morada do novo edificio: <input type="text" name="morada"/></p>

@@ -1,1 +1,0 @@
-TODO pagina para ver um espaco (listar postos do espaco)
