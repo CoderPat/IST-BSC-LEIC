@@ -1,5 +1,5 @@
 <?php
-function draw_table($table, $title, $classmaker, $heads, $cbck=false, $cbck_args=false, $cbck_const_args=false) {
+function draw_table($table, $title, $classmaker, $heads, $cbck=null, $cbck_args=null, $cbck_const_args=null) {
   echo <<<'ZZZ'
   <div class="row">
     <div class="col-md-12">
@@ -8,15 +8,8 @@ function draw_table($table, $title, $classmaker, $heads, $cbck=false, $cbck_args
 	  <h3 class="panel-title">
 ZZZ
 .$title
-.' '
-.$links
 . <<<'ZZZ'
 </h3>
-	  <div class="pull-right">
-	    <span class="clickable filter" data-toggle="tooltip" title="Toggle table filter" data-container="body" onclick="$panel = $(this).parents('.panel'); $panel.find('.panel-body').slideToggle();if($(this).css('display') != 'none') { $panel.find('.panel-body input').focus();}">
-	      <i class="glyphicon glyphicon-filter"></i>
-	    </span>
-	  </div>
 	</div>
 ZZZ
 . <<<'ZZZ'
@@ -26,7 +19,7 @@ ZZZ
 	    <tr>
               <th>
 ZZZ
-. implode("</th> <th>", $headname). <<<'ZZZ'
+. implode("</th> <th>", $heads). <<<'ZZZ'
               </th>
 	    </tr>
 	  </thead>
@@ -36,30 +29,35 @@ ZZZ;
 foreach ($table as $row) {
   echo '
 	    <tr ';
-  if (!$classmaker==false) {
+  if (!$classmaker===null) {
     call_user_func($classmaker, $row);
   }
   echo'>';
   for ($j=0; $j<count($heads); $j+=1) {
     $params = array();
     $w = 0;
-    for ($k=0; $k<count($cbck_args[$j]); $k++) {
-      if ($cbck_args[$j][$k]===null) {
-        $array_push($params, "null");
-      } else if ($cbck_args[$j][$k]===false) {
-        if ($w < count($cbck_const_args[$j])) {
-          $params += $array_push($params, $cbck_const_args[$j][$w]);
+    if ($cbck_args != null && $cbck_args[$j] != null) {
+      for ($k=0; $k<count($cbck_args[$j]); $k++) {
+        if ($cbck_args[$j][$k]===null) {
+          $array_push($params, "null");
+        } else if ($cbck_args[$j][$k]===false) {
+          if ($cbck_const_args != null && $cbck_const_args[$j] != null &&
+              $w < count($cbck_const_args[$j])) {
+            $params += $array_push($params, $cbck_const_args[$j][$w]);
+          } else {
+            $params += $array_push($params, "");
+          }
         } else {
-          $params += $array_push($params, "");
+          array_push($params, $row[$cbck_args[$j][$k]]);  
         }
-      } else {
-        $array_push($params, $row[$cbck_args[$j][$k]]);  
       }
     }
-    for (; $w<count($cbck_const_args[$j]); $w++) {
-      $params += $array_push($params, $cbck_const_args[$j][$w]);
+    if ($cbck_const_args != null && $cbck_const_args[$j] != null) {
+      for (; $w<count($cbck_const_args[$j]); $w++) {
+        $params += $array_push($params, $cbck_const_args[$j][$w]);
+      }
     }
-    if ($cbck==false || ($cbck[$j] == false)) {
+    if ($cbck==null || ($cbck[$j] == null)) {
       echo "<td>".implode("", $params)."</td>";
     } else {
       echo call_user_func_array($cbck[$j], $params);

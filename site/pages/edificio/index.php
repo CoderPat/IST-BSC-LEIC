@@ -1,5 +1,7 @@
 <?php
 require_once "../../func/init.php";
+include $root . "model/edificio.php";
+include $root . "view/table.php";
 $title = "Listar Edifícios";
 
 if(isset($_GET['edificio_id']) && !empty($_GET['edificio_id'])) {
@@ -9,15 +11,45 @@ if(isset($_GET['edificio_id']) && !empty($_GET['edificio_id'])) {
 
 include $root . "template/head.php"; 
 include $root . "template/navbar.php";
-
 $table = edificio_getall($db);
-view_table($table);
-include $root . "template/foot.php";
-
 ?>
-    <form action=<?= $root . "api/edificio.php" . "?redirect=" . $webroot . "pages/edificio/index"?> method="post">
-        <p>Morada do novo edificio: <input type="text" name="morada"/></p>
-        <p><input type="submit" value="Submit"/></p>
-    </form>
 
 
+<link rel="stylesheet" type="text/css" href="<?= $webroot ?>/assets/css/tabler.css">
+
+ <div class="jumbotron">
+    <div class="container">  
+        <h3>
+            Criar edifício
+        </h3>
+        <form action=<?= $webroot . "/api/edificio.php" . "?redirect=" . $webroot . "pages/edificio/"?> method="post">
+            <p>Morada do novo edificio: <input type="text" name="morada"/></p>
+            <p><input type="submit" value="Submit"/></p>
+        </form>
+    </div>
+</div>
+
+
+<div class="container">
+
+<?php
+function make_request_btn($morada) {
+    global $webroot;
+    return '<td style="font-size: 1.5em; padding: 10px 10px 0 10px;">'.
+    '<a data-original-title="Ver edificio" data-placement="bottom" data-toggle="tooltip" class="tooltipper" '.
+    "href='$webroot/pages/edificio/view.php?morada=".urlencode($morada)."' >".
+        '<i class="glyphicon glyphicon-circle-arrow-right"></i></a>'.
+    "<form action='$webroot/api/edificio.php?callback=".urlencode("$webroot/pages/edificio")."' method='POST'>".
+    '<input type="hidden" name="_method" value="DELETE" />'.
+    '<button type="submit" data-original-title="Apagar edificio" data-placement="bottom" data-toggle="tooltip"'.'class="tooltipper" class="btn btn-xs btn-danger"> <span class="glyphicon glyphicon-trash"></span>&nbsp; </button>'.
+    '</form></td>';
+}
+    draw_table($table, "Lista de edifícios", null, ["morada", "acções"], [null, 'make_request_btn'], [["morada"], ["morada"]], null);
+?>
+
+    
+
+</div>
+<?php
+include $root . "template/foot.php";
+?>

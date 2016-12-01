@@ -5,6 +5,6 @@
 //atualizacoes a db dentro do proprio endpoint na api (porque fica mais facil de ler o codigo)
 function edificio_getall($db) {
 	$QUERY = "SELECT * FROM edificio";
-    return $db->query($sql);
+    return $db->query($QUERY);
 }
 ?>
