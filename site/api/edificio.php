@@ -2,15 +2,16 @@
 require_once "../func/init.php";
 
 if ($METHOD === 'POST') {
-     if($_POST['key'] != "" && ctype_alpha ($_POST['key']) {
-          $query = $dbh->prepare("INSERT INTO edificio VALUES (:morada)");
+    if($_POST['morada'] != "" && ctype_alpha($_POST['morada'])) {
+          $query = $db->prepare("INSERT INTO edificio VALUES (:morada)");
           $query->bindParam(':morada', $morada);
-          $morada = $_POST['key'];
+          $morada = $_POST['morada'];
           $query->execute();
      }
         else {
           echo "error";
      }
+	
 } else if ($METHOD === 'PUT') {
      //TODO: editar um edificio
      try {
