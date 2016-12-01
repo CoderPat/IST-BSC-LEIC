@@ -9,3 +9,5 @@ Acções: Criar reserva (pode ter os campos necessarios para o pedido diretament
 
 ofertas fechadas:
 (...)
+
+Pode receber parametros para limitar a query

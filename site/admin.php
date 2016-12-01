@@ -4,31 +4,19 @@
   include $root . "template/head.php"; 
   include $root . "template/navbar.php";
 ?>
+<div class="jumbotron">
+   <div class="container">      
+      <p><a class='btn btn-primary btn-lg' href='pages/edificio' role='button'>Ver edifícios &raquo;</a></p>
 
-<?php
-      include $root . "model/edificio.php";
-      include $root . "model/espaco.php";
-      include $root . "model/posto.php";
-      include $root . "model/oferta.php";
-      include $root . "model/reserva.php";
-      include $root . "view/table.php";
-      
-      $table = edificio_getall();
-      view_table($table);
-      
-      echo "<p><a class='btn btn-primary btn-lg' href='pages/edificio' role='button'>Ver edifícios &raquo;</a></p>";
+      <p><a class='btn btn-primary btn-lg' href='pages/espaco' role='button'>Ver espacos &raquo;</a></p>
 
-      $table = espaco_getall();
-      view_table($table);
-      
-      $table = posto_getall();
-      view_table($table);
-      
-      $table = oferta_getall();
-      view_table($table);
-      
-      $table = reserva_getall();
-      view_table($table);
-?>
+      <p><a class='btn btn-primary btn-lg' href='pages/posto' role='button'>Ver postos &raquo;</a></p>
+
+      <p><a class='btn btn-primary btn-lg' href='pages/oferta' role='button'>Ver ofertas &raquo;</a></p>
+
+      <p><a class='btn btn-primary btn-lg' href='pages/reserva' role='button'>Ver reservas &raquo;</a></p>
+   </div>
+</div>
+
 
 <?php include $root . "template/foot.php"; ?>

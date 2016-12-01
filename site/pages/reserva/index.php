@@ -1,0 +1,1 @@
+TODO: reserva. idem como as ofertas.
