@@ -2,8 +2,13 @@
 require_once "../func/init.php";
 
 if ($METHOD === 'POST') {
-     //TODO: criar um edificio
-     echo "ok";
+     if($_POST['key'] != "" && ctype_alpha ($_POST['key']) {
+          $query = "INSERT INTO edificio VALUES ('" + $_POST['key'] + "')";    
+          mysql_query($query);
+     }
+        else {
+          echo "error";
+     }
 } else if ($METHOD === 'PUT') {
      //TODO: editar um edificio
      try {
