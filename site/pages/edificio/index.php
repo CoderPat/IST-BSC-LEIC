@@ -41,6 +41,7 @@ function make_request_btn($morada) {
         '<i class="glyphicon glyphicon-circle-arrow-right"></i></a>'.
     "<form action='$webroot/api/edificio.php?callback=".urlencode("$webroot/pages/edificio")."' method='POST'>".
     '<input type="hidden" name="_method" value="DELETE" />'.
+    "<input type='hidden' name='morada' value="$morada" />".
     '<button type="submit" data-original-title="Apagar edificio" data-placement="bottom" data-toggle="tooltip"'.'class="tooltipper" class="btn btn-xs btn-danger"> <span class="glyphicon glyphicon-trash"></span>&nbsp; </button>'.
     '</form></td>';
 }
