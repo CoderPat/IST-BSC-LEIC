@@ -3,8 +3,10 @@ require_once "../func/init.php";
 
 if ($METHOD === 'POST') {
      if($_POST['key'] != "" && ctype_alpha ($_POST['key']) {
-          $query = "INSERT INTO edificio VALUES ('" + $_POST['key'] + "')";    
-          mysql_query($query);
+          $query = $dbh->prepare("INSERT INTO edificio VALUES (:morada)");
+          $query->bindParam(':morada', $morada);
+          $name = $_POST['key'];
+          $query->execute();
      }
         else {
           echo "error";
