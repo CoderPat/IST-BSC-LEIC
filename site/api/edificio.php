@@ -2,6 +2,7 @@
 require_once "../func/init.php";
 
 if ($METHOD === 'POST') {
+    try {
     if($_POST['morada'] != "" && ctype_alpha($_POST['morada'])) {
           $query = $db->prepare("INSERT INTO edificio VALUES (:morada)");
           $query->bindParam(':morada', $morada);
@@ -11,7 +12,10 @@ if ($METHOD === 'POST') {
         else {
           echo "error";
      }
-	
+     }
+     catch(Exception $ex) {
+	echo "<html><h1>ERROR</h1></html>";
+     } 	
 } else if ($METHOD === 'PUT') {
      //TODO: editar um edificio
      try {
@@ -21,15 +25,22 @@ if ($METHOD === 'POST') {
          exit();
      }
 } else if ($METHOD === 'DELETE') {
-     //TODO: apagar um edificio, usa 2 parametros
-     //fazer aqui a query:
-     try {
-
-     } catch(Exception $e) {
-         echo "Error: Failed to complete the deletion...";
-         exit();
+try {
+    if($_POST['morada'] != "" && ctype_alpha($_POST['morada'])) {
+          $query = $db->prepare("DELETE FROM edificio WHERE morada=(:morada)");
+          $query->bindParam(':morada', $morada);
+          $morada = $_POST['morada'];
+          $query->execute();
      }
-} else if ($METHOD === 'GET') {
+        else {
+          echo "error";
+     }
+}
+catch(Exception $ex) {
+     echo "<html><h1>ERROR</h1></html>";
+} 	
+}
+ else if ($METHOD === 'GET') {
      echo "invalid request";
 } else {
      echo "unknown request";
