@@ -9,7 +9,7 @@ FOR EACH ROW
 BEGIN
 	IF EXISTS ( SELECT 1 FROM oferta WHERE (NEW.data_fim >= data_inicio) AND (data_fim >= NEW.data_inicio) )
 	THEN
-		SIGNAL SQLSTATE	'45000';
+		CALL DANK_ERROR_FUNCTION();
 	END IF;
 END$$ 
 
@@ -19,7 +19,7 @@ FOR EACH ROW
 BEGIN
 	IF ( SELECT MAX(date(timestamp)) FROM estado WHERE numero=NEW.numero ) > NEW.data
 	THEN
-		SIGNAL SQLSTATE	'45000';
+		CALL DANK_ERROR_FUNCTION();
 	END IF;
 END$$
 

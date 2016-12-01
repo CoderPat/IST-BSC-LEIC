@@ -33,37 +33,37 @@ create table alugavel (
     codigo varchar(255) not null,
     foto varchar(255) not null,
     primary key(morada, codigo),
-    foreign key(morada) references edificio(morada));
+    foreign key(morada) references edificio(morada) on update cascade on delete cascade);
 
 create table arrenda (
     morada varchar(255) not null,
     codigo varchar(255) not null,
     nif varchar(9) not null,
     primary key(morada, codigo),
-    foreign key(morada, codigo) references alugavel(morada, codigo),
-    foreign key(nif) references user(nif));
+    foreign key(morada, codigo) references alugavel(morada, codigo) on update cascade on delete cascade,
+    foreign key(nif) references user(nif) on update cascade on delete cascade);
 
 create table fiscaliza (
     id int not null,
     morada varchar(255) not null ,
     codigo varchar(255) not null ,
     primary key(id, morada, codigo),
-    foreign key(morada, codigo) references arrenda(morada, codigo),
-    foreign key(id) references fiscal(id));
+    foreign key(morada, codigo) references arrenda(morada, codigo) on update cascade on delete cascade,
+    foreign key(id) references fiscal(id) on update cascade on delete cascade);
 
 create table espaco (
     morada varchar(255) not null,
     codigo varchar(255) not null,
     primary key(morada, codigo),
-    foreign key(morada, codigo) references alugavel(morada, codigo));
+    foreign key(morada, codigo) references alugavel(morada, codigo) on update cascade on delete cascade);
 
 create table posto (
     morada varchar(255) not null,
     codigo varchar(255) not null,
     codigo_espaco varchar(255) not null,
     primary key(morada, codigo),
-    foreign key(morada, codigo) references alugavel(morada, codigo),
-    foreign key(morada, codigo_espaco) references espaco(morada, codigo));
+    foreign key(morada, codigo) references alugavel(morada, codigo) on update cascade on delete cascade,
+    foreign key(morada, codigo_espaco) references espaco(morada, codigo) on update cascade on delete cascade);
 
 create table oferta (
     morada varchar(255) not null,
@@ -72,7 +72,7 @@ create table oferta (
     data_fim date not null,
     tarifa numeric(19,4) not null,
     primary key(morada, codigo, data_inicio),
-    foreign key(morada, codigo) references alugavel(morada, codigo));
+    foreign key(morada, codigo) references alugavel(morada, codigo) on update cascade on delete cascade);
 
 create table reserva (
     numero varchar(255) not null unique,
@@ -85,20 +85,20 @@ create table aluga (
     nif varchar(9) not null,
     numero varchar(255) not null,
     primary key(morada, codigo, data_inicio, nif, numero),
-    foreign key(morada, codigo, data_inicio) references oferta(morada, codigo, data_inicio),
-    foreign key(nif) references user(nif),
-    foreign key(numero) references reserva(numero));
+    foreign key(morada, codigo, data_inicio) references oferta(morada, codigo, data_inicio) on update cascade on delete cascade,
+    foreign key(nif) references user(nif) on update cascade on delete cascade,
+    foreign key(numero) references reserva(numero) on update cascade on delete cascade);
 
 create table paga (
     numero varchar(255) not null unique,
     data timestamp not null,
     metodo varchar(255) not null,
     primary key(numero),
-    foreign key(numero) references reserva(numero));
+    foreign key(numero) references reserva(numero) on update cascade on delete cascade);
 
 create table estado (
     numero varchar(255) not null,
     time_stamp timestamp not null,
     estado varchar(255) not null,
     primary key(numero, time_stamp),
-    foreign key(numero) references reserva(numero));
+    foreign key(numero) references reserva(numero) on update cascade on delete cascade);
