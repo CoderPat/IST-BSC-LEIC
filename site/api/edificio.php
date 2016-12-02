@@ -6,7 +6,7 @@ try{
 			  $query->bindParam(':morada', $morada);
 			  $morada = $_POST['morada'];
 			  $result = $query->execute();
-			  if(!$result != 0) {
+			  if(!$result) {
 				throw new Exception("Could not insert");
 			  }
 	} else if ($METHOD === 'PUT') {
@@ -14,8 +14,8 @@ try{
 			  $query = $db->prepare("DELETE FROM edificio WHERE morada=(:morada)");
 			  $query->bindParam(':morada', $morada);
 			  $morada = $_POST['morada'];
-			  $query->execute();
-			  if($query != 0) {
+			  $result = $query->execute();
+			  if(!$result) {
 				throw new Exception("Could not delete");
 			  }
 	}

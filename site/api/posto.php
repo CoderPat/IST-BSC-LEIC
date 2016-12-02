@@ -10,7 +10,7 @@ try{
 		$codigo = $_POST('codigo');
 		$codigo = $_POST('codigo_espaco');
 		$result = $query->execute();
-		if(!$result != 0) {
+		if(!$result) {
 			throw new Exception("Could not insert");
 		}
 	} else if ($METHOD === 'PUT') {
@@ -20,8 +20,8 @@ try{
 			  $query->bindParam(':codigo', $codigo);
 			  $morada = $_POST['morada'];
 			  $codigo = $_POST('codigo');
-			  $query->execute();
-			  if($query != 0) {
+			  $result = $query->execute();
+			  if(!$result) {
 				throw new Exception("Could not delete");
 			  }
 	} else if ($METHOD === 'GET') {

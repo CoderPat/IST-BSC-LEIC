@@ -8,7 +8,7 @@ try{
 		$morada = $_POST['morada'];
 		$codigo = $_POST['codigo'];
 		$result = $query->execute();
-		if(!$result != 0) {
+		if(!$result) {
 			throw new Exception("Could not insert");
 		}
 		
@@ -19,8 +19,8 @@ try{
 		$query->bindParam('codigo', $codigo);
 		$morada = $_POST['morada'];
 		$codigo = $_POST['codigo'];
-		$query->execute();
-		if($query != 0) {
+		$result = $query->execute();
+		if(!$result) {
 			throw new Exception("Could not delete");
 		}
 		

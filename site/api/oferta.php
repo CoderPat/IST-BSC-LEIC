@@ -14,7 +14,7 @@ try{
 		$data_fim = $_POST['data_fim'];
 		$tarifa = $_POST['tarifa'];
 		$result = $query->execute();
-		if(!$result != 0) {
+		if(!$result) {
 			throw new Exception("Could not insert");
 		}
 	} else if ($METHOD === 'PUT') {
@@ -29,8 +29,8 @@ try{
 		$data_incio = $_POST['data_incio'];
 		$data_fim = $_POST['data_fim'];
 		$tarifa = $_POST['tarifa'];
-		$query->execute();
-		if($query != 0) {
+		$result = $query->execute();
+		if(!$result) {
 			throw new Exception("Could not insert");
 		}
 
