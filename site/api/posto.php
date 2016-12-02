@@ -19,8 +19,8 @@ try{
 		$query->bindParam(':codigo', $codigo);
 		$query->bindParam(':codigo_espaco', $codigo_espaco);
 		$morada = $_POST['morada'];
-		$codigo = $_POST('codigo');
-		$codigo_espaco = $_POST('codigo_espaco');
+		$codigo = $_POST['codigo'];
+		$codigo_espaco = $_POST['codigo_espaco'];
 		$result = $query->execute();
 		if(!$result) {
 			throw new Exception("Could not insert");
@@ -31,7 +31,7 @@ try{
 			  $query->bindParam(':morada', $morada);
 			  $query->bindParam(':codigo', $codigo);
 			  $morada = $_POST['morada'];
-			  $codigo = $_POST('codigo');
+			  $codigo = $_POST['codigo'];
 			  $result = $query->execute();
 			  if(!$result) {
 				throw new Exception("Could not delete");
