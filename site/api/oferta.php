@@ -35,12 +35,10 @@ if ($METHOD === 'POST') {
 } else if ($METHOD === 'DELETE') {
     try {
 	  if($_POST['morada'] != "" && ctype_alpha($_POST['morada'])) {
-           $query = $db->prepare("DELETE FROM oferta WHERE morada=:morada AND codigo=:codigo AND  data_inicio=:data_inicio AND data_fim=:data_fim and tarifa=:tarifa)");
+           $query = $db->prepare("DELETE FROM oferta WHERE morada=:morada AND codigo=:codigo AND  data_inicio=:data_inicio)");
            $query->bindParam(':morada', $morada);
 	   $query->bindParam(':codigo', $codigo);
 	   $query->bindParam(':data_inicio', $data_inicio);
-	   $query->bindParam(':data_fim', $data_fim);
-           $query->bindParam(':tarifa', $tarifa);
 	   $morada = $_POST['morada'];
   	   $codigo = $_POST['codigo'];        
 	   $data_incio = $_POST['data_incio'];
