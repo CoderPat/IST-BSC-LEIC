@@ -23,9 +23,9 @@ $table = oferta_getall($db);
             <label for="input-codigo">Codigo do alugavel:</label>
             <input type="text" name="codigo" id="input-codigo"/>
             <label for="input-data_inicio">Data de inicio da Oferta: </label>
-            <input type="text" name="data_inicio" id="input-data_inicio"/>
-            <label for="input-data_fim">Data de fim da oferta:</label>
-            <input type="text" name="data_fim" id="input-data_fim"/>
+            <input type="date" name="data_inicio" id="input-data_inicio"/>
+            <label for="input-data_fim">Data de fim da Oferta:</label>
+            <input type="date" name="data_fim" id="input-data_fim"/>
             <label for="input-tarifa">Tarifa:</label>
             <input type="text" name="tarifa" id="input-tarifa"/>
             <input type="submit" value="Criar"/>

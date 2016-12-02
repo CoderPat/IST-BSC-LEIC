@@ -22,7 +22,7 @@ $table = reserva_getall($db);
             <label for="input-codigo">Codigo do alugavel:</label>
             <input type="text" name="codigo" id="input-codigo"/>
             <label for="input-data_inicio">Data de inicio da Oferta: </label>
-            <input type="text" name="data_inicio" id="input-data_inicio"/>
+            <input type="date" name="data_inicio" id="input-data_inicio"/>
             <label for="input-nif">NIF do Utilizador Criador: </label>
             <input type="text" name="nif" id="input-nif"/>
             <label for="input-numero">Numero da reserva: </label>
