@@ -24,7 +24,9 @@ $table = espaco_getall($db);
             <input type="text" name="codigo" id="input-codigo"/>
             <label for="input-foto">Link da Foto:</label>
             <input type="text" name="foto" id="input-foto"/>
-            <input type="submit" value="Submit"/>
+            <label for="input-nif">NIF do Dono:</label>
+            <input type="text" name="nif" id="input-nif"/>
+            <input type="submit" value="Criar"/>
         </form>
     </div>
 </div>
@@ -44,7 +46,7 @@ function make_request_btn($morada, $codigo) {
     'class="tooltipper" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i></button>'.
     '</form></td>';
 }
-    draw_table($table, "Lista de alugaveis", null, ["Morada", "Codigo", "Accoes"], [null, null, 'make_request_btn'], [["morada"], ["codigo"], ["morada", "codigo"]], null);
+    draw_table($table, "Lista de espacos", null, ["Morada", "Codigo", "Accoes"], [null, null, 'make_request_btn'], [["morada"], ["codigo"], ["morada", "codigo"]], null);
 ?>
 
     

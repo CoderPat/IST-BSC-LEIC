@@ -1,6 +1,8 @@
 <?php
 require_once "../func/init.php";
 try{
+	//begin transaction for rollback
+	$db->beginTransaction();
 	if ($METHOD === 'POST') {
 		$query = $db->prepare("INSERT INTO alugavel VALUES (:morada, :codigo, :foto)");
 		$query->bindParam(':morada', $morada);
@@ -51,12 +53,16 @@ try{
 		 echo "unknown request";
 	}
 
+	//commit everything
+	$db->commit();	
+
 	if (isset($_GET['callback']) && !empty($_GET['callback'])) {
 		header('Location: '.$_GET['callback']);
 		exit();
 	}
 }
 catch(Exception $ex) {
+	$db->rollBack();
 	echo $ex->getMessage();
 }
 ?>

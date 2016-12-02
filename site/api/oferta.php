@@ -1,7 +1,10 @@
 <?php
 require_once "../func/init.php";
 try{
-	if ($METHOD === 'POST') {
+	//begin transaction for rollback
+	$db->beginTransaction();
+
+	if ($METHOD === 'POST') {	
 		$query = $db->prepare("INSERT INTO oferta VALUES (:morada, :codigo, :data_inicio, :data_fim, :tarifa)");
 		$query->bindParam(':morada', $morada);
 		$query->bindParam(':codigo', $codigo);
@@ -45,12 +48,16 @@ try{
 		 echo "unknown request";
 	}
 
+	//begin transaction for rollback
+	$db->commit();
+
 	if (isset($_GET['callback']) && !empty($_GET['callback'])) {
 		header('Location: '.$_GET['callback']);
 		exit();
 	}
 }
 catch(Exception $ex) {
+	$db->rollBack();
 	echo $ex->getMessage();
 }
 ?>

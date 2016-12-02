@@ -25,7 +25,7 @@ $table = edificio_getall($db);
         <form class="betterform" action=<?= $webroot . "/api/edificio.php" . "?callback=" . $webroot . "/pages/edificio/"?> method="POST">
             <label for="input-morada">Morada do novo edificio:</label>
             <input type="text" name="morada" id="input-morada"/>
-            <input type="submit" value="Submit"/>
+            <input type="submit" value="Criar"/>
         </form>
     </div>
 </div>
