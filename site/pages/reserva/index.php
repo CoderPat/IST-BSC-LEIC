@@ -18,11 +18,11 @@ $table = reserva_getall($db);
         </h3>
         <form class="betterform" action=<?= $webroot . "/api/reserva.php" . "?callback=" . $webroot . "/pages/reserva/"?> method="post">
             <label for="input-morada">Morada do Alugavel:</label>
-            <input type="text" name="morada" id="input-morada" <?=isset($_POST['morada']) ? "value=".$_POST['morada'] : ""?> />
+            <input type="text" name="morada" id="input-morada" <?=isset($_POST['morada']) ? "value=\"".htmlspecialchars($_POST['morada'], ENT_QUOTES, 'UTF-8')."\"" : ""?> />
             <label for="input-codigo">Codigo do alugavel:</label>
-            <input type="text" name="codigo" id="input-codigo" <?=isset($_POST['codigo']) ? "value=".$_POST['codigo'] : ""?> />
+            <input type="text" name="codigo" id="input-codigo" <?=isset($_POST['codigo']) ? "value=\"".htmlspecialchars($_POST['codigo'], ENT_QUOTES, 'UTF-8')."\"" : ""?> />
             <label for="input-data_inicio">Data de inicio da Oferta: </label>
-            <input type="date" name="data_inicio" id="input-data_inicio" <?=isset($_POST['data_inicio']) ? "value=".$_POST['data_inicio'] : ""?> />
+            <input type="date" name="data_inicio" id="input-data_inicio" <?=isset($_POST['data_inicio']) ? "value=\"".htmlspecialchars($_POST['data_inicio'], ENT_QUOTES, 'UTF-8')."\"" : ""?> />
             <label for="input-nif">NIF do Utilizador Criador: </label>
             <input type="text" name="nif" id="input-nif" value="123456719"/>
             <label for="input-numero">Numero da reserva: </label>
@@ -38,7 +38,7 @@ $table = reserva_getall($db);
         </h3>
         <form class="betterform" action=<?= $webroot . "/api/reserva.php" . "?callback=" . $webroot . "/pages/reserva/"?> method="post">
             <label for="input-numero">Numero da reserva: </label>
-            <input type="text" name="numero" id="input-numero" <?=isset($_POST['numero']) ? "value=".$_POST['numero'] : ""?> />
+            <input type="text" name="numero" id="input-numero" <?=isset($_POST['numero']) ? "value=\"".htmlspecialchars($_POST['numero'], ENT_QUOTES, 'UTF-8')."\"" : ""?> />
             <label for="input-metodo">Metodo de Pagamento: </label>
             <input type="text" name="metodo" id="input-metodo"/>
             <label for="input-data">Data de Pagamento: </label>

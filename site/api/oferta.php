@@ -21,6 +21,7 @@ try{
 			throw new Exception("Could not insert");
 		}
 	} else if ($METHOD === 'PUT') {
+		throw new Exception("Invalid request");
 	} else if ($METHOD === 'DELETE') {
 
 		$query = $db->prepare("DELETE FROM oferta WHERE morada=:morada AND codigo=:codigo AND  data_inicio=:data_inicio");
@@ -37,9 +38,9 @@ try{
 
 	}
 	else if ($METHOD === 'GET') {
-		 echo "invalid request";
+		 throw new Exception("Invalid request");
 	} else {
-		 echo "unknown request";
+		throw new Exception("Unknown request");
 	}
 
 	//begin transaction for rollback

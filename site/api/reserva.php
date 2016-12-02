@@ -59,10 +59,11 @@ try{
 		}
 
 	} else if ($METHOD === 'DELETE') {
+		throw new Exception("Invalid request");
 	} else if ($METHOD === 'GET') {
-		 echo "invalid request";
+		throw new Exception("Invalid request");
 	} else {
-		 echo "unknown request";
+		throw new Exception("Unknown request");
 	}
 
 	//begin transaction for rollback

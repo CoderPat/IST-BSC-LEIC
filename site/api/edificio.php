@@ -12,6 +12,7 @@ try{
 			throw new Exception("Could not insert");
 		}
 	} else if ($METHOD === 'PUT') {
+		throw new Exception("Invalid request");
 	} else if ($METHOD === 'DELETE') {
 		$query = $db->prepare("DELETE FROM edificio WHERE morada=(:morada)");
 		$query->bindParam(':morada', $morada);
@@ -20,11 +21,10 @@ try{
 		if(!$result) {
 			throw new Exception("Could not delete");
 		}
-	}
-	 else if ($METHOD === 'GET') {
-		echo "invalid request";
+	} else if ($METHOD === 'GET') {
+		throw new Exception("Invalid request");
 	} else {
-		echo "unknown request";
+		throw new Exception("Unknown request");
 	}
 	//commit everything
 	$db->commit();	

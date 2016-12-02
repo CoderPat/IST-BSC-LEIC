@@ -35,6 +35,7 @@ try{
 		}
 		
 	} else if ($METHOD === 'PUT') {
+		throw new Exception("Invalid request");
 	} else if ($METHOD === 'DELETE') {
 		$query = $db->prepare("DELETE FROM alugavel WHERE morada=(:morada) AND codigo=(:codigo)");
 		$query->bindParam(':morada', $morada);
@@ -46,11 +47,10 @@ try{
 			throw new Exception("Could not delete");
 		}
 		
-	}
-	 else if ($METHOD === 'GET') {
-		 echo "invalid request";
+	} else if ($METHOD === 'GET') {
+		throw new Exception("Invalid request");
 	} else {
-		 echo "unknown request";
+		throw new Exception("Unknown request");
 	}
 
 	//commit everything

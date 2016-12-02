@@ -17,11 +17,12 @@ $table = oferta_getall($db);
         <h3>
             Criar Oferta
         </h3>
+        
         <form class="betterform" action=<?= $webroot . "/api/oferta.php" . "?callback=" . $webroot . "/pages/oferta/"?> method="post">
             <label for="input-morada">Morada do Alugavel:</label>
-            <input type="text" name="morada" id="input-morada" <?=isset($_POST['morada']) ? "value=".$_POST['morada'] : ""?> />
+            <input type="text" name="morada" id="input-morada" <?=isset($_POST['morada']) ? "value=\"".htmlspecialchars($_POST['morada'], ENT_QUOTES, 'UTF-8')."\"" : ""?> />
             <label for="input-codigo">Codigo do alugavel:</label>
-            <input type="text" name="codigo" id="input-codigo" <?=isset($_POST['codigo']) ? "value=".$_POST['codigo'] : ""?> />
+            <input type="text" name="codigo" id="input-codigo" <?=isset($_POST['codigo']) ? "value=\"".htmlspecialchars($_POST['codigo'], ENT_QUOTES, 'UTF-8')."\"" : ""?> />
             <label for="input-data_inicio">Data de inicio da Oferta: </label>
             <input type="date" name="data_inicio" id="input-data_inicio"/>
             <label for="input-data_fim">Data de fim da Oferta:</label>
