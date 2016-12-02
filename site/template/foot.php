@@ -6,17 +6,14 @@
         <div class="col-md-4">
           <h2>Afonso Tinoco</h2>
           <p>81861</p>
-          <p><a class="btn btn-default" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" role="button">Win 100$ &raquo;</a></p>
         </div>
         <div class="col-md-4">
           <h2>António Lourenço</h2>
           <p>81796</p>
-          <p><a class="btn btn-default" href="http://heyyeyaaeyaaaeyaeyaa.com" role="button">Free dank</a></p>
        </div>
         <div class="col-md-4">
           <h2>Patrick Fernandes</h2>
-          <p>81XXX</p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+          <p>81191</p>
         </div>
       </div>
       <hr>

@@ -13,7 +13,7 @@ try{
 		$query->bindParam(':tarifa', $tarifa);
 		$morada = $_POST['morada'];
 		$codigo = $_POST['codigo'];        
-		$data_incio = $_POST['data_incio'];
+		$data_incio = $_POST['data_inicio'];
 		$data_fim = $_POST['data_fim'];
 		$tarifa = $_POST['tarifa'];
 		$result = $query->execute();
@@ -23,15 +23,13 @@ try{
 	} else if ($METHOD === 'PUT') {
 	} else if ($METHOD === 'DELETE') {
 
-		$query = $db->prepare("DELETE FROM oferta WHERE morada=:morada AND codigo=:codigo AND  data_inicio=:data_inicio)");
+		$query = $db->prepare("DELETE FROM oferta WHERE morada=:morada AND codigo=:codigo AND  data_inicio=:data_inicio");
 		$query->bindParam(':morada', $morada);
 		$query->bindParam(':codigo', $codigo);
 		$query->bindParam(':data_inicio', $data_inicio);
 		$morada = $_POST['morada'];
 		$codigo = $_POST['codigo'];        
-		$data_incio = $_POST['data_incio'];
-		$data_fim = $_POST['data_fim'];
-		$tarifa = $_POST['tarifa'];
+		$data_incio = $_POST['data_inicio'];
 		$result = $query->execute();
 		if(!$result) {
 			throw new Exception("Could not insert");

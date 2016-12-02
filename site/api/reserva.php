@@ -4,11 +4,22 @@ try{
 	//begin transaction for rollback
 	$db->beginTransaction();
 	if ($METHOD === 'POST') {
-		$query = $db->prepare("INSERT INTO aluga VALUES (:morada, :codigo, :data_incio, :nif)");
+		$query = $db->prepare("INSERT INTO reserva VALUES (:numero)");
+		$query->bindParam(':numero', $numero);
+		$morada = $_POST['numero'];
+
+		$query = $db->prepare("INSERT INTO estado VALUES (:numero, :time_stamp, :estado)");
+		$query->bindParam(':time_stamp', $time_stamp);
+		$query->bindParam(':time_stamp', $estado);
+		$time_stamp = $_POST['time_stamp'];
+		$estado = $_POST['estado'];
+
+		$query = $db->prepare("INSERT INTO aluga VALUES (:morada, :codigo, :data_incio, :nif, :numero)");
 		$query->bindParam(':morada', $morada);
 		$query->bindParam(':codigo', $codigo);
 		$query->bindParam(':data_inicio', $data_inicio);
 		$query->bindParam(':nif', $nif);
+		$query->bindParam(':numero', $numero);
 		$morada = $_POST['morada'];
 		$codigo = $_POST['codigo'];
 		$data_inicio = $_POST['data_inicio'];
@@ -18,7 +29,6 @@ try{
 			throw new Exception("Could not insert");
 		}
 	} else if ($METHOD === 'PUT') {
-		header("lixo:lixo");
 		$query = $db->prepare("INSERT INTO paga VALUES (:numero, :data, :metodo)");
 		$query->bindParam(':numero', $numero);
 		$query->bindParam(':data', $data);
