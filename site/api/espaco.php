@@ -64,6 +64,10 @@ try{
 catch(Exception $ex) {
 	http_response_code(412);
 	$db->rollBack();
-	echo $ex->getMessage();
+	if($ex->getCode() == 23000){
+		echo "Ja existe um espaco com essa morada e codigo";
+	}else {
+		echo $ex->getMessage();
+	}
 }
 ?>

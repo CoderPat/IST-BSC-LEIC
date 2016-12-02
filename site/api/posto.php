@@ -53,7 +53,7 @@ try{
 		throw new Exception("Unknown request");
 	}
 
-	//begin transaction for rollback
+	//commit the changes
 	$db->commit();
 
 	if (isset($_GET['callback']) && !empty($_GET['callback'])) {
@@ -64,6 +64,10 @@ try{
 catch(Exception $ex) {
 	http_response_code(412);
 	$db->rollBack();
-	echo $ex->getMessage();
+	if($ex->getCode() == 23000){
+		echo "Ja existe um posto com essa morada e codigo";
+	}else {
+		echo $ex->getMessage();
+	}
 }
 ?>

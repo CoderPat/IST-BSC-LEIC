@@ -43,7 +43,7 @@ try{
 		throw new Exception("Unknown request");
 	}
 
-	//begin transaction for rollback
+	//commit the changes
 	$db->commit();
 
 	if (isset($_GET['callback']) && !empty($_GET['callback'])) {
@@ -56,7 +56,7 @@ catch(Exception $ex) {
 	$db->rollBack();
 	if($ex->getCode() == 23000){
 		echo "Oferta ja com esses atributos ja existe";
-	} else if($ex->getCode == 42000){
+	} else if($ex->getCode() == 42000){
 		echo "Nao pode sobrepor ofertas sobre o mesmo alugavel";
 	} else{
 		echo $ex->getMessage();

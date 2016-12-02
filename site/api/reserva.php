@@ -66,7 +66,7 @@ try{
 		throw new Exception("Unknown request");
 	}
 
-	//begin transaction for rollback
+	//commit the changes
 	$db->commit();
 	if (isset($_GET['callback']) && !empty($_GET['callback'])) {
 		header('Location: '.$_GET['callback']);
