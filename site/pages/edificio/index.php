@@ -36,7 +36,7 @@ $table = edificio_getall($db);
 <?php
 function make_request_btn($morada) {
     global $webroot;
-    return '<td style="font-size: 1.5em; padding: 10px 10px 0 10px;">'.
+    return '<td class="table-buttons" style="font-size: 1.5em; padding: 10px 10px 0 10px;">'.
     '<a data-original-title="Ver edificio" data-placement="bottom" data-toggle="tooltip" class="tooltipper" '.
     "href='$webroot/pages/edificio/view.php?morada=".urlencode($morada)."' >".
         '<i class="glyphicon glyphicon-circle-arrow-right"></i></a>'.
