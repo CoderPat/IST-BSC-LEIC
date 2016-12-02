@@ -13,7 +13,7 @@ try{
 		$query->bindParam(':tarifa', $tarifa);
 		$morada = $_POST['morada'];
 		$codigo = $_POST['codigo'];        
-		$data_incio = $_POST['data_inicio'];
+		$data_inicio = $_POST['data_inicio'];
 		$data_fim = $_POST['data_fim'];
 		$tarifa = $_POST['tarifa'];
 		$result = $query->execute();

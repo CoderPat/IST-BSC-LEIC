@@ -4,18 +4,26 @@ try{
 	//begin transaction for rollback
 	$db->beginTransaction();
 	if ($METHOD === 'POST') {
-		echo "test1";
 		$query = $db->prepare("INSERT INTO reserva VALUES (:numero)");
 		$query->bindParam(':numero', $numero);
 		$numero = $_POST['numero'];
+		$result = $query->execute();
+		if(!$result) {
+			throw new Exception("Could not insert");
+		}
 
-		$query = $db->prepare("INSERT INTO estado VALUES (:numero, UNIX_TIMESTAMP(), :estado)");
+		$query = $db->prepare("INSERT INTO estado VALUES (:numero, :time_stamp, :estado)");
+		$query->bindParam(':numero', $numero);
 		$query->bindParam(':time_stamp', $time_stamp);
 		$query->bindParam(':estado', $estado);
-		$time_stamp = $_POST['time_stamp'];
+		$time_stamp = date('Y/m/d H:i:s');
 		$estado = $_POST['estado'];
+		$result = $query->execute();
+		if(!$result) {
+			throw new Exception("Could not insert");
+		}
 
-		$query = $db->prepare("INSERT INTO aluga VALUES (:morada, :codigo, :data_incio, :nif, :numero)");
+		$query = $db->prepare("INSERT INTO aluga VALUES (:morada, :codigo, :data_inicio, :nif, :numero)");
 		$query->bindParam(':morada', $morada);
 		$query->bindParam(':codigo', $codigo);
 		$query->bindParam(':data_inicio', $data_inicio);
@@ -25,13 +33,11 @@ try{
 		$codigo = $_POST['codigo'];
 		$data_inicio = $_POST['data_inicio'];
 		$nif = $_POST['nif'];
-		$numero = $_POST['numero'];
 		$result = $query->execute();
 		if(!$result) {
 			throw new Exception("Could not insert");
 		}
 	} else if ($METHOD === 'PUT') {
-		echo "test2";
 		$query = $db->prepare("INSERT INTO paga VALUES (:numero, :data, :metodo)");
 		$query->bindParam(':numero', $numero);
 		$query->bindParam(':data', $data);
@@ -70,9 +76,9 @@ catch(Exception $ex) {
 	http_response_code(412);
 	$db->rollBack();
 	if($ex->getCode() == 23000){
-		echo "Reserva com esse numero ja existe";
-	} else if($ex->getCode == 42000){
-		echo "Nao pode antes do ultimo estado";
+		echo "Nao pode criar reservas duplicadas"
+	} else if($ex->getCode() == 42000){
+		echo "Nao pode pagar numa data antes do ultimo estado";
 	} else{
 		echo $ex->getMessage();
 	}
