@@ -39,7 +39,9 @@ catch(Exception $ex) {
 	$db->rollBack();
 	if($ex->getCode() == 23000){
 		echo "Edificio com essa morada ja existe";
-	}else {
+	} else if($ex->getCode() == 42000){
+		echo "Restrição na base de dados não cumprida pela query";
+	} else {
 		echo $ex->getMessage();
 	}
 }

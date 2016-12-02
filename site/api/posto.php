@@ -66,7 +66,9 @@ catch(Exception $ex) {
 	$db->rollBack();
 	if($ex->getCode() == 23000){
 		echo "Ja existe um posto com essa morada e codigo";
-	}else {
+	} else if($ex->getCode() == 42000){
+		echo "Restrição na base de dados não cumprida pela query";
+	} else {
 		echo $ex->getMessage();
 	}
 }
