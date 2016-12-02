@@ -77,7 +77,7 @@ catch(Exception $ex) {
 	http_response_code(412);
 	$db->rollBack();
 	if($ex->getCode() == 23000){
-		echo "Nao pode criar reservas duplicadas"
+		echo "Nao pode criar reservas duplicadas";
 	} else if($ex->getCode() == 42000){
 		echo "Nao pode pagar numa data antes do ultimo estado";
 	} else{
