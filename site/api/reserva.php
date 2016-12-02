@@ -8,9 +8,9 @@ try{
 		$query->bindParam(':numero', $numero);
 		$morada = $_POST['numero'];
 
-		$query = $db->prepare("INSERT INTO estado VALUES (:numero, :time_stamp, :estado)");
+		$query = $db->prepare("INSERT INTO estado VALUES (:numero, UNIX_TIMESTAMP(), :estado)");
 		$query->bindParam(':time_stamp', $time_stamp);
-		$query->bindParam(':time_stamp', $estado);
+		$query->bindParam(':estado', $estado);
 		$time_stamp = $_POST['time_stamp'];
 		$estado = $_POST['estado'];
 
@@ -24,6 +24,7 @@ try{
 		$codigo = $_POST['codigo'];
 		$data_inicio = $_POST['data_inicio'];
 		$nif = $_POST['nif'];
+		$numero = $_POST['numero'];
 		$result = $query->execute();
 		if(!$result) {
 			throw new Exception("Could not insert");
