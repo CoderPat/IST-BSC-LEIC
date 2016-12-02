@@ -24,7 +24,7 @@ $table = reserva_getall($db);
             <label for="input-data_inicio">Data de inicio da Oferta: </label>
             <input type="text" name="data_inicio" id="input-data_inicio"/>
             <label for="input-nif">NIF do Utilizador Criador: </label>
-            <input type="text" name="nif" id="input-nif"/>
+            <input type="text" name="nif" id="input-nif" value="123456719"/>
             <label for="input-numero">Numero da reserva: </label>
             <input type="text" name="numero" id="input-numero"/>
             <label for="input-estado">Estado: </label>
