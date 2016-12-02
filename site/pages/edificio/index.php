@@ -22,9 +22,10 @@ $table = edificio_getall($db);
         <h3>
             Criar Edifício
         </h3>
-        <form action=<?= $webroot . "/api/edificio.php" . "?redirect=" . $webroot . "pages/edificio/"?> method="post">
-            <p>Morada do novo edificio: <input type="text" name="morada"/></p>
-            <p><input type="submit" value="Submit"/></p>
+        <form class="betterform" action=<?= $webroot . "/api/edificio.php" . "?callback=" . $webroot . "/pages/edificio/"?> method="POST">
+            <label for="input-morada">Morada do novo edificio:</label>
+            <input type="text" name="morada" id="input-morada"/>
+            <input type="submit" value="Submit"/>
         </form>
     </div>
 </div>

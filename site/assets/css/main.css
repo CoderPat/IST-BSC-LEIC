@@ -67,14 +67,31 @@ a.disabled {
 }
 
 
+/* Alinhar forms: */
+.betterform {
+    width: 80%;
+    margin: 0 auto;
+}
 
+.betterform label, .betterform > input {
+    display: inline-block;
+}
 
+.betterform label {
+    width: 30%;
+    text-align: right;
+}
 
+.betterform label + input {
+    width: 30%;
+    margin: 0 30% 0 4%;
+}
 
+.betterform input + input {
+    float: right;
+}
 
-
-
-
-
-
-
+.betterform input[type=submit] {
+    margin-left: 34%;
+    float: left;
+}

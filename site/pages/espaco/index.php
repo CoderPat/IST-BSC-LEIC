@@ -22,10 +22,12 @@ $table = espaco_getall($db);
         <h3>
             Criar Espaco
         </h3>
-        <form action=<?= $webroot . "/api/espaco.php" . "?redirect=" . $webroot . "pages/espaco/"?> method="post">
-            <p>Morada do edificio em que esta inserido: <input type="text" name="morada"/></p>
-            <p>Codigo do Espaco: <input type="text" name="codigo"/></p>
-            <p><input type="submit" value="Submit"/></p>
+        <form class="betterform" action=<?= $webroot . "/api/espaco.php" . "?callback=" . $webroot . "/pages/espaco/"?> method="POST">
+            <label for="input-morada">Morada do edificio em que esta inserido:</label>
+            <input type="text" name="morada" id="input-morada"/>
+            <label for="input-codigo">Codigo do Espaco:</label>
+            <input type="text" name="codigo" id="input-codigo"/>
+            <input type="submit" value="Submit"/>
         </form>
     </div>
 </div>
