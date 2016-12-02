@@ -2,6 +2,18 @@
 require_once "../func/init.php";
 try{
 	if ($METHOD === 'POST') {
+		$query = $db->prepare("INSERT INTO alugavel VALUES (:morada, :codigo, :foto)");
+		$query->bindParam(':morada', $morada);
+		$query->bindParam(':codigo', $codigo);
+		$query->bindParam(':foto', $codigo);
+		$morada = $_POST['morada'];
+		$codigo = $_POST['codigo'];
+		$codigo = $_POST['foto'];
+		$result = $query->execute();
+		if(!$result) {
+			throw new Exception("Could not insert");
+		}
+
 		$query = $db->prepare("INSERT INTO espaco VALUES (:morada, :codigo)");
 		$query->bindParam(':morada', $morada);
 		$query->bindParam(':codigo', $codigo);
