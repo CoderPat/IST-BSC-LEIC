@@ -26,7 +26,7 @@ try{
 		$query->bindParam(':data_inicio', $data_inicio);
 		$morada = $_POST['morada'];
 		$codigo = $_POST['codigo'];        
-		$data_incio = $_POST['data_incio'];
+		$data_incio = $_POST['data_inicio'];
 		$data_fim = $_POST['data_fim'];
 		$tarifa = $_POST['tarifa'];
 		$result = $query->execute();
@@ -51,6 +51,7 @@ try{
 	}
 }
 catch(Exception $ex) {
+	http_response_code(412);
 	echo $ex->getMessage();
 }
 ?>

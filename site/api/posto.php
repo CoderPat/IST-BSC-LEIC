@@ -56,6 +56,7 @@ try{
 	}
 }
 catch(Exception $ex) {
+	http_response_code(412);
 	echo $ex->getMessage();
 }
 ?>
