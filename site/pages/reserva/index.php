@@ -29,8 +29,6 @@ $table = reserva_getall($db);
             <input type="text" name="numero" id="input-numero"/>
             <label for="input-estado">Estado: </label>
             <input type="text" name="estado" id="input-estado"/>
-            <label for="input-numero">Timestamp: </label>
-            <input type="text" name="timestamp" id="input-timestamp"/>
             <input type="submit" value="Criar"/>
         </form>
     </div>

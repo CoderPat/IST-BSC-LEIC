@@ -30,9 +30,8 @@ try{
 			throw new Exception("Could not insert");
 		}
 
-		$query = $db->prepare("INSERT INTO estado VALUES (:numero, :time_stamp, 'Paga')");
+		$query = $db->prepare("INSERT INTO estado VALUES (:numero, UNIX_TIMESTAMP(), 'Paga')");
 		$query->bindParam(':numero', $numero);
-		$query->bindParam(':time_stamp', $data);
 		$result = $query->execute();
 		if(!$result) {
 			throw new Exception("Could not insert");
