@@ -39,11 +39,12 @@ function make_request_btn($morada) {
     return '<td class="table-buttons" style="font-size: 1.5em; padding: 10px 10px 0 10px;">'.
     '<a data-original-title="Ver edificio" data-placement="bottom" data-toggle="tooltip" class="tooltipper" '.
     "href='$webroot/pages/edificio/view.php?morada=".urlencode($morada)."' >".
-        '<i class="glyphicon glyphicon-circle-arrow-right"></i></a>'.
+    '<i class="glyphicon glyphicon-circle-arrow-right"></i></a>'.
     "<form action='$webroot/api/edificio.php?callback=".urlencode("$webroot/pages/edificio")."' method='POST'>".
-        '<input type="hidden" name="_method" value="DELETE" />'.
-        '<input type="hidden" name="morada" value="'.htmlspecialchars($morada, ENT_QUOTES, 'UTF-8').'" />'.
-        '<button type="submit" data-original-title="Apagar edificio" data-placement="bottom" data-toggle="tooltip"'.'class="tooltipper" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i></button>'.
+    '<input type="hidden" name="_method" value="DELETE" />'.
+    '<input type="hidden" name="morada" value="'.htmlspecialchars($morada, ENT_QUOTES, 'UTF-8').'" />'.
+    '<button type="submit" data-original-title="Apagar edificio" data-placement="bottom" data-toggle="tooltip"'.
+    'class="tooltipper" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i></button>'.
     '</form></td>';
 }
     draw_table($table, "Lista de edifícios", null, ["morada", "acções"], [null, 'make_request_btn'], [["morada"], ["morada"]], null);

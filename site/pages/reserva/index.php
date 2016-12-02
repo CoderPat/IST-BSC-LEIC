@@ -16,12 +16,16 @@ $table = reserva_getall($db);
         <h3>
             Criar Reserva
         </h3>
-        <form action=<?= $webroot . "/api/reserva.php" . "?redirect=" . $webroot . "pages/reserva/"?> method="post">
-            <p>Morada do Alugavel: <input type="text" name="morada"/></p>
-            <p>Codigo do Espaco: <input type="text" name="codigo"/></p>
-            <p>Data inicial da Oferta: <input type="text" name="data_inicio"/></p>
-            <p>Nif do Utilizador: <input type="text" name="nif"/></p>
-            <p><input type="submit" value="Submit"/></p>
+        <form class="betterform" action=<?= $webroot . "/api/reserva.php" . "?redirect=" . $webroot . "pages/reserva/"?> method="post">
+            <label for="input-morada">Morada do Alugavel:</label>
+            <input type="text" name="morada" id="input-morada"/>
+            <label for="input-codigo">Codigo do alugavel:</label>
+            <input type="text" name="codigo" id="input-codigo"/>
+            <label for="input-data_inicio">Data de inicio da Oferta: </label>
+            <input type="text" name="data_inicio" id="input-data_inicio"/>
+            <label for="input-nif">NIF do Utilizador Criador: </label>
+            <input type="text" name="nif" id="input-nif"/>
+            <input type="submit" value="Submit"/>
         </form>
     </div>
 </div>
@@ -32,8 +36,12 @@ $table = reserva_getall($db);
 <?php
 function make_request_btn($numero) {
     global $webroot;
-    return '<td style="font-size: 1.5em; padding: 10px 10px 0 10px;">'.
-    '<button type="submit" data-original-title="Apagar oferta" data-placement="bottom" data-toggle="tooltip"'.'class="tooltipper" class="btn btn-xs btn-danger"> <span class="glyphicon glyphicon-usd"></span>&nbsp; </button>'.
+    return '<td class="table-buttons" style="font-size: 1.5em; padding: 10px 10px 0 10px;">'.
+    "<form action='$webroot/api/edificio.php?callback=".urlencode("$webroot/pages/edificio")."' method='POST'>".
+    '<input type="hidden" name="_method" value="DELETE" />'.
+    '<input type="hidden" name="numero" value="'.htmlspecialchars($numero, ENT_QUOTES, 'UTF-8').'" />'.
+    '<button type="submit" data-original-title="Pagar Reserva" data-placement="bottom" data-toggle="tooltip"'.
+    'class="tooltipper" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-usd"></i></button>'.
     '</form></td>';
 }
     draw_table($table, "Lista de Reservas", null, ["Numero", "Accoes"], [null, 'make_request_btn'], [["numero"],["numero"]], null);

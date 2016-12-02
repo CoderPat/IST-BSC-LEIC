@@ -4,11 +4,6 @@ include $root . "model/espaco.php";
 include $root . "view/table.php";
 $title = "Listar Espacos";
 
-if(isset($_GET['edificio_id']) && !empty($_GET['edificio_id'])) {
-    $edificio_id = int($_GET['edificio_id']);
-    //Redirect to view.php
-}
-
 include $root . "template/head.php"; 
 include $root . "template/navbar.php";
 $table = espaco_getall($db);
@@ -38,8 +33,13 @@ $table = espaco_getall($db);
 <?php
 function make_request_btn($morada, $codigo) {
     global $webroot;
-    return '<td style="font-size: 1.5em; padding: 10px 10px 0 10px;">'.
-    '<button type="submit" data-original-title="Apagar espaco" data-placement="bottom" data-toggle="tooltip"'.'class="tooltipper" class="btn btn-xs btn-danger"> <span class="glyphicon glyphicon-trash"></span>&nbsp; </button>'.
+    return '<td class="table-buttons" style="font-size: 1.5em; padding: 10px 10px 0 10px;">'.
+    "<form action='$webroot/api/edificio.php?callback=".urlencode("$webroot/pages/edificio")."' method='POST'>".
+    '<input type="hidden" name="_method" value="DELETE" />'.
+    '<input type="hidden" name="morada" value="'.htmlspecialchars($morada, ENT_QUOTES, 'UTF-8').'" />'.
+    '<input type="hidden" name="codigo" value="'.htmlspecialchars($codigo, ENT_QUOTES, 'UTF-8').'" />'.
+    '<button type="submit" data-original-title="Apagar espaco" data-placement="bottom" data-toggle="tooltip"'.
+    'class="tooltipper" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i></button>'.
     '</form></td>';
 }
     draw_table($table, "Lista de alugaveis", null, ["Morada", "Codigo", "Accoes"], [null, null, 'make_request_btn'], [["morada"], ["codigo"], ["morada", "codigo"]], null);
