@@ -8,7 +8,7 @@ try{
 		$query->bindParam(':foto', $codigo);
 		$morada = $_POST['morada'];
 		$codigo = $_POST['codigo'];
-		$codigo = $_POST['foto'];
+		$foto = $_POST['foto'];
 		$result = $query->execute();
 		if(!$result) {
 			throw new Exception("Could not insert");
@@ -20,14 +20,14 @@ try{
 		$query->bindParam(':codigo_espaco', $codigo_espaco);
 		$morada = $_POST['morada'];
 		$codigo = $_POST('codigo');
-		$codigo = $_POST('codigo_espaco');
+		$codigo_espaco = $_POST('codigo_espaco');
 		$result = $query->execute();
 		if(!$result) {
 			throw new Exception("Could not insert");
 		}
 	} else if ($METHOD === 'PUT') {
 	} else if ($METHOD === 'DELETE') {
-			  $query = $db->prepare("DELETE FROM posto WHERE morada=:morada AND codigo=:codigo");
+			  $query = $db->prepare("DELETE FROM alugavel WHERE morada=:morada AND codigo=:codigo");
 			  $query->bindParam(':morada', $morada);
 			  $query->bindParam(':codigo', $codigo);
 			  $morada = $_POST['morada'];
