@@ -6,7 +6,7 @@ try{
 	if ($METHOD === 'POST') {
 		$query = $db->prepare("INSERT INTO reserva VALUES (:numero)");
 		$query->bindParam(':numero', $numero);
-		$morada = $_POST['numero'];
+		$numero = $_POST['numero'];
 
 		$query = $db->prepare("INSERT INTO estado VALUES (:numero, UNIX_TIMESTAMP(), :estado)");
 		$query->bindParam(':time_stamp', $time_stamp);
