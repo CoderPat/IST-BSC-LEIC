@@ -38,11 +38,7 @@ try{
 		}
 
 	}
-	catch(Exception $ex) {
-		 echo "<html><h1>ERROR</h1></html>";
-	} 
-	}
-	 else if ($METHOD === 'GET') {
+	else if ($METHOD === 'GET') {
 		 echo "invalid request";
 	} else {
 		 echo "unknown request";
