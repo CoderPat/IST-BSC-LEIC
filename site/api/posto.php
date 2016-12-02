@@ -5,10 +5,20 @@ try{
 		$query = $db->prepare("INSERT INTO alugavel VALUES (:morada, :codigo, :foto)");
 		$query->bindParam(':morada', $morada);
 		$query->bindParam(':codigo', $codigo);
-		$query->bindParam(':foto', $codigo);
+		$query->bindParam(':foto', $foto);
 		$morada = $_POST['morada'];
 		$codigo = $_POST['codigo'];
 		$foto = $_POST['foto'];
+		$result = $query->execute();
+		if(!$result) {
+			throw new Exception("Could not insert");
+		}
+
+		$query = $db->prepare("INSERT INTO arrenda VALUES (:morada, :codigo, :nif)");
+		$query->bindParam(':morada', $morada);
+		$query->bindParam(':codigo', $codigo);
+		$query->bindParam(':nif', $nif);
+		$nif = $_POST['nif'];
 		$result = $query->execute();
 		if(!$result) {
 			throw new Exception("Could not insert");
@@ -18,8 +28,6 @@ try{
 		$query->bindParam(':morada', $morada);
 		$query->bindParam(':codigo', $codigo);
 		$query->bindParam(':codigo_espaco', $codigo_espaco);
-		$morada = $_POST['morada'];
-		$codigo = $_POST['codigo'];
 		$codigo_espaco = $_POST['codigo_espaco'];
 		$result = $query->execute();
 		if(!$result) {

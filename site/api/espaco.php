@@ -14,11 +14,19 @@ try{
 			throw new Exception("Could not insert");
 		}
 
+		$query = $db->prepare("INSERT INTO arrenda VALUES (:morada, :codigo, :nif)");
+		$query->bindParam(':morada', $morada);
+		$query->bindParam(':codigo', $codigo);
+		$query->bindParam(':nif', $nif);
+		$nif = $_POST['nif'];
+		$result = $query->execute();
+		if(!$result) {
+			throw new Exception("Could not insert");
+		}
+
 		$query = $db->prepare("INSERT INTO espaco VALUES (:morada, :codigo)");
 		$query->bindParam(':morada', $morada);
 		$query->bindParam(':codigo', $codigo);
-		$morada = $_POST['morada'];
-		$codigo = $_POST['codigo'];
 		$result = $query->execute();
 		if(!$result) {
 			throw new Exception("Could not insert");
