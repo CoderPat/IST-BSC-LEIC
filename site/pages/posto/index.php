@@ -27,7 +27,7 @@ $table = posto_getall($db);
             <label for="input-foto">Link da Foto:</label>
             <input type="text" name="foto" id="input-foto"/>
             <label for="input-nif">NIF do Dono:</label>
-            <input type="text" name="nif" id="input-nif"/>
+            <input type="text" name="nif" id="input-nif" value="123456719"/>
             <input type="submit" value="Criar"/>
         </form>
     </div>
