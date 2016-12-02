@@ -9,11 +9,18 @@ try{
 		$morada = $_POST['morada'];
 		$codigo = $_POST('codigo');
 		$codigo = $_POST('codigo_espaco');
-		$result = $query->execute();
-		if(!$result != 0) {
+		$query->execute();
+		if($query != 0) {
 			throw new Exception("Could not insert");
 		}
 	} else if ($METHOD === 'PUT') {
+		//TODO: editar um edificio
+		try {
+
+		} catch(Exception $e) {
+		 echo "Error: Failed to complete the deletion...";
+		 exit();
+		}
 	} else if ($METHOD === 'DELETE') {
 			  $query = $db->prepare("DELETE FROM posto WHERE morada=:morada AND codigo=:codigo");
 			  $query->bindParam(':morada', $morada);

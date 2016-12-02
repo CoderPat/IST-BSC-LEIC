@@ -18,6 +18,13 @@ try{
 			throw new Exception("Could not insert");
 		}
 	} else if ($METHOD === 'PUT') {
+		 //TODO: editar um edificio
+		 try {
+
+		 } catch(Exception $e) {
+			 echo "Error: Failed to complete the deletion...";
+			 exit();
+		 }
 	} else if ($METHOD === 'DELETE') {
 
 		$query = $db->prepare("DELETE FROM oferta WHERE morada=:morada AND codigo=:codigo AND  data_inicio=:data_inicio)");

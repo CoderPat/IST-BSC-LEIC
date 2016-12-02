@@ -13,6 +13,13 @@ try{
 		}
 		
 	} else if ($METHOD === 'PUT') {
+		 //TODO: editar um edificio
+		 try {
+
+		 } catch(Exception $e) {
+			 echo "Error: Failed to complete the deletion...";
+			 exit();
+		 }
 	} else if ($METHOD === 'DELETE') {
 		$query = $db->prepare("DELETE FROM espaco WHERE morada=(:morada) AND codigo=(:codigo)");
 		$query->bindParam(':morada', $morada);
