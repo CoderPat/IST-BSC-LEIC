@@ -58,7 +58,7 @@ function make_request_btn($morada, $codigo, $data_inicio) {
     'class="tooltipper" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i></button>'.
     '</form></td>';
 }
-    draw_table($table, "Lista de Postos", null, ["Morada", "Codigo", "Data Inicial", "Data Final", "Tarifa", "Accoes"], [null, null, null, null, null, 'make_request_btn'], [["morada"], ["codigo"], ["data_inicio"], ["data_fim"], ["tarifa"], ["morada", "codigo", "data_inicio"]], null);
+    draw_table($table, "Lista de Ofertas", null, ["Morada", "Codigo", "Data Inicial", "Data Final", "Tarifa", "Accoes"], [null, null, null, null, null, 'make_request_btn'], [["morada"], ["codigo"], ["data_inicio"], ["data_fim"], ["tarifa"], ["morada", "codigo", "data_inicio"]], null);
 ?>
 
     
