@@ -14,11 +14,9 @@ function edificio_get_alugaveis_total($db, $morada){
 			(
 				SELECT morada, codigo, tarifa*DATEDIFF(data_fim,data_inicio) as custo
 				FROM espaco NATURAL JOIN oferta NATURAL JOIN aluga NATURAL JOIN paga
-				WHERE YEAR(data) = '2016'
 				UNION
 				SELECT morada, codigo_espaco AS codigo, tarifa*DATEDIFF(data_fim,data_inicio) as custo
  				FROM posto NATURAL JOIN oferta NATURAL JOIN aluga NATURAL JOIN paga
- 				WHERE YEAR(data) = '2016'
  				UNION
  				SELECT morada, codigo, 0 as custo
 				FROM espaco
