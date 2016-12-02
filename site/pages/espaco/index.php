@@ -22,6 +22,8 @@ $table = espaco_getall($db);
             <input type="text" name="morada" id="input-morada"/>
             <label for="input-codigo">Codigo do Espaco:</label>
             <input type="text" name="codigo" id="input-codigo"/>
+            <label for="input-foto">Link da Foto:</label>
+            <input type="text" name="foto" id="input-foto"/>
             <input type="submit" value="Submit"/>
         </form>
     </div>

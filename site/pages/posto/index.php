@@ -24,6 +24,8 @@ $table = posto_getall($db);
             <input type="text" name="codigo" id="input-codigo_espaco"/>
             <label for="input-codigo">Codigo do Posto:</label>
             <input type="text" name="codigo" id="input-codigo"/>
+            <label for="input-foto">Link da Foto:</label>
+            <input type="text" name="foto" id="input-foto"/>
             <input type="submit" value="Submit"/>
         </form>
     </div>
