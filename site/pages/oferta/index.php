@@ -40,7 +40,7 @@ $table = oferta_getall($db);
 function make_request_btn($morada, $codigo, $data_inicio) {
     global $webroot;
     return '<td class="table-buttons" style="font-size: 1.5em; padding: 10px 10px 0 10px;">'.
-    "<form action='$webroot/api/edificio.php?callback=".urlencode("$webroot/pages/edificio")."' method='POST'>".
+    "<form action='$webroot/api/oferta.php?callback=".urlencode("$webroot/pages/oferta")."' method='POST'>".
     '<input type="hidden" name="_method" value="DELETE" />'.
     '<input type="hidden" name="morada" value="'.htmlspecialchars($morada, ENT_QUOTES, 'UTF-8').'" />'.
     '<input type="hidden" name="codigo" value="'.htmlspecialchars($codigo, ENT_QUOTES, 'UTF-8').'" />'.

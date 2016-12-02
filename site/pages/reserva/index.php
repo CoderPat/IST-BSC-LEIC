@@ -37,7 +37,7 @@ $table = reserva_getall($db);
 function make_request_btn($numero) {
     global $webroot;
     return '<td class="table-buttons" style="font-size: 1.5em; padding: 10px 10px 0 10px;">'.
-    "<form action='$webroot/api/edificio.php?callback=".urlencode("$webroot/pages/edificio")."' method='POST'>".
+    "<form action='$webroot/api/reserva.php?callback=".urlencode("$webroot/pages/reserva")."' method='POST'>".
     '<input type="hidden" name="_method" value="DELETE" />'.
     '<input type="hidden" name="numero" value="'.htmlspecialchars($numero, ENT_QUOTES, 'UTF-8').'" />'.
     '<button type="submit" data-original-title="Pagar Reserva" data-placement="bottom" data-toggle="tooltip"'.
