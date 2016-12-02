@@ -29,7 +29,7 @@ try{
 		$query->bindParam(':data_inicio', $data_inicio);
 		$morada = $_POST['morada'];
 		$codigo = $_POST['codigo'];        
-		$data_incio = $_POST['data_inicio'];
+		$data_inicio = $_POST['data_inicio'];
 		$result = $query->execute();
 		if(!$result) {
 			throw new Exception("Could not insert");
@@ -53,6 +53,12 @@ try{
 catch(Exception $ex) {
 	http_response_code(412);
 	$db->rollBack();
-	echo $ex->getMessage();
+	if($ex->getCode() == 23000){
+		echo "Oferta ja com esses atributos ja existe";
+	} else if($ex->getCode == 42000){
+		echo "Nao pode sobrepor ofertas sobre o mesmo alugavel";
+	} else{
+		echo $ex->getMessage();
+	}
 }
 ?>

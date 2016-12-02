@@ -38,6 +38,13 @@ $table = espaco_getall($db);
 function make_request_btn($morada, $codigo) {
     global $webroot;
     return '<td class="table-buttons" style="font-size: 1.5em; padding: 10px 10px 0 10px;">'.
+    "<form action='$webroot/pages/oferta/index.php' method='POST'>".
+    '<input type="hidden" name="_method" value="DELETE" />'.
+    '<input type="hidden" name="morada" value="'.htmlspecialchars($morada, ENT_QUOTES, 'UTF-8').'" />'.
+    '<input type="hidden" name="codigo" value="'.htmlspecialchars($codigo, ENT_QUOTES, 'UTF-8').'" />'.
+    '<button type="submit" data-original-title="Criar Oferta" data-placement="bottom" data-toggle="tooltip"'.
+    'class="tooltipper" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-folder-close"></i></button>'.
+    '</form>' .
     "<form action='$webroot/api/espaco.php?callback=".urlencode("$webroot/pages/espaco")."' method='POST'>".
     '<input type="hidden" name="_method" value="DELETE" />'.
     '<input type="hidden" name="morada" value="'.htmlspecialchars($morada, ENT_QUOTES, 'UTF-8').'" />'.

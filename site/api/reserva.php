@@ -4,6 +4,7 @@ try{
 	//begin transaction for rollback
 	$db->beginTransaction();
 	if ($METHOD === 'POST') {
+		echo "test1";
 		$query = $db->prepare("INSERT INTO reserva VALUES (:numero)");
 		$query->bindParam(':numero', $numero);
 		$numero = $_POST['numero'];
@@ -30,6 +31,7 @@ try{
 			throw new Exception("Could not insert");
 		}
 	} else if ($METHOD === 'PUT') {
+		echo "test2";
 		$query = $db->prepare("INSERT INTO paga VALUES (:numero, :data, :metodo)");
 		$query->bindParam(':numero', $numero);
 		$query->bindParam(':data', $data);
@@ -41,9 +43,10 @@ try{
 		if(!$result) {
 			throw new Exception("Could not insert");
 		}
-
-		$query = $db->prepare("INSERT INTO estado VALUES (:numero, UNIX_TIMESTAMP(), 'Paga')");
+		$query = $db->prepare("INSERT INTO estado VALUES (:numero, :time_stamp, 'Paga')");
 		$query->bindParam(':numero', $numero);
+		$query->bindParam(':time_stamp', $time_stamp);
+		$time_stamp = date('Y/m/d H:i:s');
 		$result = $query->execute();
 		if(!$result) {
 			throw new Exception("Could not insert");
@@ -66,6 +69,12 @@ try{
 catch(Exception $ex) {
 	http_response_code(412);
 	$db->rollBack();
-	echo $ex->getMessage();
+	if($ex->getCode() == 23000){
+		echo "Reserva com esse numero ja existe";
+	} else if($ex->getCode == 42000){
+		echo "Nao pode antes do ultimo estado";
+	} else{
+		echo $ex->getMessage();
+	}
 }
 ?>
