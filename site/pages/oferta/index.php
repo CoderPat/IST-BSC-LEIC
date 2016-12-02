@@ -17,7 +17,7 @@ $table = oferta_getall($db);
         <h3>
             Criar Oferta
         </h3>
-        <form class="betterform" action=<?= $webroot . "/api/oferta.php" . "?redirect=" . $webroot . "pages/oferta/"?> method="post">
+        <form class="betterform" action=<?= $webroot . "/api/oferta.php" . "?callback=" . $webroot . "/pages/oferta/"?> method="post">
             <label for="input-morada">Morada do Alugavel:</label>
             <input type="text" name="morada" id="input-morada"/>
             <label for="input-codigo">Codigo do alugavel:</label>
@@ -28,7 +28,7 @@ $table = oferta_getall($db);
             <input type="text" name="data_fim" id="input-data_fim"/>
             <label for="input-tarifa">Tarifa:</label>
             <input type="text" name="tarifa" id="input-tarifa"/>
-            <input type="submit" value="Submit"/>
+            <input type="submit" value="Criar"/>
         </form>
     </div>
 </div>

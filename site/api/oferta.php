@@ -1,7 +1,10 @@
 <?php
 require_once "../func/init.php";
 try{
-	if ($METHOD === 'POST') {
+	//begin transaction for rollback
+	$db->beginTransaction();
+
+	if ($METHOD === 'POST') {	
 		$query = $db->prepare("INSERT INTO oferta VALUES (:morada, :codigo, :data_inicio, :data_fim, :tarifa)");
 		$query->bindParam(':morada', $morada);
 		$query->bindParam(':codigo', $codigo);
@@ -35,15 +38,14 @@ try{
 		}
 
 	}
-	catch(Exception $ex) {
-		 echo "<html><h1>ERROR</h1></html>";
-	} 
-	}
-	 else if ($METHOD === 'GET') {
+	else if ($METHOD === 'GET') {
 		 echo "invalid request";
 	} else {
 		 echo "unknown request";
 	}
+
+	//begin transaction for rollback
+	$db->commit();
 
 	if (isset($_GET['callback']) && !empty($_GET['callback'])) {
 		header('Location: '.$_GET['callback']);
@@ -52,6 +54,7 @@ try{
 }
 catch(Exception $ex) {
 	http_response_code(412);
+	$db->rollBack();
 	echo $ex->getMessage();
 }
 ?>

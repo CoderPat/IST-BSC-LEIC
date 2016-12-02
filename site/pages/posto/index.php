@@ -17,16 +17,18 @@ $table = posto_getall($db);
         <h3>
             Criar Posto
         </h3>
-        <form class="betterform" action=<?= $webroot . "/api/posto.php" . "?redirect=" . $webroot . "pages/posto/"?> method="post">
+        <form class="betterform" action=<?= $webroot . "/api/posto.php" . "?callback=" . $webroot . "/pages/posto/"?> method="post">
             <label for="input-morada">Morada do edificio em que esta inserido:</label>
             <input type="text" name="morada" id="input-morada"/>
             <label for="input-codigo_espaco">Codigo do Espaco em que esta inserido:</label>
-            <input type="text" name="codigo" id="input-codigo_espaco"/>
+            <input type="text" name="codigo_espaco" id="input-codigo_espaco"/>
             <label for="input-codigo">Codigo do Posto:</label>
             <input type="text" name="codigo" id="input-codigo"/>
             <label for="input-foto">Link da Foto:</label>
             <input type="text" name="foto" id="input-foto"/>
-            <input type="submit" value="Submit"/>
+            <label for="input-nif">NIF do Dono:</label>
+            <input type="text" name="nif" id="input-nif"/>
+            <input type="submit" value="Criar"/>
         </form>
     </div>
 </div>
@@ -47,7 +49,7 @@ function make_request_btn($morada, $codigo) {
     'class="tooltipper" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-trash"></i></button>'.
     '</form></td>';
 }
-    draw_table($table, "Lista de Postos", null, ["Morada", "Codigo do Espaco", "Codigo do Posto", "Accoes"], [null, null, null, 'make_request_btn'], [["morada"], ["codigo"], ["codigo_espaco"], ["morada", "codigo"]], null);
+    draw_table($table, "Lista de Postos", null, ["Morada", "Codigo do Espaco", "Codigo do Posto", "Accoes"], [null, null, null, 'make_request_btn'], [["morada"], ["codigo_espaco"], ["codigo"], ["morada", "codigo"]], null);
 ?>
 
     
