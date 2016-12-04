@@ -194,7 +194,7 @@
 (defconstant MAX-VYS (1+ (* 2 MAX-VY)))
 (defconstant MAX-PX 102) ;maximum pos is this-1
 (defun compress-coord (px py vx vy)
-  (+ ((+ vx MAX-VX) (* MAX-VXS (+ (+ vy MAX-VY) (* MAX-VYS (+ px (* MAX-PX py))))))))
+  (+ (+ vx MAX-VX) (* MAX-VXS (+ (+ vy MAX-VY) (* MAX-VYS (+ px (* MAX-PX py)))))))
 (defun decompress-coord-vx (coord)
   (- (mod coord MAX-VXS) MAX-VX))
 (defun decompress-coord-vy (coord)
@@ -217,56 +217,56 @@
 (defclass pq ()
   ((arr
    :initform nil)
-   upd8
-   cmp)
-  (defmethod initialize-instance :after (updater comparator)
-    (setf (slot-value arr) (make-array 1 :adjustable t :fill-pointer 0)
-          upd8 updater
-          cmp comparator))
+   (upd8)
+   (cmp)))
 
-  (defmethod pq-insert ((q pq) id)
+(defmethod initialize-instance :after ((q pq) &key updater comparator)
+  (setf (slot-value arr q) (make-array 1 :adjustable t :fill-pointer 0))
+  (setf (slot-value upd8 q) updater)
+  (setf (slot-value cmp q) comparator))
+
+(defmethod pq-insert ((q pq) id)
      (with-slots (arr) q
           (vector-push-extend id arr (ceiling (* 0.5  (array-total-size arr))))
           (up8 id (1- (fill-pointer arr)))
-          (pq-fixup q (1- (fill-pointer arr))))
+          (pq-fixup q (1- (fill-pointer arr)))))
 
-  (defmethod pq-popmin ((q pq)) 
-    (with-slots (arr upd8) q
-      (when (= (fill-pointer arr) 0) (return-from pq-popmin nil))
-      (let ((ret (aref arr 0)))
-        (rotatef (aref arr 0) (aref arr (1- (fill-pointer arr))))
-        (upd8 (aref arr 0) 0)
-        (upd8 (aref arr (1- (fill-pointer arr))) -1)
-        (decf (fill-pointer arr))
-        (pq-fixdown q 0)
-        ret
-      )))
+(defmethod pq-popmin ((q pq)) 
+  (with-slots (arr upd8) q
+    (when (= (fill-pointer arr) 0) (return-from pq-popmin nil))
+    (let ((ret (aref arr 0)))
+      (rotatef (aref arr 0) (aref arr (1- (fill-pointer arr))))
+      (upd8 (aref arr 0) 0)
+      (upd8 (aref arr (1- (fill-pointer arr))) -1)
+      (decf (fill-pointer arr))
+      (pq-fixdown q 0)
+      ret
+    )))
 
-  (defmethod pq-fixup ((q pq) ind)
-    (with-slots (arr upd8) q
-    (do ((p (floor (1- ind) 2)))
-        (when (= ind 0) (return nil))
-        (when (not (cmp ind p)) (return nil))
-        (rotatef (aref arr ind) (aref arr p))
+(defmethod pq-fixup ((q pq) ind)
+  (with-slots (arr upd8) q
+  (do ((p (floor (1- ind) 2)))
+      (when (= ind 0) (return nil))
+      (when (not (cmp ind p)) (return nil))
+      (rotatef (aref arr ind) (aref arr p))
+      (upd8 (aref arr ind) ind)
+      (upd8 (aref arr p) p)
+      (rotatef arr ind))))
+
+(defmethod pq-fixdown ((q pq) ind)
+  (with-slots (arr upd8) q
+    (do ((l (+ 1 (* ind 2)))
+         (r (+ 2 (* ind 2))))
+        (cond ((>= l (length arr)) (return-from pq-fixdown nil))
+              ((and (>= r (fill-pointer arr)) (cmp l ind)) t)
+              ((>= r (fill-pointer arr)) (return-from pq-fixdown nil))
+              ((and (cmp l r) (cmp l ind)) t)
+              ((and (cmp r l) (cmp r ind)) (setf l r))
+              (t (return-from pq-fixdown nil)))
+        (rotatef (aref arr ind) (aref arr l))
         (upd8 (aref arr ind) ind)
-        (upd8 (aref arr p) p)
-        (rotatef arr ind))))
-
-  (defmethod pq-fixdown ((q pq) ind)
-    (with-slots (arr upd8) q
-      (do ((l (+ 1 (* ind 2)))
-          (r (+ 2 (* ind 2))))
-          (cond ((>= l (fill-pointer arr)) (return nil))
-                ((and (>= r (fill-pointer arr)) (cmp l ind)) t)
-                ((>= r (fill-pointer arr)) (return nil))
-                ((and (cmp l r) (cmp l ind)) t)
-                ((and (cmp r l) (cmp r ind)) (setf l r))
-                (t (return nil)))
-          (rotatef (aref arr ind) (aref arr l))
-          (upd8 (aref arr ind) ind)
-          (setf ind l)
-          (upd8 (aref arr ind) ind))))
-)
+        (setf ind l)
+        (upd8 (aref arr ind) ind))))
 
 (defun state-to-new-fullstate (st parent)
   (make-fullstate state most-positive-fixnum most-positive-fixnum nil parent)
@@ -275,7 +275,7 @@
   (compress-coord (car (state-pos st)) (cadr (state-pos st)) (car (state-vel st)) (cadr (state-vel st))))
 
 (defun coord-to-state (coord)
-  (gethash coord table))
+  (fullstate-state (gethash coord table)))
 
 (defun updater1 (coord ind)
   (setf (fullstate-pqid (gethash coord table)) ind))
@@ -293,7 +293,9 @@
 ;;; A*
 (defun a* (problem)
   ;Default heuristic -> 
-  (let ((q (make-instance 'pq update1 cmp1))
+  (defparameter table (make-hash-table))
+  (defparameter done (make-hash-table))
+  (let ((q (make-instance 'pq :updater update1 :comparator cmp1))
         (curr nil)
         (heuristic (problem-heuristic problem)))
     (setf 
