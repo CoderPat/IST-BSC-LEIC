@@ -210,14 +210,13 @@
   state
   f
   g
-  pqid)
+  pqid
+  parent)
 ;TODO: define table somewhere
 
 (defclass pq ()
   ((arr
    :initform nil)
-   (sz
-   :initform 0)
    upd8
    cmp)
   (defmethod initialize-instance :after (updater comparator)
@@ -226,52 +225,51 @@
           cmp comparator))
 
   (defmethod pq-insert ((q pq) id)
-     (with-slots (arr sz) q
-          (incf sz)
+     (with-slots (arr) q
           (vector-push-extend id arr (ceiling (* 0.5  (array-total-size arr))))
-          (up8 id (1- sz))
-          (pq-fixup q (1- sz))
-          sz))
+          (up8 id (1- (fill-pointer arr)))
+          (pq-fixup q (1- (fill-pointer arr))))
 
   (defmethod pq-popmin ((q pq)) 
-    (with-slots (arr sz upd8) q
-      (when (= sz 0) (return-from pq-popmin nil))
+    (with-slots (arr upd8) q
+      (when (= (fill-pointer arr) 0) (return-from pq-popmin nil))
       (let ((ret (aref arr 0)))
-        (rotatef (aref arr 0) (aref arr (1- sz)))
+        (rotatef (aref arr 0) (aref arr (1- (fill-pointer arr))))
         (upd8 (aref arr 0) 0)
-        (upd8 (aref arr (1- sz)) -1)
-        (decf sz)
+        (upd8 (aref arr (1- (fill-pointer arr))) -1)
         (decf (fill-pointer arr))
         (pq-fixdown q 0)
         ret
       )))
 
   (defmethod pq-fixup ((q pq) ind)
+    (with-slots (arr upd8) q
     (do ((p (floor (1- ind) 2)))
         (when (= ind 0) (return nil))
         (when (not (cmp ind p)) (return nil))
         (rotatef (aref arr ind) (aref arr p))
         (upd8 (aref arr ind) ind)
         (upd8 (aref arr p) p)
-        (rotatef arr ind)))
+        (rotatef arr ind))))
 
   (defmethod pq-fixdown ((q pq) ind)
-    (do ((l (+ 1 (* ind 2)))
-         (r (+ 2 (* ind 2))))
-        (cond ((>= l sz) (return nil))
-              ((and (>= r sz) (cmp l ind)) t)
-              ((>= r sz) (return nil))
-              ((and (cmp l r) (cmp l ind)) t)
-              ((and (cmp r l) (cmp r ind)) (setf l r))
-              (t (return nil)))
-        (rotatef (aref arr ind) (aref arr l))
-        (upd8 (aref arr ind) ind)
-        (setf ind l)
-        (upd8 (aref arr ind) ind)))
+    (with-slots (arr upd8) q
+      (do ((l (+ 1 (* ind 2)))
+          (r (+ 2 (* ind 2))))
+          (cond ((>= l (fill-pointer arr)) (return nil))
+                ((and (>= r (fill-pointer arr)) (cmp l ind)) t)
+                ((>= r (fill-pointer arr)) (return nil))
+                ((and (cmp l r) (cmp l ind)) t)
+                ((and (cmp r l) (cmp r ind)) (setf l r))
+                (t (return nil)))
+          (rotatef (aref arr ind) (aref arr l))
+          (upd8 (aref arr ind) ind)
+          (setf ind l)
+          (upd8 (aref arr ind) ind))))
 )
 
-(defun state-to-new-fullstate (st f g stid)
-  (make-fullstate state nil f g stid))
+(defun state-to-new-fullstate (st parent)
+  (make-fullstate state most-positive-fixnum most-positive-fixnum nil parent)
 
 (defun state-to-coord (st)
   (compress-coord (car (state-pos st)) (cadr (state-pos st)) (car (state-vel st)) (cadr (state-vel st))))
@@ -285,31 +283,49 @@
 (defun cmp1 (coord1 coord2)
   (<= (fullstate-f (gethash coord1 table)) (fullstate-f (gethash coord2 table))))
 
+(defun rebuil-path (coord)
+  (let ((ret (list)))
+    (loop while coord do
+      (setf ret (cons (coord-to-state coord) ret))
+      (setf coord (fullstate-parent (gethash coord table)))      
+    )))
+
 ;;; A*
 (defun a* (problem)
   ;Default heuristic -> 
   (let ((q (make-instance 'pq update1 cmp1))
-        (curr nil))
+        (curr nil)
+        (heuristic (problem-heuristic problem)))
     (setf 
       (gethash (state-to-coord (problem-initial-state problem)) table)
-      (state-to-new-fullstate (problem-initial-state problem)))
+      (state-to-new-fullstate (problem-initial-state problem) nil))
+    (setf (fullstate-g (gethash (state-to-coord (problem-initial-state problem)) table)) 0)
+    (setf 
+      (fullstate-f (gethash (state-to-coord (problem-initial-state problem)) table)) 
+      (funcall heuristic (problem-initial-state problem)))
     (pq-insert q (state-to-coord (problem-initial-state problem)))
     (loop while (setf curr (pq-popmin q)) do
       (block continue1
-        ;(when (fullstate-done (gethash curr table)) (return-from continue1));THIS IS USELESS
         (setf (gethash curr done) t)
         (when (isGoalp (coord-to-state curr)) (return-from a* (rebuil-path curr)))
         (loop for st in (funcall (problem-fn-nextStates problem) (coord-to-state curr)) do
           (block continue2
-            (when (gethash curr done) (return-from continue2))
-            (when (nil (gethash curr table)) 
-              (setf (gethash curr table) (state-to-new-fullstate st)))
-            (when (< (+ (state-cost st) (fn-heuristic st)) ()) ())
-            gScore[current]
-              (setf (gScore[current]) t) ;tentative score
-              ;if not done yet: do stuff
-              ;if better: do other stuff
-          )    
-        )
-      )))
-  (list (make-node :state (problem-initial-state problem))))  
+            (let ((added (+ (fullstate-g (gethash curr table)) (st-cost st)))
+                  (prox (state-to-coord st))
+                  (aux 0))
+              (when (gethash prox done) (return-from continue2))
+              (when (nil (gethash prox table)) 
+                (setf (gethash prox table) (state-to-new-fullstate st curr))
+                (setf (fullstate-g (gethash prox table)) added)
+                (setf (fullstate-f (gethash prox table)) (+ added (pro)))
+                (pq-insert q prox))
+              (when (>= added (fullstate-g (gethash prox table))) (return-from continue2))
+              (setf aux (fullstate-pqid (gethash prox table)))
+              (setf (gethash prox table) (state-to-new-fullstate st curr))
+              (setf (fullstate-pqid (gethash prox table)) aux)
+              (setf (fullstate-g (gethash prox table)) added)
+              (setf (fullstate-f (gethash prox table)) (+ added (pro)))
+              (pq-fixup q)
+              )))
+)))
+nil)
