@@ -1,5 +1,8 @@
-(load "datastructures.lisp")
-(load "auxfuncs.lisp")
+;Grupo al-105
+;81191 Patrick Fernandes
+;81861 Afonso Tinoco
+(load "datastructures.fas")
+(load "auxfuncs.fas")
 
 
 ;;; TAI position
@@ -137,42 +140,52 @@
 
 
 ;; Solution of phase 3
+(defparameter table nil)
+(defparameter done nil)
+(defparameter heuristic-done nil)
+(defparameter heuristic-arr nil)
 
 ;; Heuristic
 ;; ofc this is not an admissible heuristic
-;;;TODO dp this shit, stop using make-state and shit
 (defun compute-heuristic (st)
-  (when (isObstaclep (state-pos st) (state-track st)) (return-from compute-heuristic MOST-POSITIVE-FIXNUM))
-  (let ( (q (list (make-state
-                    :POS (state-pos st)
-                    :VEL '(0 0)
-                    :ACTION '(0 0)
-                    :COST 0
-                    :TRACK (state-track st)
-         )))
-         (nq (list))
-         (done (make-array (list (car (track-size (state-track st))) (cadr (track-size (state-track st)))) :INITIAL-ELEMENT t))
-         (ans 0)
+  (when heuristic-done (return-from compute-heuristic (aref heuristic-arr (1+ (car (state-pos st))) (1+ (cadr (state-pos st))))))
+  (let* ((W (car (track-size (state-track st))))
+         (H (cadr (track-size (state-track st))))
+         (q nil)
+         (nq nil)
+         (endst (cons (1+ (car (state-pos st))) (1+ (cadr (state-pos st)))))
+         (ans 1))
+       (defparameter heuristic-arr (make-array (list (+ 2 W) (+ 2 H)) :initial-element MOST-POSITIVE-FIXNUM))
+       (loop for i from 1 to (- W 1) 
+             for x in (track-env (state-track st)) do
+           (loop for j from 1 to (- H 1) 
+                 for y in x do
+               (setf (aref heuristic-arr i j) -1)
+               (when (null y) (setf (aref heuristic-arr i j) MOST-POSITIVE-FIXNUM))
+           )
        )
-       (setf (aref done (car (state-pos st)) (cadr (state-pos st))) nil)
+       
+       (loop for p in (track-endpositions (state-track st)) do
+           (setf (aref heuristic-arr (1+ (car p)) (1+ (cadr p))) 0)
+           (setf q (cons (cons (1+ (car p)) (1+ (cadr p))) q))
+       )
        (loop while q
          do
            (setf nq q)
            (setf q nil)
            (loop for w in nq
             do
-              (when (isGoalp w) (return-from compute-heuristic ans))
-              (loop for n in (nextStates w)
+              (loop for i in (list (car w) (car w) (car w) (1+ (car w)) (1+ (car w)) (1+ (car w)) (1- (car w)) (1- (car w)) (1- (car w)))
+                    for j in (list (cdr w) (1+ (cdr w)) (1- (cdr w)) (cdr w) (1+ (cdr w)) (1- (cdr w)) (cdr w) (1+ (cdr w)) (1- (cdr w)))
                do
-                 (when (aref done (car (state-pos n)) (cadr (state-pos n)))
-                       (setf (state-vel n) '(0 0))
-                       (setf q (cons n q))
-                       (setf (aref done (car (state-pos n)) (cadr (state-pos n))) nil))
-           ))
+               (block continue
+                 (when (not (= -1 (aref heuristic-arr i j))) (return-from continue))
+                 (setf (aref heuristic-arr i j) ans)
+                 (setf q (cons (cons i j) q)))))
            (incf ans)
-       ) 
-  )
-  MOST-POSITIVE-FIXNUM)
+       )
+  (aref heuristic-arr (car endst) (cdr endst))
+))
 
 ;;; state_compressed:
 ; state_id: ((posx, posy) (velx, vely))
@@ -304,7 +317,9 @@
 ;;; A*
 (defun a* (problem)
   ;Default heuristic -> 
-  (defparameter hpre nil) ;TODO: add precalc to heuristic
+  (defparameter heuristic-done nil)
+  (funcall (problem-fn-h problem) (problem-initial-state problem))
+  (defparameter heuristic-done t)
   (defparameter table (make-hash-table))
   (defparameter done (make-hash-table))
   (let ((q (make-array 1 :adjustable t :fill-pointer 0))
@@ -325,7 +340,7 @@
 ;        (terpri)
         (setf (gethash curr done) t)
 ;        (write-pq q)
-        (when (isGoalp (coord-to-state curr)) (return-from a* (rebuil-path curr)))
+        (when (isGoalp (coord-to-state curr)) (defparameter heuristic-done nil) (return-from a* (rebuil-path curr)))
         (loop for st in (funcall (problem-fn-nextStates problem) (coord-to-state curr)) do
           (block continue2
             (let ((added (+ (fullstate-g (gethash curr table)) (state-cost st)))
@@ -341,16 +356,17 @@
                          (< added (fullstate-g (gethash prox table)))
                     (setf (fullstate-state (gethash prox table)) st)
                     (setf (fullstate-parent (gethash prox table)) curr)
+                    (setf (fullstate-f (gethash prox table)) (+ (- added (fullstate-g (gethash prox table))) (fullstate-f (gethash prox table))))
                     (setf (fullstate-g (gethash prox table)) added)
-                    (setf (fullstate-f (gethash prox table)) (+ added (funcall heuristic st)))
                     (pq-insert q prox)))
               (when (>= added (fullstate-g (gethash prox table))) (return-from continue2))
                     (setf aux (fullstate-pqid (gethash prox table)))
                     (setf (gethash prox table) (state-to-new-fullstate st curr))
                     (setf (fullstate-pqid (gethash prox table)) aux)
+                    (setf (fullstate-f (gethash prox table)) (+ (- added (fullstate-g (gethash prox table))) (fullstate-f (gethash prox table))))
                     (setf (fullstate-g (gethash prox table)) added)
-                    (setf (fullstate-f (gethash prox table)) (+ added (funcall heuristic st)))
                     (pq-fixup q aux)
               )))
 )))
+(defparameter heuristic-done nil)
 nil)
