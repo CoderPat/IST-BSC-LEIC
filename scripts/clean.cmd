@@ -1,0 +1,2 @@
+del *.fas
+del *.lib
