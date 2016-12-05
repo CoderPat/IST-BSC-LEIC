@@ -18,13 +18,18 @@
 (format t "~&Exercise 3.1 - Heuristic~&")
 (with-open-file (str "out3.1.txt"
 		 :direction :input)
+;  (print (list (compute-heuristic (initial-state *t1*)) (compute-heuristic (make-state :pos '(1 6)  :track track)) (compute-heuristic (make-state :pos '(2 8)  :track track))))
   (format t "~% Solution is correct? ~a~&" (equal (list (compute-heuristic (initial-state *t1*)) (compute-heuristic (make-state :pos '(1 6)  :track track)) (compute-heuristic (make-state :pos '(2 8)  :track track))) (read str))))
-  
+
+
 (setf *p1* (make-problem :initial-state (initial-state *t1*)  :fn-isGoal #'isGoalp	  :fn-nextstates #'nextStates	  :fn-h #'compute-heuristic))
 			  
 (format t "~&Exercise 3.2 - A*~&")
  (let ((real1 (get-internal-real-time)))
 		 (with-open-file (str "out3.2.txt" :direction :input)
+;		 (format t "~{~a~^~}" (states-to-list (a* *p1*)))
+;		 (terpri)
+	  (time (a* *p1*))
 	   (format t "~% Solution is correct? ~a~&" (string= (format nil "~{~a~^~}" (states-to-list (a* *p1*))) (read str))))
       (let ((real2 (get-internal-real-time)))
 	  (format t "~%Computation took: ~f seconds of real time~%" (/ (- real2 real1) internal-time-units-per-second))))
@@ -45,6 +50,9 @@
 (format t "~&Exercise 3.2b - A*~&")
  (let ((real1 (get-internal-real-time)))
 		 (with-open-file (str "out3.2b.txt" :direction :input)
+;		 (format t "~{~a~^~}" (states-to-list (a* *p2*)))
+;		 (terpri)
+	   (time (a* *p2*))
 	   (format t "~% Solution is correct? ~a~&" (string= (format nil "~{~a~^~}" (states-to-list (a* *p2*))) (read str))))
       (let ((real2 (get-internal-real-time)))
 	  (format t "~%Computation took: ~f seconds of real time~%" (/ (- real2 real1) internal-time-units-per-second))))
