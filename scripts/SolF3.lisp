@@ -140,6 +140,7 @@
 
 ;; Heuristic
 ;; ofc this is not an admissible heuristic
+;;;TODO dp this shit, stop using make-state and shit
 (defun compute-heuristic (st)
   (when (isObstaclep (state-pos st) (state-track st)) (return-from compute-heuristic MOST-POSITIVE-FIXNUM))
   (let ( (q (list (make-state
@@ -198,11 +199,11 @@
 (defun decompress-coord-vx (coord)
   (- (mod coord MAX-VXS) MAX-VX))
 (defun decompress-coord-vy (coord)
-  (- (mod (floor coord MAX-VXS) MAX-VYS) MAX-VY))
+  (- (mod (truncate coord MAX-VXS) MAX-VYS) MAX-VY))
 (defun decompress-coord-px (coord)
-  (mod (floor (floor coord MAX-VXS) MAX-VYS) MAX-PX))
+  (mod (truncate (truncate coord MAX-VXS) MAX-VYS) MAX-PX))
 (defun decompress-coord-py (coord)
-  (floor (floor (floor coord MAX-VXS) MAX-VYS) MAX-PX))
+  (truncate (truncate (truncate coord MAX-VXS) MAX-VYS) MAX-PX))
 
 
 ;State indexes are implicit
@@ -212,14 +213,11 @@
   g
   pqid
   parent)
-;TODO: define table somewhere
-
 
 (defun pq-insert (arr id)
   (vector-push-extend id arr (ceiling (* 0.5  (array-total-size arr))))
   (upd8 id (1- (fill-pointer arr)))
-  (pq-fixup arr (1- (fill-pointer arr)))
-)
+  (pq-fixup arr (1- (fill-pointer arr))))
 
 (defun pq-popmin (arr) 
   (when (= (fill-pointer arr) 0) (return-from pq-popmin nil))
@@ -230,44 +228,42 @@
     (decf (fill-pointer arr))
     (pq-fixdown arr 0)
     ret
-  )
-)
+  ))
 
 (defun pq-fixup (arr ind)
+;  (print "fixup")
   (do ((p (truncate (1- ind) 2) (truncate (1- ind) 2)))
-      ((or (= ind 0) (not (cmp  (aref arr p) (aref arr ind)))) T)
+      ((or (= ind 0) (not (cmp (aref arr ind) (aref arr p)))))
+;      (write-pq arr)
       (rotatef (aref arr ind) (aref arr p))
       (upd8 (aref arr ind) ind)
       (upd8 (aref arr p) p)
-      (rotatef p ind)
-  )
-)
+      (rotatef p ind)))
 
-
-;do is no correctly done
 (defun pq-fixdown (arr ind)
+; (print "fixdown")
   (do ((l (+ 1 (* ind 2)) (+ 1 (* ind 2)))
-       (r (+ 2 (* ind 2)) (+ 2 (* ind 2))))
+        (r (+ 2 (* ind 2)) (+ 2 (* ind 2))))
       (nil)
-      (cond ((>= l (length arr)) (return-from pq-fixdown T))
+;     (write-pq arr)
+      (cond ((>= l (length arr)) (return-from pq-fixdown nil))
             ((and (>= r (fill-pointer arr)) (cmp (aref arr l) (aref arr ind))) t)
-            ((>= r (fill-pointer arr)) (return-from pq-fixdown T))
+            ((>= r (fill-pointer arr)) (return-from pq-fixdown nil))
             ((and (cmp (aref arr l) (aref arr r)) (cmp (aref arr l) (aref arr ind))) t)
             ((and (cmp (aref arr r) (aref arr l)) (cmp (aref arr r) (aref arr ind))) (setf l r))
-            (t (return-from pq-fixdown T)))
+            (t (return-from pq-fixdown nil)))
       (rotatef (aref arr ind) (aref arr l))
       (upd8 (aref arr ind) ind)
       (setf ind l)
-      (upd8 (aref arr ind) ind)
-  )
-)
+      (upd8 (aref arr ind) ind)))
 
 (defun state-to-new-fullstate (st parent)
-  (make-fullstate :state st 
-                  :f most-positive-fixnum 
-                  :g most-positive-fixnum 
-                  :pqid nil
-                  :parent parent))
+  (make-fullstate 
+    :STATE st 
+    :F most-positive-fixnum
+    :G most-positive-fixnum
+    :PQID nil
+    :PARENT parent))
 
 (defun state-to-coord (st)
   (compress-coord (car (state-pos st)) (cadr (state-pos st)) (car (state-vel st)) (cadr (state-vel st))))
@@ -279,18 +275,36 @@
   (setf (fullstate-pqid (gethash coord table)) ind))
 
 (defun cmp (coord1 coord2)
-  (<= (fullstate-f (gethash coord1 table)) (fullstate-f (gethash coord2 table))))
+  (<=  (fullstate-f (gethash coord1 table)) (fullstate-f (gethash coord2 table))))
 
 (defun rebuil-path (coord)
   (let ((ret (list)))
     (loop while coord do
       (setf ret (cons (coord-to-state coord) ret))
       (setf coord (fullstate-parent (gethash coord table)))      
-    )))
+    )
+    ret))
+
+(defun write-coord (coord)
+  (write (list (decompress-coord-px coord) (decompress-coord-py coord) (decompress-coord-vx coord) (decompress-coord-vy coord)))
+  (write (list (fullstate-f (gethash coord table)) (fullstate-g (gethash coord table))))
+)
+
+(defun write-pq (q)
+  (write "pq: ")
+  (do ((i 0 (1+ i))
+       (space "")) 
+      ((= i (fill-pointer q)))
+      (write (fullstate-f (gethash (aref q i) table)))
+      (write space)
+  )
+  (terpri)
+)
 
 ;;; A*
 (defun a* (problem)
   ;Default heuristic -> 
+  (defparameter hpre nil) ;TODO: add precalc to heuristic
   (defparameter table (make-hash-table))
   (defparameter done (make-hash-table))
   (let ((q (make-array 1 :adjustable t :fill-pointer 0))
@@ -303,10 +317,14 @@
     (setf 
       (fullstate-f (gethash (state-to-coord (problem-initial-state problem)) table)) 
       (funcall heuristic (problem-initial-state problem)))
-      (pq-insert q (state-to-coord (problem-initial-state problem)))
+    (pq-insert q (state-to-coord (problem-initial-state problem)))
     (loop while (setf curr (pq-popmin q)) do
       (block continue1
+;        (write ">")
+;        (write-coord curr)
+;        (terpri)
         (setf (gethash curr done) t)
+;        (write-pq q)
         (when (isGoalp (coord-to-state curr)) (return-from a* (rebuil-path curr)))
         (loop for st in (funcall (problem-fn-nextStates problem) (coord-to-state curr)) do
           (block continue2
@@ -315,18 +333,24 @@
                   (aux 0))
               (when (gethash prox done) (return-from continue2))
               (when (null (gethash prox table)) 
-                (setf (gethash prox table) (state-to-new-fullstate st curr))
-                (setf (fullstate-g (gethash prox table)) added)
-                (setf (fullstate-f (gethash prox table)) (+ added (funcall heuristic st)))
-                (pq-insert q prox))
-              (when (< added (fullstate-g (gethash prox table)))
-                (setf aux (fullstate-pqid (gethash prox table)))
-                (setf (gethash prox table) (state-to-new-fullstate st curr))
-                (setf (fullstate-pqid (gethash prox table)) aux)
-                (setf (fullstate-g (gethash prox table)) added)
-                (setf (fullstate-f (gethash prox table)) (+ added (funcall heuristic st)))
-                (pq-fixup q aux)
-              )
-          )))
+                    (setf (gethash prox table) (state-to-new-fullstate st curr))
+                    (setf (fullstate-g (gethash prox table)) added)
+                    (setf (fullstate-f (gethash prox table)) (+ added (funcall heuristic st)))
+                    (pq-insert q prox))
+              (when (and (= -1 (fullstate-pqid (gethash prox table))) 
+                         (< added (fullstate-g (gethash prox table)))
+                    (setf (fullstate-state (gethash prox table)) st)
+                    (setf (fullstate-parent (gethash prox table)) curr)
+                    (setf (fullstate-g (gethash prox table)) added)
+                    (setf (fullstate-f (gethash prox table)) (+ added (funcall heuristic st)))
+                    (pq-insert q prox)))
+              (when (>= added (fullstate-g (gethash prox table))) (return-from continue2))
+                    (setf aux (fullstate-pqid (gethash prox table)))
+                    (setf (gethash prox table) (state-to-new-fullstate st curr))
+                    (setf (fullstate-pqid (gethash prox table)) aux)
+                    (setf (fullstate-g (gethash prox table)) added)
+                    (setf (fullstate-f (gethash prox table)) (+ added (funcall heuristic st)))
+                    (pq-fixup q aux)
+              )))
 )))
 nil)
