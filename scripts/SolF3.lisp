@@ -39,11 +39,17 @@
 (defun makePair(a b)
   (list a b))
 
-(defun isObstaclep (pos track) 
+(defun isObstaclep (pos track)
   "check if there is an obstacle at position pos of the track"
   (when (or (minusp (car pos)) (minusp (cadr pos))) (return-from isObstaclep t))
   (when (or (>= (car pos) (car (track-size track))) (>= (cadr pos) (cadr (track-size track)))) (return-from isObstaclep t))
-  (not (nth (cadr pos) (nth (car pos) (track-env track)))))
+  (when (eq obstacle-track track) 
+     (return-from isObstaclep (not (aref obstacle-arr (car pos) (cadr pos)))))
+  (setf obstacle-track track)
+  (setf obstacle-arr (make-array (list (length (track-env track))
+                                       (length (first (track-env track))))
+                                       :initial-contents (track-env track)))
+  (not (aref obstacle-arr (car pos) (cadr pos))))
 
 (defun isGoalp (st)
   "check if st is a goal state"
@@ -142,8 +148,11 @@
 ;; Solution of phase 3
 (defparameter table nil)
 (defparameter done nil)
+;; caching
 (defparameter heuristic-track nil)
 (defparameter heuristic-arr nil)
+(defparameter obstacle-track nil)
+(defparameter obstacle-arr nil)
 
 ;; Heuristic
 ;; ofc this is not an admissible heuristic
