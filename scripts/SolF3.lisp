@@ -213,11 +213,11 @@
 ; py
 ; vx
 ; vy) => int with compressed shit
-(defconstant MAX-VX 15)
-(defconstant MAX-VXS (1+ (* 2 MAX-VX)))
-(defconstant MAX-VY 15)
-(defconstant MAX-VYS (1+ (* 2 MAX-VY)))
-(defconstant MAX-PX 102) ;maximum pos is this-1
+(defparameter MAX-VX 15)
+(defparameter MAX-VXS (1+ (* 2 MAX-VX)))
+(defparameter MAX-VY 15)
+(defparameter MAX-VYS (1+ (* 2 MAX-VY)))
+(defparameter MAX-PX 102) ;maximum pos is this-1
 (defun compress-coord (px py vx vy)
   (+ (+ vx MAX-VX) (* MAX-VXS (+ (+ vy MAX-VY) (* MAX-VYS (+ px (* MAX-PX py)))))))
 (defun decompress-coord-vx (coord)
@@ -329,6 +329,12 @@
 ;;Curently this looks for the optimal solution, so it is kinda not an a*
 (defun a* (problem)
   ;Default heuristic -> 
+  (defparameter MAX-PX (max (car (track-size (state-track (problem-initial-state problem)))) (cadr (track-size (state-track (problem-initial-state problem)))))) ;maximum pos is this-1
+  (defparameter MAX-PX (+ 2 MAX-PX))
+  (defparameter MAX-VX (+ 2 (truncate (isqrt (* 8 (+ 2 (car (track-size (state-track (problem-initial-state problem))))))) 2)))
+  (defparameter MAX-VXS (1+ (* 2 MAX-VX)))
+  (defparameter MAX-VX (+ 2 (truncate (isqrt (* 8 (+ 2 (cadr (track-size (state-track (problem-initial-state problem))))))) 2)))
+  (defparameter MAX-VYS (1+ (* 2 MAX-VY)))
   (defparameter table (make-hash-table))
   (defparameter done (make-hash-table))
   (let ((q (make-array 1 :adjustable t :fill-pointer 0))
