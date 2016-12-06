@@ -142,13 +142,15 @@
 ;; Solution of phase 3
 (defparameter table nil)
 (defparameter done nil)
-(defparameter heuristic-done nil)
+(defparameter heuristic-track nil)
 (defparameter heuristic-arr nil)
 
 ;; Heuristic
 ;; ofc this is not an admissible heuristic
 (defun compute-heuristic (st)
-  (when heuristic-done (return-from compute-heuristic (aref heuristic-arr (1+ (car (state-pos st))) (1+ (cadr (state-pos st))))))
+  (when (eq heuristic-track (state-track st)) 
+     (return-from compute-heuristic (aref heuristic-arr (1+ (car (state-pos st))) (1+ (cadr (state-pos st))))))
+  (defparameter heuristic-track (state-track st))
   (let* ((W (car (track-size (state-track st))))
          (H (cadr (track-size (state-track st))))
          (q nil)
@@ -318,9 +320,6 @@
 ;;Curently this looks for the optimal solution, so it is kinda not an a*
 (defun a* (problem)
   ;Default heuristic -> 
-  (defparameter heuristic-done nil)
-  (funcall (problem-fn-h problem) (problem-initial-state problem))
-  (defparameter heuristic-done t)
   (defparameter table (make-hash-table))
   (defparameter done (make-hash-table))
   (let ((q (make-array 1 :adjustable t :fill-pointer 0))
@@ -344,11 +343,11 @@
 ;        (write-pq q)
         ;Note in case of admissible heuristic, the following can be simplified:
         (when (>= (fullstate-f (gethash curr table)) bestsolution) (return-from continue1))
-        (when (isGoalp (coord-to-state curr))
-            (when (< (+ 100 (fullstate-g (gethash curr table))) bestsolution) 
-                      (setf bestsolution (+ 100 (fullstate-g (gethash curr table))))
-                      (setf bestnode curr))
-            (return-from continue1))
+        (when (isGoalp (coord-to-state curr)) 
+            (setf bestsolution (+ 100 (fullstate-g (gethash curr table))))
+            (setf bestnode curr)
+            (defparameter heuristic-done nil)
+            (return-from a* (rebuil-path bestnode)))
         (loop for st in (funcall (problem-fn-nextStates problem) (coord-to-state curr)) do
           (block continue2
             (let ((added (+ (fullstate-g (gethash curr table)) (state-cost st)))
@@ -379,3 +378,10 @@
 (when (not (null bestnode)) (return-from a* (rebuil-path bestnode)))
 )
 nil)
+
+
+(defun best-search (problem)
+  (defparameter track (optimize-track (problem-track problem)))
+  (precompute-heuristic track)
+  (search initial-state track mdma-heuristic)
+)
