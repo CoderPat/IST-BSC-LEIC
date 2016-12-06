@@ -342,7 +342,8 @@
         (setf (gethash curr done) t)
 ;        (write-pq q)
         ;Note in case of admissible heuristic, the following can be simplified:
-        (when (>= (fullstate-f (gethash curr table)) bestsolution) (return-from continue1))
+        ;We can use the heuristic for cutting branches, right?
+        ;(when (>= (fullstate-f (gethash curr table)) bestsolution) (return-from continue1))
         (when (isGoalp (coord-to-state curr)) 
             (setf bestsolution (+ 100 (fullstate-g (gethash curr table))))
             (setf bestnode curr)
@@ -353,7 +354,7 @@
             (let ((added (+ (fullstate-g (gethash curr table)) (state-cost st)))
                   (prox (state-to-coord st))
                   (aux 0))
-;              (when (gethash prox done) (return-from continue2))
+;              (when (gethash prox done) (return-from continue2)) we need reexpansion if the heuristic is not admissible
               (when (null (gethash prox table)) 
                     (setf (gethash prox table) (state-to-new-fullstate st curr))
                     (setf (fullstate-g (gethash prox table)) added)
@@ -381,7 +382,5 @@ nil)
 
 
 (defun best-search (problem)
-  (defparameter track (optimize-track (problem-track problem)))
-  (precompute-heuristic track)
-  (search initial-state track mdma-heuristic)
+  (a* problem)
 )
