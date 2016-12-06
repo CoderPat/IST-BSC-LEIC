@@ -315,6 +315,7 @@
 )
 
 ;;; A*
+;;Curently this looks for the optimal solution, so it is kinda not an a*
 (defun a* (problem)
   ;Default heuristic -> 
   (defparameter heuristic-done nil)
@@ -324,7 +325,9 @@
   (defparameter done (make-hash-table))
   (let ((q (make-array 1 :adjustable t :fill-pointer 0))
         (curr nil)
-        (heuristic (problem-fn-h problem)))
+        (heuristic (problem-fn-h problem))
+        (bestsolution MOST-POSITIVE-FIXNUM)
+        (bestnode nil))
     (setf 
       (gethash (state-to-coord (problem-initial-state problem)) table)
       (state-to-new-fullstate (problem-initial-state problem) nil))
@@ -335,24 +338,29 @@
     (pq-insert q (state-to-coord (problem-initial-state problem)))
     (loop while (setf curr (pq-popmin q)) do
       (block continue1
-;        (write ">")
 ;        (write-coord curr)
 ;        (terpri)
         (setf (gethash curr done) t)
 ;        (write-pq q)
-        (when (isGoalp (coord-to-state curr)) (defparameter heuristic-done nil) (return-from a* (rebuil-path curr)))
+        ;Note in case of admissible heuristic, the following can be simplified:
+        (when (>= (fullstate-f (gethash curr table)) bestsolution) (return-from continue1))
+        (when (isGoalp (coord-to-state curr))
+            (when (< (+ 100 (fullstate-g (gethash curr table))) bestsolution) 
+                      (setf bestsolution (+ 100 (fullstate-g (gethash curr table))))
+                      (setf bestnode curr))
+            (return-from continue1))
         (loop for st in (funcall (problem-fn-nextStates problem) (coord-to-state curr)) do
           (block continue2
             (let ((added (+ (fullstate-g (gethash curr table)) (state-cost st)))
                   (prox (state-to-coord st))
                   (aux 0))
-              (when (gethash prox done) (return-from continue2))
+;              (when (gethash prox done) (return-from continue2))
               (when (null (gethash prox table)) 
                     (setf (gethash prox table) (state-to-new-fullstate st curr))
                     (setf (fullstate-g (gethash prox table)) added)
                     (setf (fullstate-f (gethash prox table)) (+ added (funcall heuristic st)))
                     (pq-insert q prox))
-              (when (and (= -1 (fullstate-pqid (gethash prox table))) 
+              (when (and (= -1 (fullstate-pqid (gethash prox table)))
                          (< added (fullstate-g (gethash prox table)))
                     (setf (fullstate-state (gethash prox table)) st)
                     (setf (fullstate-parent (gethash prox table)) curr)
@@ -366,7 +374,8 @@
                     (setf (fullstate-f (gethash prox table)) (+ (- added (fullstate-g (gethash prox table))) (fullstate-f (gethash prox table))))
                     (setf (fullstate-g (gethash prox table)) added)
                     (pq-fixup q aux)
-              )))
-)))
+    )))))
 (defparameter heuristic-done nil)
+(when (not (null bestnode)) (return-from a* (rebuil-path bestnode)))
+)
 nil)
