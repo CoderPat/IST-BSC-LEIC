@@ -39,12 +39,21 @@
 (defun makePair(a b)
   (list a b))
 
+;; caching structures
+(defparameter heuristic-track nil)
+(defparameter heuristic-arr nil)
+(defparameter obstacle-track nil)
+(defparameter obstacle-arr nil)
+
+
 (defun isObstaclep (pos track)
   "check if there is an obstacle at position pos of the track"
   (when (or (minusp (car pos)) (minusp (cadr pos))) (return-from isObstaclep t))
   (when (or (>= (car pos) (car (track-size track))) (>= (cadr pos) (cadr (track-size track)))) (return-from isObstaclep t))
+  ;check for cache validity
   (when (eq obstacle-track track) 
      (return-from isObstaclep (not (aref obstacle-arr (car pos) (cadr pos)))))
+  ;fills the cache
   (setf obstacle-track track)
   (setf obstacle-arr (make-array (list (length (track-env track))
                                        (length (first (track-env track))))
@@ -148,17 +157,15 @@
 ;; Solution of phase 3
 (defparameter table nil)
 (defparameter done nil)
-;; caching
-(defparameter heuristic-track nil)
-(defparameter heuristic-arr nil)
-(defparameter obstacle-track nil)
-(defparameter obstacle-arr nil)
+
 
 ;; Heuristic
 ;; ofc this is not an admissible heuristic
 (defun compute-heuristic (st)
+  ;check for cache validity
   (when (eq heuristic-track (state-track st)) 
      (return-from compute-heuristic (aref heuristic-arr (1+ (car (state-pos st))) (1+ (cadr (state-pos st))))))
+
   (defparameter heuristic-track (state-track st))
   (let* ((W (car (track-size (state-track st))))
          (H (cadr (track-size (state-track st))))
@@ -198,45 +205,15 @@
   (aref heuristic-arr (car endst) (cdr endst))
 ))
 
-;;; state_compressed:
-; state_id: ((posx, posy) (velx, vely))
-; state_v: (g_score, f_score, (fromx, fromy))
-;;;
-
-;;; pqueue:
-; val: f_score
-; state_id: state_id
-; l, r: pqueue
-;;;
-;(defstruct skey
-; px
-; py
-; vx
-; vy) => int with compressed shit
-(defparameter MAX-VX 15)
-(defparameter MAX-VXS (1+ (* 2 MAX-VX)))
-(defparameter MAX-VY 15)
-(defparameter MAX-VYS (1+ (* 2 MAX-VY)))
-(defparameter MAX-PX 102) ;maximum pos is this-1
-(defun compress-coord (px py vx vy)
-  (+ (+ vx MAX-VX) (* MAX-VXS (+ (+ vy MAX-VY) (* MAX-VYS (+ px (* MAX-PX py)))))))
-(defun decompress-coord-vx (coord)
-  (- (mod coord MAX-VXS) MAX-VX))
-(defun decompress-coord-vy (coord)
-  (- (mod (truncate coord MAX-VXS) MAX-VYS) MAX-VY))
-(defun decompress-coord-px (coord)
-  (mod (truncate (truncate coord MAX-VXS) MAX-VYS) MAX-PX))
-(defun decompress-coord-py (coord)
-  (truncate (truncate (truncate coord MAX-VXS) MAX-VYS) MAX-PX))
 
 
-;State indexes are implicit
-(defstruct fullstate
-  state
-  f
-  g
-  pqid
-  parent)
+;--------- priority queue methods--------
+
+(defun upd8 (coord ind)
+  (setf (fullstate-pqid (gethash coord table)) ind))
+
+(defun cmp (coord1 coord2)
+  (<=  (fullstate-f (gethash coord1 table)) (fullstate-f (gethash coord2 table))))
 
 (defun pq-insert (arr id)
   (vector-push-extend id arr (ceiling (* 0.5  (array-total-size arr))))
@@ -255,21 +232,17 @@
   ))
 
 (defun pq-fixup (arr ind)
-;  (print "fixup")
   (do ((p (truncate (1- ind) 2) (truncate (1- ind) 2)))
       ((or (= ind 0) (not (cmp (aref arr ind) (aref arr p)))))
-;      (write-pq arr)
       (rotatef (aref arr ind) (aref arr p))
       (upd8 (aref arr ind) ind)
       (upd8 (aref arr p) p)
       (rotatef p ind)))
 
 (defun pq-fixdown (arr ind)
-; (print "fixdown")
   (do ((l (+ 1 (* ind 2)) (+ 1 (* ind 2)))
         (r (+ 2 (* ind 2)) (+ 2 (* ind 2))))
       (nil)
-;     (write-pq arr)
       (cond ((>= l (length arr)) (return-from pq-fixdown nil))
             ((and (>= r (fill-pointer arr)) (cmp (aref arr l) (aref arr ind))) t)
             ((>= r (fill-pointer arr)) (return-from pq-fixdown nil))
@@ -280,6 +253,34 @@
       (upd8 (aref arr ind) ind)
       (setf ind l)
       (upd8 (aref arr ind) ind)))
+
+
+;--------------fullstate and methods ----------------
+(defparameter MAX-PX nil)
+(defparameter MAX-VX nil)
+(defparameter MAX-VXS nil)
+(defparameter MAX-VY nil)
+(defparameter MAX-VYS nil)
+
+(defun compress-coord (px py vx vy)
+  (+ (+ vx MAX-VX) (* MAX-VXS (+ (+ vy MAX-VY) (* MAX-VYS (+ px (* MAX-PX py)))))))
+(defun decompress-coord-vx (coord)
+  (- (mod coord MAX-VXS) MAX-VX))
+(defun decompress-coord-vy (coord)
+  (- (mod (truncate coord MAX-VXS) MAX-VYS) MAX-VY))
+(defun decompress-coord-px (coord)
+  (mod (truncate (truncate coord MAX-VXS) MAX-VYS) MAX-PX))
+(defun decompress-coord-py (coord)
+  (truncate (truncate (truncate coord MAX-VXS) MAX-VYS) MAX-PX))
+
+;State indexes are implicit
+(defstruct fullstate
+  state
+  f
+  g
+  pqid
+  parent)
+
 
 (defun state-to-new-fullstate (st parent)
   (make-fullstate 
@@ -295,12 +296,8 @@
 (defun coord-to-state (coord)
   (fullstate-state (gethash coord table)))
 
-(defun upd8 (coord ind)
-  (setf (fullstate-pqid (gethash coord table)) ind))
 
-(defun cmp (coord1 coord2)
-  (<=  (fullstate-f (gethash coord1 table)) (fullstate-f (gethash coord2 table))))
-
+;-------------- A* and auxiliary functions ----------------
 (defun rebuil-path (coord)
   (let ((ret (list)))
     (loop while coord do
@@ -309,72 +306,51 @@
     )
     ret))
 
-(defun write-coord (coord)
-  (write (list (decompress-coord-px coord) (decompress-coord-py coord) (decompress-coord-vx coord) (decompress-coord-vy coord)))
-  (write (list (fullstate-f (gethash coord table)) (fullstate-g (gethash coord table))))
-)
-
-(defun write-pq (q)
-  (write "pq: ")
-  (do ((i 0 (1+ i))
-       (space "")) 
-      ((= i (fill-pointer q)))
-      (write (fullstate-f (gethash (aref q i) table)))
-      (write space)
-  )
-  (terpri)
-)
 
 ;;; A*
-;;Curently this looks for the optimal solution, so it is kinda not an a*
 (defun a* (problem)
-  ;Default heuristic -> 
-  (defparameter MAX-PX (max (car (track-size (state-track (problem-initial-state problem)))) (cadr (track-size (state-track (problem-initial-state problem)))))) ;maximum pos is this-1
-  (defparameter MAX-PX (+ 2 MAX-PX))
-  (defparameter MAX-VX (+ 2 (truncate (isqrt (* 8 (+ 2 (car (track-size (state-track (problem-initial-state problem))))))) 2)))
+ 
+  (defparameter MAX-PX (+ 2 (car (track-size (state-track (problem-initial-state problem))))))
+  (defparameter MAX-VX (+ 2 (truncate (isqrt (* 8 MAX-PX)) 2)))
   (defparameter MAX-VXS (1+ (* 2 MAX-VX)))
-  (defparameter MAX-VX (+ 2 (truncate (isqrt (* 8 (+ 2 (cadr (track-size (state-track (problem-initial-state problem))))))) 2)))
+  (defparameter MAX-VY (+ 2 (truncate (isqrt (* 8 (+ 2 (cadr (track-size (state-track (problem-initial-state problem))))))) 2)))
   (defparameter MAX-VYS (1+ (* 2 MAX-VY)))
+
   (defparameter table (make-hash-table))
   (defparameter done (make-hash-table))
+
+  ;Initial variable setting
   (let ((q (make-array 1 :adjustable t :fill-pointer 0))
         (curr nil)
-        (heuristic (problem-fn-h problem))
-        (bestsolution MOST-POSITIVE-FIXNUM)
-        (bestnode nil))
-    (setf 
-      (gethash (state-to-coord (problem-initial-state problem)) table)
-      (state-to-new-fullstate (problem-initial-state problem) nil))
+        (heuristic (problem-fn-h problem)))
+    (setf (gethash (state-to-coord (problem-initial-state problem)) table) (state-to-new-fullstate (problem-initial-state problem) nil))
     (setf (fullstate-g (gethash (state-to-coord (problem-initial-state problem)) table)) 0)
-    (setf 
-      (fullstate-f (gethash (state-to-coord (problem-initial-state problem)) table)) 
-      (funcall heuristic (problem-initial-state problem)))
+    (setf (fullstate-f (gethash (state-to-coord (problem-initial-state problem)) table)) (funcall heuristic (problem-initial-state problem)))
     (pq-insert q (state-to-coord (problem-initial-state problem)))
+
     (loop while (setf curr (pq-popmin q)) do
       (block continue1
-;        (write-coord curr)
-;        (terpri)
         (setf (gethash curr done) t)
-;        (write-pq q)
-        ;Note in case of admissible heuristic, the following can be simplified:
-        ;We can use the heuristic for cutting branches, right?
-        ;(when (>= (fullstate-f (gethash curr table)) bestsolution) (return-from continue1))
+
+        ;check for solution
         (when (isGoalp (coord-to-state curr)) 
-            (setf bestsolution (+ 100 (fullstate-g (gethash curr table))))
-            (setf bestnode curr)
             (defparameter heuristic-done nil)
-            (return-from a* (rebuil-path bestnode)))
+            (return-from a* (rebuil-path curr)))
+
+        ;explore child nodes
         (loop for st in (funcall (problem-fn-nextStates problem) (coord-to-state curr)) do
           (block continue2
+            ;next state variables
             (let ((added (+ (fullstate-g (gethash curr table)) (state-cost st)))
                   (prox (state-to-coord st))
                   (aux 0))
-;              (when (gethash prox done) (return-from continue2)) we need reexpansion if the heuristic is not admissible
+              ;fullstate was never generated before 
               (when (null (gethash prox table)) 
                     (setf (gethash prox table) (state-to-new-fullstate st curr))
                     (setf (fullstate-g (gethash prox table)) added)
                     (setf (fullstate-f (gethash prox table)) (+ added (funcall heuristic st)))
                     (pq-insert q prox))
+              ;fullstate was generated and visited (so is no longer in pqueue) se we might need to insert it back
               (when (and (= -1 (fullstate-pqid (gethash prox table)))
                          (< added (fullstate-g (gethash prox table)))
                     (setf (fullstate-state (gethash prox table)) st)
@@ -382,6 +358,7 @@
                     (setf (fullstate-f (gethash prox table)) (+ (- added (fullstate-g (gethash prox table))) (fullstate-f (gethash prox table))))
                     (setf (fullstate-g (gethash prox table)) added)
                     (pq-insert q prox)))
+              ;fullstate was generated and is still in pqueue so might need updating
               (when (>= added (fullstate-g (gethash prox table))) (return-from continue2))
                     (setf aux (fullstate-pqid (gethash prox table)))
                     (setf (gethash prox table) (state-to-new-fullstate st curr))
@@ -390,12 +367,14 @@
                     (setf (fullstate-g (gethash prox table)) added)
                     (pq-fixup q aux)
     )))))
-(defparameter heuristic-done nil)
-(when (not (null bestnode)) (return-from a* (rebuil-path bestnode)))
+    (defparameter heuristic-done nil)
+  )
+  nil
 )
-nil)
 
+;-------------- best search and its heuristic ----------------
 
 (defun best-search (problem)
+  (setf (problem-fn-h problem) compute-heuristic) ;TODO: Change this for an admissible heuristic
   (a* problem)
 )
