@@ -45,7 +45,6 @@
 (defparameter obstacle-track nil)
 (defparameter obstacle-arr nil)
 
-
 (defun isObstaclep (pos track)
   "check if there is an obstacle at position pos of the track"
   (when (or (minusp (car pos)) (minusp (cadr pos))) (return-from isObstaclep t))
@@ -372,9 +371,22 @@
   nil
 )
 
-;-------------- best search and its heuristic ----------------
+(defun sqrtvelaux (pos1 pos2 vel)
+  (max 0 
+    (- (truncate (isqrt (+ 1 (* 4 (car vel) (- (car vel) 1)) (* 8 (abs (- (car pos2) (car pos1)))))) 2) (1+ (car vel)))
+    (- (truncate (isqrt (+ 1 (* 4 (cadr vel) (- (cadr vel) 1)) (* 8 (abs (- (cadr pos2) (cadr pos1)))))) 2) (1+ (cadr vel))))
+)
 
+(defun admissible-heuristic (st)
+  (reduce #'min (mapcar (lambda (epos) (sqrtvelaux (state-pos st) epos (state-vel st))) (track-endpositions (state-track st))))
+)
+
+(defun retzero (st)
+  0
+)
+
+;-------------- best search and its heuristic ----------------
 (defun best-search (problem)
-  (setf (problem-fn-h problem) compute-heuristic) ;TODO: Change this for an admissible heuristic
+  (setf (problem-fn-h problem) #'retzero) ;TODO: Change this for an admissible heuristic
   (a* problem)
 )

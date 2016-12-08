@@ -61,33 +61,52 @@
 (format t "~&Exercise 42.0 - A*~&")
 (defvar *t0* nil)
 (defvar *p0* nil)
-
-
 (setf *t0* (loadtrack "track_edge_case.txt"))
 (setf *p0* (make-problem :initial-state (initial-state *t0*)  :fn-isGoal #'isGoalp	  :fn-nextstates #'nextStates	  :fn-h #'compute-heuristic))
+(defvar *t3* nil)
+(defvar *p3* nil)
+(setf *t3* (loadtrack "ntrack1.txt"))
+(setf *p3* (make-problem :initial-state (initial-state *t3*)  :fn-isGoal #'isGoalp	  :fn-nextstates #'nextStates	  :fn-h #'compute-heuristic))
+(defvar *t4* nil)
+(defvar *p4* nil)
+(setf *t4* (loadtrack "track10000.txt"))
+(setf *p4* (make-problem :initial-state (initial-state *t4*)  :fn-isGoal #'isGoalp	  :fn-nextstates #'nextStates	  :fn-h #'compute-heuristic))
+
+
 
 (time (a* *p0*))
 (format t "~{~a~^~}" (states-to-list (a* *p0*)))
 
+
+(print "Best search p0:")
+(time (best-search *p0*))
+(format t "~{~a~^~}" (states-to-list (best-search *p0*)))
+
+(print "Best search p1:")
+(time (best-search *p1*))
+(format t "~{~a~^~}" (states-to-list (best-search *p1*)))
+
+(print "Best search p2:")
+(time (best-search *p2*))
+(format t "~{~a~^~}" (states-to-list (best-search *p2*)))
+
+(print "Best search p3:")
+(time (best-search *p3*))
+(format t "~{~a~^~}" (states-to-list (best-search *p3*)))
+
+(print "Best search p4:")
+(time (best-search *p4*))
+(format t "~{~a~^~}" (states-to-list (best-search *p4*)))
+
 (quit)
 
 (format t "~&Exercise 69.1 - A*~&")
-(defvar *t3* nil)
-(defvar *p3* nil)
-
-(setf *t3* (loadtrack "ntrack1.txt"))
-(setf *p3* (make-problem :initial-state (initial-state *t3*)  :fn-isGoal #'isGoalp	  :fn-nextstates #'nextStates	  :fn-h #'compute-heuristic))
 
 (time (a* *p3*))
 (format t "~{~a~^~}" (states-to-list (a* *p3*)))
 
 
 (format t "~&Exercise 69.1 - A*~&")
-(defvar *t4* nil)
-(defvar *p4* nil)
-
-(setf *t4* (loadtrack "track10000.txt"))
-(setf *p4* (make-problem :initial-state (initial-state *t4*)  :fn-isGoal #'isGoalp	  :fn-nextstates #'nextStates	  :fn-h #'compute-heuristic))
 
 (time (a* *p4*))
 (format t "~{~a~^~}" (states-to-list (a* *p4*)))
