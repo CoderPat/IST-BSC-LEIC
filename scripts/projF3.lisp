@@ -3,8 +3,10 @@
 
 (defun states-to-list (stts)
   (loop for st in stts
-	  collect (format nil "POS: ~a VEL: ~a ACT: ~a COST: ~a~&"
-	  (state-pos st)  (state-vel st)  (state-action st)  (state-cost st))))
+	  collect (format nil "POS: ~a VEL: ~a ACT: ~a COST: ~a Best-Heuristic ~a Good-Heuristic ~a ~&"
+	  (state-pos st)  (state-vel st)  (state-action st)  (state-cost st) (best-heuristic st) (good-heuristic st))))
+;	  collect (format nil "POS: ~a VEL: ~a ACT: ~a COST: ~a~&"
+;	  (state-pos st)  (state-vel st)  (state-action st)  (state-cost st))))
 
 (defun initial-state (track)
   (make-state :pos (track-startpos track) :vel (make-vel 0 0) :action nil :cost 0 :track track))
@@ -71,6 +73,18 @@
 (defvar *p4* nil)
 (setf *t4* (loadtrack "track10000.txt"))
 (setf *p4* (make-problem :initial-state (initial-state *t4*)  :fn-isGoal #'isGoalp	  :fn-nextstates #'nextStates	  :fn-h #'compute-heuristic))
+(defvar *thack* nil)
+(defvar *phack* nil)
+(setf *thack* (loadtrack "track_hack.txt"))
+(setf *phack* (make-problem :initial-state (initial-state *thack*)  :fn-isGoal #'isGoalp	  :fn-nextstates #'nextStates	  :fn-h #'compute-heuristic))
+(defvar *thard* nil)
+(defvar *phard* nil)
+(setf *thard* (loadtrack "track_hard.txt"))
+(setf *phard* (make-problem :initial-state (initial-state *thard*)  :fn-isGoal #'isGoalp	  :fn-nextstates #'nextStates	  :fn-h #'compute-heuristic))
+(defvar *t007* nil)
+(defvar *p007* nil)
+(setf *t007* (loadtrack "track007.txt"))
+(setf *p007* (make-problem :initial-state (initial-state *t007*)  :fn-isGoal #'isGoalp	  :fn-nextstates #'nextStates	  :fn-h #'compute-heuristic))
 
 
 
@@ -89,6 +103,19 @@
 (print "Best search p2:")
 (time (best-search *p2*))
 (format t "~{~a~^~}" (states-to-list (best-search *p2*)))
+
+(print "Best search thack:")
+(time (best-search *phack*))
+(format t "~{~a~^~}" (states-to-list (best-search *phack*)))
+
+(print "Best search p007:")
+(time (best-search *p007*))
+(format t "~{~a~^~}" (states-to-list (best-search *p007*)))
+
+(print "Best search thard:")
+(time (best-search *phard*))
+(format t "~{~a~^~}" (states-to-list (best-search *phard*)))
+
 
 (print "Best search p3:")
 (time (best-search *p3*))

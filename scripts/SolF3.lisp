@@ -366,7 +366,6 @@
                     (setf (fullstate-g (gethash prox table)) added)
                     (pq-fixup q aux)
     )))))
-    (defparameter heuristic-done nil)
   )
   nil
 )
@@ -377,16 +376,43 @@
     (- (truncate (isqrt (+ 1 (* 4 (cadr vel) (- (cadr vel) 1)) (* 8 (abs (- (cadr pos2) (cadr pos1)))))) 2) (1+ (cadr vel))))
 )
 
+(defun sqrtvelaux-better (pos1 pos2 vel)
+  (let ((sa (signum (- (car pos2) (car pos1))))
+        (sb (signum (- (cadr pos2) (cadr pos1))))
+       )
+    (max 0
+    (+ 0 (ceiling (- 
+      (isqrt (+ (* (1+ (* 2 (car vel) sa)) (1+ (* 2 (car vel) sa))) (* 8 sa (- (car pos2) (car pos1))))) 
+      (1+ (* 2 (car vel) sa))) 2))
+    (+ 0 (ceiling (- 
+      (isqrt (+ (* (1+ (* 2 (cadr vel) sb)) (1+ (* 2 (cadr vel) sb))) (* 8 sb (- (cadr pos2) (cadr pos1))))) 
+      (1+ (* 2 (cadr vel) sb))) 2))
+  ))
+)
+
+(defun best-heuristic (st)
+    (when (isGoalp st) (return-from best-heuristic 102))
+    (reduce #'min (mapcar (lambda (epos) (sqrtvelaux-better (state-pos st) epos (state-vel st))) (track-endpositions (state-track st))))
+)
+
+(defun good-heuristic (st)
+    (reduce #'min (mapcar (lambda (epos) (sqrtvelaux (state-pos st) epos (state-vel st))) (track-endpositions (state-track st))))
+)
+
 (defun admissible-heuristic (st)
-  (reduce #'min (mapcar (lambda (epos) (sqrtvelaux (state-pos st) epos (state-vel st))) (track-endpositions (state-track st))))
+  (min 
+    (reduce #'min (mapcar (lambda (epos) (sqrtvelaux (state-pos st) epos (state-vel st))) (track-endpositions (state-track st))))
+    (reduce #'min (mapcar (lambda (epos) (sqrtvelaux-better (state-pos st) epos (state-vel st))) (track-endpositions (state-track st))))
+  )
 )
 
 (defun retzero (st)
-  0
+  (when (isGoalp st) (return-from retzero 0))
+  -101
 )
 
 ;-------------- best search and its heuristic ----------------
 (defun best-search (problem)
-  (setf (problem-fn-h problem) #'retzero) ;TODO: Change this for an admissible heuristic
+  (setf (problem-fn-h problem) #'best-heuristic) ;TODO: Change this for an admissible heuristic
   (a* problem)
 )
