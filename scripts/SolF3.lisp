@@ -40,6 +40,11 @@
   (list a b))
 
 ;; caching structures
+;; We assume that tracks are loaded from files and are not modified during runtime,
+;;  and therefore we use eq to compare just the object-ids. It seemed a reasonable assumption 
+;;  taken from the handout. In case this is not a valid assumption, ou isObstaclep and 
+;;  compute-heuristic will fail and changes are needed to them.
+;; We decided to keep the code as is as the evaluator provided sugested this is acceptable.
 (defparameter heuristic-track nil)
 (defparameter heuristic-arr nil)
 (defparameter obstacle-track nil)
@@ -391,7 +396,7 @@
 )
 
 (defun best-heuristic (st)
-    (when (isGoalp st) (return-from best-heuristic 102))
+    (when (isGoalp st) (return-from best-heuristic 101))
     (reduce #'min (mapcar (lambda (epos) (sqrtvelaux-better (state-pos st) epos (state-vel st))) (track-endpositions (state-track st))))
 )
 
@@ -407,8 +412,8 @@
 )
 
 (defun retzero (st)
-  (when (isGoalp st) (return-from retzero 0))
-  -101
+  (when (isGoalp st) (return-from retzero 110))
+  1
 )
 
 ;-------------- best search and its heuristic ----------------

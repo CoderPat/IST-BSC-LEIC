@@ -3,10 +3,10 @@
 
 (defun states-to-list (stts)
   (loop for st in stts
-	  collect (format nil "POS: ~a VEL: ~a ACT: ~a COST: ~a Best-Heuristic ~a Good-Heuristic ~a ~&"
-	  (state-pos st)  (state-vel st)  (state-action st)  (state-cost st) (best-heuristic st) (good-heuristic st))))
-;	  collect (format nil "POS: ~a VEL: ~a ACT: ~a COST: ~a~&"
-;	  (state-pos st)  (state-vel st)  (state-action st)  (state-cost st))))
+;	  collect (format nil "POS: ~a VEL: ~a ACT: ~a COST: ~a Best-Heuristic ~a Good-Heuristic ~a ~&"
+;	  (state-pos st)  (state-vel st)  (state-action st)  (state-cost st) (best-heuristic st) (good-heuristic st))))
+	  collect (format nil "POS: ~a VEL: ~a ACT: ~a COST: ~a~&"
+	  (state-pos st)  (state-vel st)  (state-action st)  (state-cost st))))
 
 (defun initial-state (track)
   (make-state :pos (track-startpos track) :vel (make-vel 0 0) :action nil :cost 0 :track track))
