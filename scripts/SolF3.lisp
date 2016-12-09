@@ -64,17 +64,9 @@
                                        :initial-contents (track-env track)))
   (not (aref obstacle-arr (car pos) (cadr pos))))
 
-(defun isGoalp (st)
-  "check if st is a goal state"
-  (loop for e in (track-endpositions (state-track st))
-    do (when (and 
-              (= (car e) (car (state-pos st))) 
-              (= (cadr e) (cadr (state-pos st)))
-           )
-           (return t)
-       )
-  )
-)
+(defun isGoalp (st) 
+  (and (member (state-pos st) (track-endpositions (state-track st)) :test #'equalp)
+  T))
 
 (defun nextState (st act)
   "generate the nextState after state st and action act"

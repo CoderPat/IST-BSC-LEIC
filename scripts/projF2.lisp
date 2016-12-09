@@ -1,6 +1,6 @@
 
 ;;; this is your solution file
-(load "SolF2.lisp")
+(load "solf2.lisp")
 
 (defun states-to-list (stts)
   (loop for st in stts
