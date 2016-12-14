@@ -64,7 +64,7 @@ BEGIN
 	DECLARE curr_date datetime;
 	SET curr_date = '2016-01-01 00:00:00';
 	WHILE (YEAR(curr_date)<>2018) DO
-		INSERT INTO wh_dim_data (dia, semana, mes, semestre, ano) VALUES (DAY(curr_date), WEEK(curr_date), MONTH(curr_date), SEMESTER(curr_date), ano); #IS THE HIERARCHY STRICT? (MONTH RANGE ONLY 1-6, WEEK RANGE ONLY 1-5?)
+		INSERT INTO wh_dim_data (dia, semana, mes, semestre, ano) VALUES (DAY(curr_date), 1, MONTH(curr_date),1, ano); #IS THE HIERARCHY STRICT? (MONTH RANGE ONLY 1-6, WEEK RANGE ONLY 1-5?)
 		SET curr_date = DATE_ADD(curr_date, INTERVAL 1 DAY);
 	END WHILE;
 END$$
@@ -75,7 +75,7 @@ BEGIN
 	DECLARE curr_ts datetime;
 	SET curr_ts = '0000-01-01 00:00:00'; 
 	WHILE (DAY(curr_ts)!=2) DO
-		INSERT INTO wh_dim_tempo (hora, segundo) VALUES (HOUR(curr_ts), MINUTE(curr_ts)); #IS THE HIERARCHY STRICT? (second only between 1-60?)
+		INSERT INTO wh_dim_tempo (hora, minuto) VALUES (HOUR(curr_ts), MINUTE(curr_ts)); #IS THE HIERARCHY STRICT? (second only between 1-60?)
 		SET curr_ts = DATE_ADD(curr_ts, INTERVAL 1 SECOND);
 	END WHILE;
 END$$
@@ -102,7 +102,7 @@ END$$
 CREATE PROCEDURE carregar_medidas()
 BEGIN
 	INSERT INTO wh_informacao (user_id, data_id, tempo_id, local_id) 
-		SELECT user_id, data_id, tempo_id, local_id, tarifa*(DATADIFF(data_fim,data_inicio)), DATADIFF(data_fim, data_inicio)
+		SELECT user_id, data_id, tempo_id, local_id, tarifa*(DATEDIFF(data_fim,data_inicio)), DATEDIFF(data_fim, data_inicio)
 		FROM paga NATURAL JOIN oferta INNER JOIN wh_dim_user U
 									  INNER JOIN wh_dim_data D
 									  INNER JOIN wh_dim_tempo T
@@ -114,6 +114,12 @@ BEGIN
 END$$
 
 DELIMITER ;
+
+call carregar_dim_datas();
+call carregar_dim_tempo();
+call carregar_dim_localizacao();
+call carregar_dim_user();
+call carregar_medidas();
 
 SELECT dia, semana, mes, semestre, ano, morada, codigo_espaco, codigo_posto, AVG(montante) as media
 from wh_informacao NATURAL JOIN wh_dim_localizacao NATURAL JOIN wh_dim_data  
