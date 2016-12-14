@@ -4,19 +4,19 @@ DROP TABLE IF EXISTS wh_dim_tempo;
 DROP TABLE IF EXISTS wh_dim_localizacao;
 DROP TABLE IF EXISTS wh_informacao;
 
---necessary user_id in this case?
+#necessary user_id in this case?
 CREATE TABLE wh_dim_user(
 	user_id int UNSIGNED NOT NULL AUTO_INCREMENT,
-    nif varchar(9) NOT NULL unique,
+    nif varchar(9) NOT NULL,
     nome varchar(80) NOT NULL,
     telefone varchar(26) NOT NULL,
 	PRIMARY KEY (user_id)
 );
 
 CREATE TABLE wh_dim_data(
-	data_id int unsigned  NOT NULL AUTO_INCREMENT,
+	data_id int unsigned NOT NULL AUTO_INCREMENT,
     dia tinyint unsigned NOT NULL,
-    semana tinyint unsigned NOT NULL
+    semana tinyint unsigned NOT NULL,
     mes tinyint unsigned NOT NULL,
     semestre tinyint unsigned NOT NULL,
     ano int unsigned NOT NULL,
@@ -27,7 +27,7 @@ CREATE TABLE wh_dim_tempo(
     tempo_id int unsigned NOT NULL AUTO_INCREMENT,
     hora tinyint unsigned NOT NULL,
     minuto tinyint unsigned NOT NULL,
-	PRIMARY KEY (time_id)
+	PRIMARY KEY (tempo_id)
 );	
 
 CREATE TABLE wh_dim_localizacao(
@@ -43,8 +43,11 @@ CREATE TABLE wh_informacao(
 	data_id int unsigned NOT NULL,
 	tempo_id int unsigned NOT NULL,
 	local_id int unsigned NOT NULL,
-	montante int NOT NULL,aFERENCES REFERENCES wh_dim_tempo(tempo_id),
-	FOREIGN KEY (local_id) REFERENCES REFERENCES wh_dim_localizacao(local_id),
+	montante int NOT NULL, 
+	FOREIGN KEY (user_id) REFERENCES wh_dim_user(user_id),	
+	FOREIGN KEY (data_id) REFERENCES wh_dim_data(data_id),	
+	FOREIGN KEY (tempo_id) REFERENCES wh_dim_tempo(tempo_id),
+	FOREIGN KEY (local_id) REFERENCES wh_dim_localizacao(local_id)
 );
 
 --only paid reservations
