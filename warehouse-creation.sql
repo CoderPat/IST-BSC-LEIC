@@ -127,7 +127,7 @@ dia tinyint unsigned NOT NULL,
 	codigo_espaco varchar(255) NOT NULL,
 	codigo_posto varchar(255)
 
-SELECT dia, semana, mes, semestre, ano, morada, codigo_espaco, codigo_posto, AVG(montante) 
+SELECT dia, semana, mes, semestre, ano, morada, codigo_espaco, codigo_posto, AVG(montante) as media
 from wh_informacao NATURAL JOIN wh_dimensao_informacao NATURAL JOIN wh_dimensao_data  
 group by dia, semana, mes, semestre, ano, morada, codigo_espaco, codigo_posto with rollup
 
