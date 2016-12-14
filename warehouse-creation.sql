@@ -43,12 +43,7 @@ CREATE TABLE wh_informacao(
 	data_id int unsigned NOT NULL,
 	tempo_id int unsigned NOT NULL,
 	local_id int unsigned NOT NULL,
-	montante int NOT NULL,
-	duracao int NOT NULL,
-	PRIMARY KEY (user_id, data_id, tempo_id, local_id ),
-	FOREIGN KEY (user_id) REFERENCES REFERENCES wh_dim_user(user_id),
-	FOREIGN KEY (data_id) REFERENCES REFERENCES wh_dim_data(data_id),
-	FOREIGN KEY (tempo_id) REFERENCES REFERENCES wh_dim_tempo(tempo_id),
+	montante int NOT NULL,aFERENCES REFERENCES wh_dim_tempo(tempo_id),
 	FOREIGN KEY (local_id) REFERENCES REFERENCES wh_dim_localizacao(local_id),
 )
 
@@ -122,7 +117,19 @@ END$$
 DELIMITER;
 
 
+dia tinyint unsigned NOT NULL,
+    semana tinyint unsigned NOT NULL
+    mes tinyint unsigned NOT NULL,
+    semestre tinyint unsigned NOT NULL,
+    ano int unsigned NOT NULL,
+    
+    morada varchar(255) NOT NULL,
+	codigo_espaco varchar(255) NOT NULL,
+	codigo_posto varchar(255)
 
+SELECT dia, semana, mes, semestre, ano, morada, codigo_espaco, codigo_posto, AVG(montante) 
+from wh_informacao NATURAL JOIN wh_dimensao_informacao NATURAL JOIN wh_dimensao_data  
+group by dia, semana, mes, semestre, ano, morada, codigo_espaco, codigo_posto with rollup
 
 
 
