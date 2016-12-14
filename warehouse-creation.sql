@@ -110,27 +110,11 @@ BEGIN
 		ON  U.nif = oferta.nif AND
 		   (D.dia = DAY(paga.data) AND D.mes = MONTH(paga.data) AND D.ano = YEAR(paga.data)) AND
 		   (T.hora = HOUR(paga.data) AND T.minuto = MINUTE(paga.data)) AND
-		   (L.morada = oferta.morada AND ((L.codigo_espaco = oferta.codigo AND L.codigo_post IS NULL) OR L.codigo_posto = oferta.codigo))
+		   (L.morada = oferta.morada AND ((L.codigo_espaco = oferta.codigo AND L.codigo_post IS NULL) OR L.codigo_posto = oferta.codigo));
 END$$
 
-DELIMITER;
-
-
-dia tinyint unsigned NOT NULL,
-    semana tinyint unsigned NOT NULL
-    mes tinyint unsigned NOT NULL,
-    semestre tinyint unsigned NOT NULL,
-    ano int unsigned NOT NULL,
-    
-    morada varchar(255) NOT NULL,
-	codigo_espaco varchar(255) NOT NULL,
-	codigo_posto varchar(255)
+DELIMITER ;
 
 SELECT dia, semana, mes, semestre, ano, morada, codigo_espaco, codigo_posto, AVG(montante) as media
-from wh_informacao NATURAL JOIN wh_dim_informacao NATURAL JOIN wh_dim_data  
-group by dia, semana, mes, semestre, ano, morada, codigo_espaco, codigo_posto with rollup
-
-
-
-
-
+from wh_informacao NATURAL JOIN wh_dim_localizacao NATURAL JOIN wh_dim_data  
+group by dia, semana, mes, semestre, ano, morada, codigo_espaco, codigo_posto with rollup;
