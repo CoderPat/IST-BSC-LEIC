@@ -1,17 +1,17 @@
-DROP TABLE IF EXISTS wh_dimensao_user;
-DROP TABLE IF EXISTS wh_dimensao_data;
-DROP TABLE IF EXISTS wh_dimensao_tempo;
-DROP TABLE IF EXISTS wh_dimensao_localizacao;
+DROP TABLE IF EXISTS wh_dim_user;
+DROP TABLE IF EXISTS wh_dim_data;
+DROP TABLE IF EXISTS wh_dim_tempo;
+DROP TABLE IF EXISTS wh_dim_localizacao;
 DROP TABLE IF EXISTS wh_informacao;
 
 --necessary user_id in this case?
 CREATE TABLE wh_dim_user(
-	user_id int unsigned NOT NULL AUTO_INCREMENT,
+	user_id int UNSIGNED NOT NULL AUTO_INCREMENT,
     nif varchar(9) NOT NULL unique,
     nome varchar(80) NOT NULL,
     telefone varchar(26) NOT NULL,
 	PRIMARY KEY (user_id)
-)
+);
 
 CREATE TABLE wh_dim_data(
 	data_id int unsigned  NOT NULL AUTO_INCREMENT,
@@ -21,14 +21,14 @@ CREATE TABLE wh_dim_data(
     semestre tinyint unsigned NOT NULL,
     ano int unsigned NOT NULL,
 	PRIMARY KEY (data_id)
-)
+);
 
-CREATE TABLE wh_dimensao_tempo(
+CREATE TABLE wh_dim_tempo(
     tempo_id int unsigned NOT NULL AUTO_INCREMENT,
     hora tinyint unsigned NOT NULL,
     minuto tinyint unsigned NOT NULL,
 	PRIMARY KEY (time_id)
-)
+);	
 
 CREATE TABLE wh_dim_localizacao(
 	local_id int unsigned NOT NULL AUTO_INCREMENT,
@@ -36,7 +36,7 @@ CREATE TABLE wh_dim_localizacao(
 	codigo_espaco varchar(255) NOT NULL,
 	codigo_posto varchar(255),
 	PRIMARY KEY (local_id)
-)
+);
 
 CREATE TABLE wh_informacao(
 	user_id int unsigned NOT NULL,
@@ -45,7 +45,7 @@ CREATE TABLE wh_informacao(
 	local_id int unsigned NOT NULL,
 	montante int NOT NULL,aFERENCES REFERENCES wh_dim_tempo(tempo_id),
 	FOREIGN KEY (local_id) REFERENCES REFERENCES wh_dim_localizacao(local_id),
-)
+);
 
 --only paid reservations
 DELIMITER $$
@@ -128,7 +128,7 @@ dia tinyint unsigned NOT NULL,
 	codigo_posto varchar(255)
 
 SELECT dia, semana, mes, semestre, ano, morada, codigo_espaco, codigo_posto, AVG(montante) as media
-from wh_informacao NATURAL JOIN wh_dimensao_informacao NATURAL JOIN wh_dimensao_data  
+from wh_informacao NATURAL JOIN wh_dim_informacao NATURAL JOIN wh_dim_data  
 group by dia, semana, mes, semestre, ano, morada, codigo_espaco, codigo_posto with rollup
 
 
