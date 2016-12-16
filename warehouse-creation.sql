@@ -122,6 +122,26 @@ call carregar_dim_localizacao();
 call carregar_dim_user();
 call carregar_medidas();
 
-SELECT dia, semana, mes, semestre, ano, morada, codigo_espaco, codigo_posto, AVG(montante) as media
+SELECT mes, dia, codigo_espaco, codigo_posto, AVG(montante) as media
 from wh_informacao NATURAL JOIN wh_dim_localizacao NATURAL JOIN wh_dim_data
-group by dia, mes, codigo_espaco, codigo_posto with rollup;
+GROUP BY dia, mes, codigo_espaco, codigo_posto with rollup
+UNION
+SELECT mes, dia,codigo_espaco, codigo_posto, AVG(montante) as media
+from wh_informacao NATURAL JOIN wh_dim_localizacao NATURAL JOIN wh_dim_data
+GROUP BY mes, codigo_espaco, codigo_posto, dia with rollup
+UNION
+SELECT mes, dia,codigo_espaco, codigo_posto, AVG(montante) as media
+from wh_informacao NATURAL JOIN wh_dim_localizacao NATURAL JOIN wh_dim_data
+GROUP BY codigo_espaco, codigo_posto, dia, mes with rollup
+UNION
+SELECT mes, dia,codigo_espaco, codigo_posto, AVG(montante) as media
+from wh_informacao NATURAL JOIN wh_dim_localizacao NATURAL JOIN wh_dim_data
+GROUP BY codigo_posto, dia, mes, codigo_espaco with rollup
+UNION
+SELECT mes, dia,codigo_espaco, codigo_posto, AVG(montante) as media
+from wh_informacao NATURAL JOIN wh_dim_localizacao NATURAL JOIN wh_dim_data
+GROUP BY dia, codigo_espaco, mes, codigo_posto with rollup
+UNION
+SELECT mes, dia,codigo_espaco, codigo_posto, AVG(montante) as media
+from wh_informacao NATURAL JOIN wh_dim_localizacao NATURAL JOIN wh_dim_data
+GROUP BY mes, codigo_posto, codigo_espaco, dia with rollup;
