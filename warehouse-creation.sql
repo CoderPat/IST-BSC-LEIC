@@ -21,7 +21,7 @@ CREATE TABLE wh_dim_user(
 
 CREATE TABLE wh_dim_data(
 	data_id int unsigned NOT NULL AUTO_INCREMENT,
-    dia tinyint unsigned NOT NULL,
+    dia tinyint unsigned NOT NULL, 
     semana tinyint unsigned NOT NULL,
     mes tinyint unsigned NOT NULL,
     semestre tinyint unsigned NOT NULL,
@@ -122,26 +122,27 @@ call carregar_dim_localizacao();
 call carregar_dim_user();
 call carregar_medidas();
 
-SELECT mes, dia, codigo_espaco, codigo_posto, AVG(montante) as media
-from wh_informacao NATURAL JOIN wh_dim_localizacao NATURAL JOIN wh_dim_data
+
+SELECT mes, dia, codigo_espaco, codigo_posto, IfNull(AVG(montante), 0) as media
+from wh_informacao NATURAL RIGHT OUTER JOIN (wh_dim_localizacao INNER JOIN wh_dim_data)
 GROUP BY dia, mes, codigo_espaco, codigo_posto with rollup
 UNION
-SELECT mes, dia,codigo_espaco, codigo_posto, AVG(montante) as media
-from wh_informacao NATURAL JOIN wh_dim_localizacao NATURAL JOIN wh_dim_data
+SELECT mes, dia,codigo_espaco, codigo_posto, IfNull(AVG(montante), 0) as media
+from wh_informacao NATURAL RIGHT OUTER JOIN (wh_dim_localizacao INNER  JOIN wh_dim_data)
 GROUP BY mes, codigo_espaco, codigo_posto, dia with rollup
 UNION
-SELECT mes, dia,codigo_espaco, codigo_posto, AVG(montante) as media
-from wh_informacao NATURAL JOIN wh_dim_localizacao NATURAL JOIN wh_dim_data
+SELECT mes, dia,codigo_espaco, codigo_posto, IfNull(AVG(montante), 0) as media
+from wh_informacao NATURAL RIGHT OUTER JOIN (wh_dim_localizacao INNER JOIN wh_dim_data)
 GROUP BY codigo_espaco, codigo_posto, dia, mes with rollup
 UNION
-SELECT mes, dia,codigo_espaco, codigo_posto, AVG(montante) as media
-from wh_informacao NATURAL JOIN wh_dim_localizacao NATURAL JOIN wh_dim_data
+SELECT mes, dia,codigo_espaco, codigo_posto, IfNull(AVG(montante), 0) as media
+from wh_informacao NATURAL RIGHT OUTER JOIN (wh_dim_localizacao INNER JOIN wh_dim_data)
 GROUP BY codigo_posto, dia, mes, codigo_espaco with rollup
 UNION
-SELECT mes, dia,codigo_espaco, codigo_posto, AVG(montante) as media
-from wh_informacao NATURAL JOIN wh_dim_localizacao NATURAL JOIN wh_dim_data
+SELECT mes, dia, codigo_espaco, codigo_posto, IfNull(AVG(montante), 0) as media
+from wh_informacao NATURAL RIGHT OUTER JOIN (wh_dim_localizacao INNER JOIN  wh_dim_data)
 GROUP BY dia, codigo_espaco, mes, codigo_posto with rollup
 UNION
-SELECT mes, dia,codigo_espaco, codigo_posto, AVG(montante) as media
-from wh_informacao NATURAL JOIN wh_dim_localizacao NATURAL JOIN wh_dim_data
+SELECT mes, dia, codigo_espaco, codigo_posto, IfNull(AVG(montante), 0) as media
+from wh_informacao NATURAL RIGHT OUTER JOIN (wh_dim_localizacao INNER JOIN wh_dim_data)
 GROUP BY mes, codigo_posto, codigo_espaco, dia with rollup;
