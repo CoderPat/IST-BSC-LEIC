@@ -1,0 +1,7 @@
+2) Para impedir a alteração do tabuleiro de jogo enquanto este tiver a ser lido (para verificar se há vencedor, ver o board, etc...)
+4)
+	a) ttt_xdr.c
+	b) ttt_clnt.c
+	c) cliente : ttt_clnt.c e ttt_client.c | server : ttt_svc.c ttt_server.c ttt_lib.c ttt_lib.h | ambos : ttt_xdr.c
+	d) ttt_client.c para por o loop de execução a funcionar
+	e) ONC RPC com canal de transporte UDP
