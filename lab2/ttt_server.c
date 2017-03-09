@@ -36,3 +36,10 @@ checkwinner_1_svc(void *argp, struct svc_req *rqstp)
 
   return &result;
 }
+
+void *
+switchsymbols_1_svc(void *argp, struct svc_req *rqstp)
+{
+  switchSymbols();
+  return (void*) 1;
+}

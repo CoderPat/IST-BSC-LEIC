@@ -18,6 +18,8 @@ static int numPlays = 0;
 /* Mutex */
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
+static short switched = 0;
+
 /* ********** */
 
 void currentBoard(char *buffer) {
@@ -53,7 +55,7 @@ int play(int row, int column, int player) {
         return 4;
     }
 
-    board[row][column] = (player == 1) ? 'X' : 'O';  /* Insert player symbol   */
+    board[row][column] = (player != switched) ? 'X' : 'O';  /* Insert player symbol   */
     nextPlayer = (nextPlayer + 1) % 2;
     numPlays ++;
     pthread_mutex_unlock(&mutex);
@@ -103,7 +105,14 @@ int checkWinner() {
     {
         result = 2; /* A draw! */
     }
+    else if (result != -1)
+	result = (result + switched)%2;
     
     pthread_mutex_unlock (&mutex);
     return result; 
 }
+
+void switchSymbols(){
+	switched = (switched + 1) % 2;
+}
+	

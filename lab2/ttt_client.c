@@ -24,7 +24,11 @@ ttt_1(char *host)
 	int  *result_2;
 	play_args  play_1_arg;
 	int  *result_3;
+	void *result_4;
 	char *checkwinner_1_arg;
+	char *switchsymbols_1_arg;
+	int play = 0;
+	short switched = 0;
 
 	clnt = clnt_create (host, TTT, V1, "udp");
 	if (clnt == NULL) {
@@ -43,8 +47,16 @@ ttt_1(char *host)
 			printf("%s\n", *result_1);
 
 			printf("\nPlayer %d, please enter the number of the square "
-			     "where you want to place your %c (or 0 to refresh the board): ", player,(player==1)?'X':'O');
+			     "where you want to place your %c (or 0 to refresh the board): ", player,(player!=switched)?'X':'O');
 			scanf(" %d", &go);
+			if(go==10 && play==0){
+				switched=(switched+1)%2;
+				result_4 = switchsymbols_1((void*)&switchsymbols_1_arg, clnt);
+				if (result_4 == (void *) NULL) {
+					clnt_perror (clnt, "call failed");
+				}
+				continue;				
+			}
 
 			if (go == 0){
 				play_res = TTT_UNUSED_PLAY_RES;
@@ -61,6 +73,7 @@ ttt_1(char *host)
 			if (result_2 == (int *) NULL) {
 				clnt_perror (clnt, "call failed");
 			}
+			play++;
 			play_res = *result_2;
 
 			if (play_res != 0) {
@@ -115,3 +128,5 @@ int main (int argc, char *argv[])
 	ttt_1 (host);
 exit (0);
 }
+
+
