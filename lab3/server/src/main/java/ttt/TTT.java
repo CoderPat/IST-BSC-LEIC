@@ -1,13 +1,14 @@
 package ttt;
 
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
 
 
 /**
  * TTT - Tic Tac Toe.
  */
-public class TTT implements TTTService {
+public class TTT extends UnicastRemoteObject implements TTTService {
 
 	/** The Game Board */
 	private char board[][] = {
@@ -19,6 +20,11 @@ public class TTT implements TTTService {
 	private int nextPlayer = 0;
 	/** Number of plays */
 	private int numPlays = 0;
+	static final long serialVersionUID=69;
+
+	public TTT() throws RemoteException {
+
+	}
 
 	/** Return a textual representation of the current game board. */
 	public String currentBoard() throws RemoteException {

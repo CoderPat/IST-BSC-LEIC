@@ -1,9 +1,6 @@
 package ttt;
 
-import java.util.Scanner;
-import java.rmi.*;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
+import java.rmi.Naming;
 
 public class Game {
 	 public static void main(String args[]){

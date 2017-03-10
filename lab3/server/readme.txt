@@ -32,3 +32,7 @@ Check that the desired POM is selected and 'Finish'.
 --
 Revision date: 2017-03-05
 leic-sod@disciplinas.tecnico.ulisboa.pt
+
+
+Also make sure you have a java RMI Server Naming Server running. For instance:
+rmiregistry -J-Djava.rmi.server.useCodebaseOnly=false
