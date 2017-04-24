@@ -1,0 +1,3 @@
+::: Since besides the API, no interfaces for the application componentes are specified, we assume that every other application components that interacts with users have an User Interface.
+::: All communication with infrastructure services is done server-side, so the Partner and Clients applications communicate with the website API to use infrastructure services.
+:::
