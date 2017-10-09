@@ -1,0 +1,32 @@
+s.row{
+    margin-top:40px;
+    padding: 0 10px;
+}
+.clickable{
+    cursor: pointer;   
+}
+
+.panel-heading div {
+    margin-top: -18px;
+    font-size: 15px;
+}
+.panel-heading div span{
+    margin-left:5px;
+}
+.panel-body{
+    
+}
+.rented {
+    /*por a cor a cinzento*/
+    background-color: #a0a0af;
+}
+.late {
+    /*por a cor a amarelo */
+}
+.forbiden {
+    /*por a cor a vermelho*/
+}
+
+thead tr th {
+    font-size: 1em;
+}

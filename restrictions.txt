@@ -1,0 +1,6 @@
+IR 1: The start date should be either in the start of the month or the start of the week, depending on the subtype of the entity
+IR 2: A user password must be hashed.
+IR 3: The address and floor number of an Individual Workstation full key must be the same as the Workspace it is located in.
+IR 4: A user can only be active if it's primary email is validated
+IR 5: There can only be one accepted reservation over an offer.
+IR 6: A offer must be unavailable if there is a request upon it in the accepted state

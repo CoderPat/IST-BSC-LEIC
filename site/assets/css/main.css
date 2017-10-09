@@ -1,0 +1,117 @@
+
+
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+
+
+
+.adisabled {
+  pointer-events: none;
+  cursor: default;
+  background-color: grey !important;
+  border:0;
+}
+
+ul {
+    list-style-type: none;
+}
+
+.caritem {
+    align: left;
+    witdh: auto;
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+}
+.caritem p {
+    align: left;
+}
+
+.thumbnail {
+    width: 160px;
+    height: 235px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: transparent;
+    overflow: hidden;
+    box-shadow: 0 12px 12px -10px #c4c4c4;
+    -webkit-box-shadow: 0 17px 22px -20px #c4c4c4;
+    -moz-box-shadow: 0 12px 12px -10px #c4c4c4;
+    border:none;
+}
+.thumbnail img { width:100%; height:auto; } /* to keep proportions */
+.thumbnails p { text-align: center; padding: 10px; } /* captions can be styled with an inline element */
+
+.col-md-1-5 {
+    position: relative;
+    min-height: 1px;
+    padding: 0 0 0 0;
+    margin: 0 0 0 0;
+    float: left;
+    width: 13.5%;
+
+}
+
+a.tooltipper, a.tooltipper:hover, a.tooltipper:visited {
+/*Place holder*/
+}
+a small {
+    font-size: 1em;
+    color: white;
+}
+a:hover {
+    text-decoration: none;
+}
+a.disabled {
+    color: gray;
+}
+
+
+/* Alinhar forms: */
+.betterform {
+    min-width: 50%; /*Mudar isto para ocupar mais espaco, a alternativa e por um container para cada form*/
+    margin: 0 auto;
+    margin-left: 0;
+}
+
+.betterform label, .betterform > input {
+    display: inline-block;
+}
+
+.betterform label {
+    width: 50%;
+    text-align: right;
+}
+
+.betterform label + input {
+    width: 30%;
+    margin: 0 10% 0 4%;
+}
+
+.betterform input + input {
+    float: right;
+}
+
+.betterform input[type=submit] {
+    margin-left: 54%;
+    float: left;
+}
+
+/* Butoes das tabels */
+.table-buttons > a, .table-buttons > form {
+    display: inline-block;
+    padding-right: 0.3em;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+/* hacks :P */
+.table-buttons > form > button {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    outline: none;
+    border: 0;
+    background: transparent;
+    margin: 0 0 0 0;
+    padding: 0 0 0 0;
+}
