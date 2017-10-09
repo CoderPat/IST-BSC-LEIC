@@ -1,0 +1,17 @@
+1-Client submits a form to MyTGuide system where details are validated 
+after a Token generation and validation the client is registered.
+
+2-Client requests information in regards of MyTGuide. 
+Data is selected and sent to the user.
+
+3-Client sends a notification to the server where a request for reservation 
+is described. The server validates, saves the input and sends out a confirmation.
+
+4-Client requests information from MyTGuide tour database.
+Data is selected, analyzed and sent to the user.
+
+5-Client sends a notification to the server where a request for a hotspot
+is described. The server validates, saves the input and sends out a confirmation.
+
+6-Client submits a form with feedback of the trip. Data is stored, analyzed
+and a confirmation message is sent.
