@@ -1,0 +1,29 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[top=2.5cm, left=3cm, right=3cm]{geometry}
+
+\title{Análise da complexidade da solução para o problema das pessoas fundamentais}
+\author{Patrick Fernandes\\81191 \and João Abrantes\\81845}
+\date{Grupo 70}
+
+\begin{document}
+\maketitle
+\section{Introdução}
+O problema proposto consistia em, dado um certo número de pessoas presentes numa certa rede social e as ligações (bidirecionais) entre elas, que pessoas eram fundamentais para a difusão total de uma mensagem, ou seja, em que pessoas a informação tinha obrigatoriamente de passar para poder chegar a todas as pessoas (mencionadas) da rede social.\\
+Pela natureza do problema, é possível concluir que a rede social pode ser descrita por um grafo não dirigido, em que as pessoas são representadas por vértices e as ligações entre pessoas são as arestas do grafo. Então, dada esta descrição do contexto, o problema pode ser reduzido a um em termos do grafo: que vértices são articulações do grafo, ou por outras palavras, que vértices, quando retirados, separariam o grafo original em dois grafos distintos.
+\section{A solução}
+Uma abordagem mais ignorante e intuitiva seria, para todos os vértices, tirar-los, um a um, e testar se originava dois grafos distintos, através de uma \textit{depth/breath-first traversal}. É claro no entanto que esta ideia é computacionalmente cara pois vericar se ficamos com dois grafos distintos tem só por si custo linear. \\ 
+Para arranjar uma solução mais eficiente basta analisar o que define uma articulação de um grafo. Se uma articulação divide um grafo em duas componentes separadas, então se executarmos uma \textit{depth-first traversal}, os elementos de cada componente vão estar antes e depois da passagem pela articulação (pois não há outra ligação entre os componentes). Para além disso, se introduzir-mos a noção do \textit{lowpoint} de um vértice numa \textit{depth-first traversal}, que corresponde a qual o antepassado com menor tempo de descoberta ao qual é possível chegar desde o vértice sem andar para trás na árvore de travessia, também é possível verificar que os vértices depois de uma articulação na travessia nunca podem chegar a antepassados da articulação (pois tem de passar por ela), sendo que tem de obrigatoriamente ter um lowpoint maior que o tempo de descoberta do vértice articulação.\\
+...\\
+a) A raiz tem dois ou mais filhos;\\
+b) Sendo o vertice y filho de um vertice v, v é um articulação se e só se discovery(v) $>=$ lowpoint(y).\\
+Sendo assim o algoritmo usado para encontrar todas as articulações de um grafo consiste em fazer uma depth-first traversal, de seguida calcular os lowpoints para cada vertice e por último verificar quais os vértices que respeitam as condições a) e b).\\
+
+\section{Análise de Complexidade}
+\subsection{Analise Teórica}
+Designemos por $T(V,E)$ a funcão que, dado o conjunto dos vertices e arestas, devolve o tempo que o algoritmo demora a executar. O algoritmo executa apenas uma vez uma \textit{depth-first search}, com a complexidade adicional de calcular os lowpoints e retirar as articulações. Assim
+\[ T(V,E) = \mathcal{O}(|V|+|E|) + \sum\limits_{v\in V}(L(v) + A(v)) \]
+Onde  $L(v)$ e $A(v)$ representa o tempo que demora, respectivamente, a calcular os lowpoint de um vertice $v$ e verificar se é uma articulação. Ora para calcular o lowpoints do um vertice temos de olhar para os filhos de um vertice, tendo de percorrer a lista de adjacencias dele. Percorrer a lista de adjacencias de todos os vertices equivale e passar por todos as arestas por isso $\sum\limits_{v\in V}L(v) = \mathcal{O}(|V|+|E|)$. Equivalentemente, para verificar se um vertice é uma articulação, temos de olhar para os filhos de um vertice, o que outravez implica percorrer a lista de adjacencias, sendo que para todos os vertices $\sum\limits_{v\in V}A(v) = \mathcal{O}(|V|+|E|)$. Assim a complexidade temporal do algoritmo é 
+\[ T(V,E) = \mathcal{O}(|V|+|E|)\]
+\subsection{Analise Experimental}
+\end{document}

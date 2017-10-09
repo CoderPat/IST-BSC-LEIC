@@ -1,0 +1,58 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[top=2.5cm, left=3cm, right=3cm]{geometry}
+\usepackage{graphicx}   
+\usepackage{pgfplotstable}
+\usepackage{pgfplots}
+\usepackage{cite}
+\renewcommand{\refname}{Referências}
+
+
+\title{Análise da complexidade da solução para o melhor ponto de encontro}
+\author{Patrick Fernandes\\81191 \and João Abrantes\\81845}
+\date{Grupo 70}
+
+\begin{document}
+\maketitle
+\section{Introdução}
+O problema proposto consistia em, dado um certo número de localidades, filiais de uma empresa e caminhos entre localidades/filiais, com custos associados (considera-se que um custo negativo corresponde a um lucro) descobrir qual o ponto de encontro/localidade para as carrinhas que partem das filiais se encontrarem em que a perda total da empresa é minimizada.\\
+\indent Tendo em conta os conceitos descritos é possível estabelecer uma analogia entre o cenário descrito e um grafo dirigido e pesado, onde as filiais e localidades são representadas por vértices, os caminhos entre elas as arestas e os custos associados a cada caminho como o peso da aresta. O problema pode então ser formulado em termos de grafos: dado um grafo e um conjunto de vértices F (filiais), qual o vértice do grafo cujo a soma das distancias dos vértices de F a esse vértice (tomando sempre o caminho mais curto) é mínima.
+\section{A solução}
+Ora analisando o problema, para descobrir o mínimo da distancia, tem de se calcular a distancia de todos os vértices que representam filiais a todos os vértices do grafo. Isto pode ser reduzido ao problema conhecido como \textbf{distancias mínimas entre todos os pares de vertices}. Para este problema podia ser usados dois algoritmos, o algoritmo de \textit{Floyd-Warshall}\cite{Floyd:1962:A9S:367766.368168} e o algoritmo de \textit{Johnson}\cite{Johnson:1977:EAS:321992.321993}, sendo que resolvem este problema. No entanto, pode-se reparar que o nosso caso em particular é um pouco mais simples, pois apenas requer-se a distancia de uma conjunto de vértices a todos os vértices. Ora, para o algoritmo de \textit{Floyd-Warshall} funcionar, é preciso calcular a distancia de todos os vértices a todos os vertices, enquanto que o algoritmo de \textit{Johnson}, que se baseia na aplicação do algoritmo de \textit{Dijkstra}\cite{Dijkstra} a todos os vértices, pode ser alterado para apenas calcular o que nós queremos. Assim, para encontrar a distancia dos vértices das filiais a todos os vértices, aplica-se este último.\\
+Após termos as distancias, para encontrar o vértice que pretendemos, basta para todos os vértices, somar-mos a distancias das filais até ele, e no final descobrir qual o vértice em que este valor é mínimo. Apesar de este problema ser bastante simplificado se usar-mos uma matriz FxL, isto pode causar problemas de memória para grandes inputs. Uma melhor maneira, é alterar o algoritmo de \textit{Johnson} para em vez de escrever numa matrix, escrever num vetor acumulador de dimensão L, que mantém a soma das distancias para qual o algoritmo de \textit{Dijkstra} já foi aplicado, sendo que no final o vertice com menor valor no acumulador é o melhor. No entanto, como perdemos os valores individuais das distancias dos filiais ao ponto de encontro no acumulador, podemos no final, inverter todas as arestas do grafo e aplicar mais uma iteração do algoritmo de \textit{Dijkstra}, ao vértice de encontro. Como o grafo foi invertido, a distancia desse vértice a uma filial corresponde a distancia de uma filial ao vértice no gafo original. \\
+\indent Assim com esta sequencia de passos obtemos a solução para o problema original, sendo que o vértice representa o local de encontro, o seu valor no acumulador o custo de todos locais até ao ponto de encontro e a distancias calculadas na última iteração do algoritmo de \textit{Dijkstra} os custos individuais de cada filial ao ponto de encontro.
+\section{Análise de Complexidade}
+\subsection{Analise Teórica}
+Designemos por $T(F, L ,E)$ a função que, dado o conjunto das filiais ($F$), de todos os locais ($L$) e as ligações pesadas entre eles ($E$), devolve o tempo que o algoritmo demora a executar.
+A maior parte do tempo de execução é passado na versão modificada do algoritmo de \textit{Johnson}. \\
+\indent Neste, primeiro é executado o algoritmo de \textit{Bellman-Ford}\cite{bellman1956routing}, para repesar as arestas. Este algoritmo consiste no relaxamento de todas as aresta, num número de vezes igual aos vértices do grafo. Assim para o nosso grafo, a complexidade é $\mathcal{O}(|L||E|)$. \\
+\indent Após a repesagem, já tendo o grafo com arestas positivas, são executadas $|F|$ vezes o algoritmo de \textit{Dijkstra}. Ora o algoritmo de \textit{Dijkstra} com Min-Heap para a fila de prioridades, tem complexidade de $\mathcal{O}((|L|+|E|)log(|L|))$, pois o algoritmo olha para todas as aresta e no pior caso tem de atualizar uma distancia, que é $\mathcal{O}(log(|L|))$ numa heap. Ora executando o algorimto de \textit{Dijkstra} $|F|$ vezes, temos que a complexidade de calcular as distancias todas para somar ao acumulador é $\mathcal{O}(|F|(|L|+|E|)log(|L|))$. No final tem de se inverter o grafo, que tem complexidade $\mathcal{O}(|L|+|E|)$, e calcular mais uma vez o algoritmo de \textit{Dijkstra} ($\mathcal{O}((|L|+|E|)log(|L|))$) para as distancias individuais. Então a complexidade final é de \[ T(F, L ,E) = \mathcal{O}(|L||E|) + \mathcal{O}((|F|+1)(|L|+|E|)log(|L|)) + \mathcal{O}(|L|+|E|)\] \\
+\[ \Leftrightarrow  T(F, L ,E) = \mathcal{O}(|L||E| + |F||E|log(|L|))\]
+\subsection{Analise Experimental}
+Para confirmar a previsão teórica foi realizada uma análise experimental. Foram gerados 100 grafos dirigidos com tamanhos compreendidos entre 1 e os 10000 vértices, esparsos (probabilidade de haver uma aresta entre dois vértices era de aproximadamente 1/L, sendo L o numero de vértices) e com peso aleatório, num programa Python com recurso à biblioteca NetworkX\cite{hagberg-2008-exploring}, e para cada grafo, foram escolhidos vértices aleatórios como fontes, tal que o numero de fontes é aprox. 10\% dos vértices. Para cada grafo, foi medido o numero de instruções assembly (em modo de utilizador) usadas, que se pode assumir-se como unidade base de tempo.\\
+\indent O algoritmo foi implementado em C++ usando vetores da STL e uma implementação nossa de uma Min-Heap, com as complexidades necessárias.\\
+\indent Em baixo apresentasse um gráfico com o $LE + FElog(L)$ (onde L é o numero de localidades/vértices, F o numero de fontes e E o numero de ligações entre localidades) de cada grafo no eixo x e o respetivo tempo de execução no eixo $y$.\\
+\\
+\begin{tikzpicture}[font=\small]
+	\begin{axis}[
+	    scaled x ticks=base 10:-6,
+      	scaled y ticks=base 10:-9,
+		legend style={empty legend, at={(0.65,0.95)}},
+	    width=13cm,
+      	height=8cm,
+		xlabel=$LE + FElog(L)$,
+		ylabel=Instr. modo util.]
+	\addplot[only marks] table {perf_results.dat};
+	\addplot[no marks, thick, red] table 
+			[y={create col/linear regression={y=instr}}] {perf_results.dat};
+	\addlegendentry{%
+        $y = \pgfmathprintnumber{\pgfplotstableregressiona} (LE + FElog(L))
+        \pgfmathprintnumber[print sign]{\pgfplotstableregressionb}$ } %
+    \addlegendentry{$r =  0.9998855376$ }
+	\end{axis}
+\end{tikzpicture}\\\\
+Pela análise do gráfico e do baixo coeficiente de regressão, notasse que o tempo é proporcional a $LE + FElog(L)$  ou seja, os dados experimentais confirmam a previsão teórica de que a solução tem complexidade temporal de $\mathcal{O}(|L||E| + |F||E|log(|L|))$\\
+\pagebreak
+\bibliography{references}{}
+\bibliographystyle{plain}
+\end{document}
